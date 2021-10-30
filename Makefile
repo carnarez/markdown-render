@@ -5,13 +5,13 @@ SHELL=/bin/bash
 	@.venv/bin/pip install -U pip
 	@.venv/bin/pip install --no-cache-dir -r requirements.txt
 
-css:
+style:
 	@/bin/bash style-highlight.sh > style-highlight.css
 
-test: .venv css
+tests: style .venv
 	@.venv/bin/python render.py markdown.md > index.html
 
-build:
+build: style
 	docker build --tag www .
 
 serve: build

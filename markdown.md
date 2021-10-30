@@ -1,6 +1,6 @@
 ---
 
-This page stands as an example of supported Markdown-to-HTML processing. More is available, see respective documentation.
+This page stands as an example of supported Markdown-to-HTML processing. Plenty more details and variants available, check respective documentation.
 
 # Blockquotes
 

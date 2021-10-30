@@ -7,7 +7,7 @@ function extract_hex {
 
 
 function format_vars {
-  extract_hex $1 | cat -n | sed 's/^[ ]*/    --color-/g;s/\t/: /g;s/$/;/g'
+  extract_hex $1 | cat -n | sed 's/^[ ]*/  --color-/g;s/\t/: /g;s/$/;/g'
 }
 
 
@@ -23,7 +23,7 @@ echo '/*
  */'
 echo
 
-echo ':root, .light {'
+echo -e ":root,\n.light {"
 format_vars github.css
 echo '}'
 echo

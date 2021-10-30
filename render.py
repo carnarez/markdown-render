@@ -1,6 +1,9 @@
 """Template script to render Markdown to HTML. Fanciness included."""
 
+import typing
+
 from markdown import markdown
+from markdown.extensions import Extension
 from markdown.extensions.md_in_html import MarkdownInHtmlExtension
 from markdown.extensions.tables import TableExtension
 from markdown.extensions.toc import TocExtension
@@ -12,7 +15,7 @@ from pymdownx.highlight import HighlightExtension
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 from pymdownx.tilde import DeleteSubExtension
 
-tpl = """
+tpl: str = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,7 +83,7 @@ HTML
 """
 
 # check extension respective documentations for configuration
-exts = [
+exts: typing.List[Extension] = [
     AstdocsExtension(),
     DeleteSubExtension(),
     HighlightExtension(use_pygments=False),

@@ -5,7 +5,6 @@
 @import "style-highlight.css";
 @import "style-mermaid.css";
 
-
 /* color schemes */
 
 :root,
@@ -29,7 +28,6 @@
   --font-color: #adbac7;
   --link-color: #539bf5;
 }
-
 
 /* general */
 
@@ -102,9 +100,8 @@ pre > code {
   padding: 0;
 }
 
-/* due to some weird decisions in the official stylesheet */
 .hljs {
-  background: none;
+  background: none; /* due to some weird decisions in the official stylesheet */
 }
 
 /* equations */
@@ -137,7 +134,6 @@ a:focus,
 a:hover {
   text-decoration: underline;
 }
-
 
 /* tables */
 

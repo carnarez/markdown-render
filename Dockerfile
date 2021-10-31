@@ -29,6 +29,7 @@ COPY requirements.txt /tmp/requirements.txt
 
 COPY render.py render.py
 COPY markdown.md markdown.md
+COPY template.html template.html
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \

@@ -1,4 +1,4 @@
-*.html
-*.swp
+index.html
 __pycache__
+*.swp
 .venv

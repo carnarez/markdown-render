@@ -50,7 +50,7 @@ Copyright^©^
 
 # Equations
 
-Rendered in the browser via [KaTeX](https://katex.org/). `$$` and `$` notations are supported.
+Rendered in the browser via [`KaTeX`](https://katex.org/). `$$` and `$` notations are supported.
 
 ## Block
 
@@ -148,7 +148,7 @@ Inline code blocks such as `import polars as pl` are not highlighted.
 
 # Mermaid diagram
 
-Rendered in the browser via [Mermaid](https://mermaidjs.github.io/).
+Rendered in the browser via [`Mermaid`](https://mermaidjs.github.io/).
 
 ````markdown
 ```mermaid

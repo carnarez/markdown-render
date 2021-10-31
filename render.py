@@ -15,7 +15,29 @@ from pymdownx.highlight import HighlightExtension
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 from pymdownx.tilde import DeleteSubExtension
 
-tpl: str = """
+# check extension respective documentations for configuration
+exts: typing.List[Extension] = [
+    AstdocsExtension(),
+    DeleteSubExtension(),
+    HighlightExtension(use_pygments=False),
+    ImgExtension(),
+    InsertSupExtension(),
+    MarkdownInHtmlExtension(),
+    ScriptExtension(),
+    SuperFencesCodeExtension(
+        custom_fences=[
+            {"name": "mermaid", "class": "mermaid", "format": fence_div_format}
+        ]
+    ),
+    TableExtension(),
+    TocExtension(),
+]
+
+# add table of contents
+html: str = markdown(f'[TOC]\n\n{open("markdown.md").read()}', extensions=exts)
+
+# chunk of a html template
+tmpl: str = '''
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,16 +51,16 @@ tpl: str = """
   ></script>
   <script
     defer
-    src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
     onload="mermaid.initialize();"
   ></script>
   <script
     defer
-    src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"
+    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
   ></script>
   <script
     defer
-    src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"
+    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/contrib/auto-render.min.js"
     onload="renderMathInElement(
       document.body,
       {delimiters: [
@@ -74,35 +96,10 @@ tpl: str = """
   <title>Markdown rendering test</title>
 </head>
 <body>
-
-HTML
-
+%CONTENT%
 <a onclick="toggleTheme();">theme</a>
 </body>
 </html>
-"""
+'''
 
-# check extension respective documentations for configuration
-exts: typing.List[Extension] = [
-    AstdocsExtension(),
-    DeleteSubExtension(),
-    HighlightExtension(use_pygments=False),
-    ImgExtension(),
-    InsertSupExtension(),
-    MarkdownInHtmlExtension(),
-    ScriptExtension(),
-    SuperFencesCodeExtension(
-        custom_fences=[
-            {"name": "mermaid", "class": "mermaid", "format": fence_div_format}
-        ]
-    ),
-    TableExtension(),
-    TocExtension(),
-]
-
-# add table of contents
-print(
-    tpl.replace(
-        "HTML", markdown(f'[TOC]\n\n{open("markdown.md").read()}', extensions=exts)
-    )
-)
+print(tmpl.replace("%CONTENT%", html).strip())

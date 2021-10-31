@@ -1,15 +1,12 @@
 # below assumption is, all css definitions are in the same order
 
-
 function extract_hex {
   grep -e 'background:' -e 'color:' $1 | sed 's/;$//g' | awk '{print$NF}'
 }
 
-
 function format_vars {
   extract_hex $1 | cat -n | sed 's/^[ ]*/  --color-/g;s/\t/: /g;s/$/;/g'
 }
-
 
 src=https://raw.githubusercontent.com/highlightjs/highlight.js/main/src/styles
 wget -qq $src/github.css

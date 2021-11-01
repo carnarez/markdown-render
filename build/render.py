@@ -1,5 +1,6 @@
 """Template script to render Markdown to HTML. Fanciness included."""
 
+import sys
 import typing
 
 from markdown import markdown
@@ -34,7 +35,7 @@ exts: typing.List[Extension] = [
 ]
 
 # add table of contents
-html: str = markdown(f'[TOC]\n\n{open("markdown.md").read()}', extensions=exts)
+html: str = markdown(f'[TOC]\n\n{open(sys.argv[1]).read()}', extensions=exts)
 
 # chunk of a html template
 tmpl: str = open("template.html").read()

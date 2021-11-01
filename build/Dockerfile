@@ -5,7 +5,7 @@ FROM alpine:latest as thttpd
 
 WORKDIR /usr/src
 
-COPY thttpd.patch thttpd.patch
+COPY build/thttpd.patch thttpd.patch
 
 ARG THTTPD_VERSION=2.29
 RUN apk --no-cache add curl gcc make musl-dev patch tar \
@@ -25,18 +25,18 @@ FROM python:slim as render
 
 WORKDIR /usr/src
 
-COPY requirements.txt /tmp/requirements.txt
-
-COPY render.py render.py
-COPY markdown.md markdown.md
-COPY template.html template.html
+COPY build .
+COPY prose .
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends -y git make \
- && pip install -r /tmp/requirements.txt \
+ && pip install -r requirements.txt \
  && mkdir -p /usr/local/www \
- && python render.py markdown.md > /usr/local/www/index.html
+ && find . -name "*.md" | while read f; do \
+      mkdir -p /usr/local/www/`dirname $f`; \
+      python render.py $f > /usr/local/www/`echo $f | sed 's/.md$/.html/g'`; \
+    done
 
 
 # run as root, but there is literally NOTHING in this container
@@ -49,6 +49,6 @@ WORKDIR /
 COPY --from=thttpd /usr/bin/thttpd /bin/thttpd
 COPY --from=render /usr/local/www /www
 
-COPY style*.css /www/
+COPY static /www
 
 ENTRYPOINT ["/bin/thttpd", "-D", "-l", "/dev/null", "-d", "/www"]

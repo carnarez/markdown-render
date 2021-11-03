@@ -33,8 +33,8 @@ a couple `JavaScript` libraries donwloaded from [cdnjs.com](https://cdnjs.com/):
 * [`Mermaid`](https://mermaidjs.github.io/) to render diagrams and flowcharts.
 
 Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
-[`style-highlight.sh`](style-highlight.sh). Crude light/dark (dimmed) toggler included.
-But the `Mermaid` [stylesheet](style-mermaid.css) will forever be in progress...
+[`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler included.
+But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in progress...
 
 As usual, this makes use of a niftily
 [patched](https://blog.oddbit.com/post/2015-01-04-building-a-minimal-web-server-for-testing-kubernetes/)

@@ -2,7 +2,7 @@ This page stands as an example of supported Markdown-to-HTML processing. Plenty 
 
 # Blockquotes & footnote
 
-As alledgedly said Napoleon[^#]:
+Napoleon alledgedly said[^#]:
 
 ```markdown
 > Un bon croquis vaut mieux qu'un long discours.

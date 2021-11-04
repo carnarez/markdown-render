@@ -8,6 +8,8 @@ extensions to deal with the fancy stuff:
   [`astdocs`](https://github.com/carnarez/astdocs/)-specific syntax.
 * [`DeleteSubExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/tilde/)
   to introduce crossed out and subscript text.
+* [`FootonesExtension1](https://python-markdown.github.io/extensions/footnotes/) to
+  handle, well, footnotes.
 * [`HighlightExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/highlight/)
   to single out code blocks.
 * [`ImgExtension`](https://github.com/carnarez/markdown-img/) for a [slightly] smarter

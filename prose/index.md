@@ -1,12 +1,16 @@
 This page stands as an example of supported Markdown-to-HTML processing. Plenty more details and variants available, check respective documentation.
 
-# Blockquotes
+# Blockquotes & footnote
+
+As alledgedly said Napoleon[^#]:
 
 ```markdown
 > Un bon croquis vaut mieux qu'un long discours.
 ```
 
 > Un bon croquis vaut mieux qu'un long discours.
+
+[^#]: [I did not invent it.](https://en.wikipedia.org/wiki/A_picture_is_worth_a_thousand_words#Equivalents)
 
 # Emphasis
 
@@ -252,5 +256,3 @@ Text
 ###### Subparagraph
 
 Text
-
----

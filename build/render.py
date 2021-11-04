@@ -5,6 +5,7 @@ import typing
 
 from markdown import markdown
 from markdown.extensions import Extension
+from markdown.extensions.footnotes import FootnoteExtension
 from markdown.extensions.md_in_html import MarkdownInHtmlExtension
 from markdown.extensions.tables import TableExtension
 from markdown.extensions.toc import TocExtension
@@ -20,6 +21,7 @@ from pymdownx.tilde import DeleteSubExtension
 exts: typing.List[Extension] = [
     AstdocsExtension(),
     DeleteSubExtension(),
+    FootnoteExtension(),
     HighlightExtension(use_pygments=False),
     ImgExtension(),
     InsertSupExtension(),

@@ -9,12 +9,12 @@ COPY build/thttpd.patch thttpd.patch
 
 ARG THTTPD_VERSION=2.29
 RUN apk --no-cache add curl gcc make musl-dev patch tar \
- && curl -sf -o thttpd-${THTTPD_VERSION}.tar.gz http://acme.com/software/thttpd/thttpd-${THTTPD_VERSION}.tar.gz \
+ && curl -fs -o thttpd-${THTTPD_VERSION}.tar.gz http://acme.com/software/thttpd/thttpd-${THTTPD_VERSION}.tar.gz \
  && tar -xf thttpd-${THTTPD_VERSION}.tar.gz \
  && cd thttpd-${THTTPD_VERSION} \
  && patch -p1 < ../thttpd.patch \
  && ./configure \
- && make CCOPT="-O2 -g -static" thttpd \
+ && make CCOPT="-O2 -g -static -w" thttpd \
  && install -m 755 thttpd /usr/bin
 
 
@@ -31,6 +31,7 @@ COPY prose .
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends -y git make \
+ && pip install --upgrade pip \
  && pip install -r requirements.txt \
  && mkdir -p /usr/local/www \
  && find . -name "*.md" | while read f; do \

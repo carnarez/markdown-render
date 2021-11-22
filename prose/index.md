@@ -92,6 +92,12 @@ Inline code blocks such as `import polars as pl` are not highlighted.
 
 Inline code blocks such as `import polars as pl` are not highlighted.
 
+# Insert
+
+The syntax cannot be demonstrated as inserts work even within code blocks. But below is...:
+
+&[](insert.md)
+
 # Links
 
 ```markdown

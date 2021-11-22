@@ -14,6 +14,8 @@ extensions to deal with the fancy stuff:
   to single out code blocks.
 * [`ImgExtension`](https://github.com/carnarez/markdown-img/) for a [slightly] smarter
   image management.
+* [`InsertExtension`](https://github.com/carnarez/markdown-insert/) to support addition
+  of external content into the processed document.
 * [`InsertSupExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/caret/)
   to introduce underlined and superscript text.
 * [`MarkdownInHtmlExtension`](https://python-markdown.github.io/extensions/md_in_html/)

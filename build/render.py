@@ -11,6 +11,7 @@ from markdown.extensions.tables import TableExtension
 from markdown.extensions.toc import TocExtension
 from markdown_astdocs import AstdocsExtension
 from markdown_img import ImgExtension
+from markdown_insert import InsertExtension
 from markdown_script import ScriptExtension
 from pymdownx.caret import InsertSupExtension
 from pymdownx.highlight import HighlightExtension
@@ -24,6 +25,7 @@ exts: typing.List[Extension] = [
     FootnoteExtension(),
     HighlightExtension(use_pygments=False),
     ImgExtension(),
+    InsertExtension(),
     InsertSupExtension(),
     MarkdownInHtmlExtension(),
     ScriptExtension(),

@@ -1,5 +1,6 @@
 """Template script to render Markdown to HTML. Fanciness included."""
 
+import os
 import sys
 import typing
 
@@ -25,7 +26,7 @@ exts: typing.List[Extension] = [
     FootnoteExtension(),
     HighlightExtension(use_pygments=False),
     ImgExtension(),
-    InsertExtension(),
+    InsertExtension(parent_path=os.getcwd()),
     InsertSupExtension(),
     MarkdownInHtmlExtension(),
     ScriptExtension(),

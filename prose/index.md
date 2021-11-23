@@ -94,9 +94,16 @@ Inline code blocks such as `import polars as pl` are not highlighted.
 
 # Insert
 
-The syntax cannot be demonstrated as inserts work even within code blocks. But below is...:
+```bash
+$ cat insert.md
+> This is the content of the insert.
+```
+
+Syntax is abused from the Markdown link, and works even within code blocks: `&[]()`. For instance `&[](insert.md)` would render:
 
 &[](insert.md)
+
+Note the insert is [also available rendered](insert.html); fancy scripting (in the `Dockerfile` for instance) could get rid of it.
 
 # Links
 

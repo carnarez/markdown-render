@@ -1,6 +1,6 @@
-git+https://github.com/carnarez/markdown-astdocs
-git+https://github.com/carnarez/markdown-img
-git+https://github.com/carnarez/markdown-insert
-git+https://github.com/carnarez/markdown-script
+git+https://github.com/carnarez/markdown-astdocs@master
+git+https://github.com/carnarez/markdown-img@master
+git+https://github.com/carnarez/markdown-insert@master
+git+https://github.com/carnarez/markdown-script@master
 markdown
 pymdown-extensions

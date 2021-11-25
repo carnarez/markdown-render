@@ -13,9 +13,10 @@ RUN apk --no-cache add curl gcc make musl-dev patch tar \
  && tar -xf thttpd-${THTTPD_VERSION}.tar.gz \
  && cd thttpd-${THTTPD_VERSION} \
  && patch -p1 < ../thttpd.patch \
+ && curl -fs -o config.sub https://git.savannah.gnu.org/cgit/config.git/plain/config.sub \
  && ./configure \
  && make CCOPT="-O2 -g -static -w" thttpd \
- && install -m 755 thttpd /usr/bin
+ && install -m 755 thttpd /usr/local/bin
 
 
 # render markdown to html
@@ -30,8 +31,8 @@ COPY prose .
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
-    apt-get install --no-install-recommends -y git make \
- && pip install --upgrade pip \
+    apt-get install --no-install-recommends -y git \
+ && pip install -U pip \
  && pip install -r requirements.txt \
  && mkdir -p /usr/local/www \
  && find . -name "*.md" | while read f; do \
@@ -47,7 +48,7 @@ FROM scratch
 
 WORKDIR /
 
-COPY --from=thttpd /usr/bin/thttpd /bin/thttpd
+COPY --from=thttpd /usr/local/bin/thttpd /bin/thttpd
 COPY --from=render /usr/local/www /www
 
 COPY static /www

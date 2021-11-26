@@ -13,9 +13,9 @@ extensions to deal with the fancy stuff:
 * [`HighlightExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/highlight/)
   to single out code blocks.
 * [`ImgExtension`](https://github.com/carnarez/markdown-img/) for a [slightly] smarter
-  image management.
+  image management via option in the usual `![]()` marker.
 * [`InsertExtension`](https://github.com/carnarez/markdown-insert/) to support addition
-  of external content into the processed document.
+  of external content into the processed document via the `&[]()` marker.
 * [`InsertSupExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/caret/)
   to introduce underlined and superscript text.
 * [`MarkdownInHtmlExtension`](https://python-markdown.github.io/extensions/md_in_html/)
@@ -41,12 +41,10 @@ Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
 But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in progress...
 
 Run `make serve` to get the HTTP server started at
-[http://localhost:8000/](http://localhost:8000/) using either
-* ~~a niftily
-  [patched](https://blog.oddbit.com/post/2015-01-04-building-a-minimal-web-server-for-testing-kubernetes/)
-  [`thttpd`](https://acme.com/software/thttpd/) as a *very* lightweight solution for
-  local development and testing or~~
-* the tiny solution shipped with [BusyBox](https://www.busybox.net/),
-  [`httpd`](https://www.busybox.net/downloads/BusyBox.html#httpd), although still
-  slightly bigger than the `thttpd` solution above (convince yourself by changing the
-  source `Dockerfile`).
+[http://localhost:8000/](http://localhost:8000/) using ~~a niftily
+[patched](https://blog.oddbit.com/post/2015-01-04-building-a-minimal-web-server-for-testing-kubernetes/)
+[`thttpd`](https://acme.com/software/thttpd/) as a *very* lightweight solution for
+local development and testing or~~ the tiny solution shipped with [BusyBox](https://www.busybox.net/),
+[`httpd`](https://www.busybox.net/downloads/BusyBox.html#httpd), although still
+slightly bigger than the `thttpd` solution above (convince yourself by changing the
+source `Dockerfile`).

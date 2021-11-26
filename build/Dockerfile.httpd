@@ -1,0 +1,40 @@
+# render markdown to html
+
+FROM python:slim as render
+
+WORKDIR /usr/src
+
+COPY build .
+COPY prose .
+
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive \
+    apt-get install --no-install-recommends -y git \
+ && pip install -U pip \
+ && pip install -r requirements.txt \
+ && mkdir -p /usr/local/www \
+ && find . -name "*.md" | while read f; do \
+      mkdir -p /usr/local/www/`dirname $f`; \
+      python render.py $f > /usr/local/www/`echo $f | sed 's/.md$/.html/g'`; \
+    done
+
+
+# create an entrypoint.sh to trap the httpd process
+
+FROM busybox
+
+RUN addgroup -S www \
+ && adduser -DHS -G www -s /bin/sh www \
+ && touch /etc/httpd.conf \
+ && echo "/bin/httpd -c /etc/httpd.conf -f -h /var/www -p 0.0.0.0:80" > /usr/sbin/entrypoint.sh \
+ && chmod +x /usr/sbin/entrypoint.sh
+
+WORKDIR /var/www
+
+COPY --from=render /usr/local/www .
+
+COPY static .
+
+USER www
+
+ENTRYPOINT ["/bin/sh", "-c", "/usr/sbin/entrypoint.sh"]

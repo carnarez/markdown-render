@@ -1,4 +1,4 @@
-**Templates for rendering and styling HTML generated from Markdown.** For my opinionated
+**Templates for rendering and styling Markdown-generated HTML.** For my opinionated
 usage, hate if you will.
 
 Rendering done via [`Python-Markdown`](https://python-markdown.github.io/). Plenty
@@ -40,8 +40,13 @@ Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
 [`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler included.
 But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in progress...
 
-As usual, this makes use of a niftily
-[patched](https://blog.oddbit.com/post/2015-01-04-building-a-minimal-web-server-for-testing-kubernetes/)
-[`thttpd`](https://acme.com/software/thttpd/) as a *very* lightweight HTTP
-server for local development and testing. Run `make serve` to get it started, and visit
-[http://localhost:8000/](http://localhost:8000/).
+Run `make serve` to get the HTTP server started at
+[http://localhost:8000/](http://localhost:8000/), using
+* ~~a niftily
+  [patched](https://blog.oddbit.com/post/2015-01-04-building-a-minimal-web-server-for-testing-kubernetes/)
+  [`thttpd`](https://acme.com/software/thttpd/) as a *very* lightweight solution for
+  local development and testing.~~
+* the tiny solution shipped with [BusyBox](https://www.busybox.net/),
+  [`httpd`](https://www.busybox.net/downloads/BusyBox.html#httpd), although still
+  slightly bigger than the `thttpd` solution above (convince yourself by changing the
+  source `Dockerfile`).

@@ -1,0 +1,47 @@
+name: Render and publish
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -r build/requirements.txt
+
+      - name: Render Markdown content
+        run: |
+          cd prose
+          find . -name "*.md" | while read f; do
+            b=`basename $f | sed 's|.md$|.html|'`
+            d=`dirname $f | sed -r 's|^prose[/]?||'`
+            mkdir -p /tmp/www/$d
+            python ../build/render.py $f ../build/template.html > /tmp/www/$d/$b
+          done
+
+#      - name: Minify served content
+#        run: |
+#          python -m pip install minify-html
+#          find /tmp/www -name "*.html" | while read f; do
+#            minify-html --keep-closing-tags --minify-css --minify-js --output $f $f
+#          done
+
+#      - name: Publish via GitHub Pages
+#        run: |
+#          python -m pip install ghp-import
+#          ghp-import --no-jekyll /tmp/www
+#          git push --force --quiet https://${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git github-pages

@@ -43,6 +43,6 @@ exts: typing.List[Extension] = [
 html: str = markdown(f'[TOC]\n\n{open(sys.argv[1]).read()}', extensions=exts)
 
 # chunk of a html template
-tmpl: str = open("template.html" if len(sys.argv) < 3 else sys.arg[2]).read()
+tmpl: str = open("template.html" if len(sys.argv) < 3 else sys.argv[2]).read()
 
 print(tmpl.replace("%CONTENT%", html).strip())

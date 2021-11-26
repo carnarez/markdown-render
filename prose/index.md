@@ -94,6 +94,8 @@ Inline code blocks such as `import polars as pl` are not highlighted.
 
 # Insert
 
+Rendered via [`markdown-insert`](https://github.com/carnarez/markdown-insert).
+
 ```bash
 $ cat insert.md
 > This is the content of the insert.

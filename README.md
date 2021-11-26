@@ -41,11 +41,11 @@ Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
 But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in progress...
 
 Run `make serve` to get the HTTP server started at
-[http://localhost:8000/](http://localhost:8000/), using
+[http://localhost:8000/](http://localhost:8000/) using either
 * ~~a niftily
   [patched](https://blog.oddbit.com/post/2015-01-04-building-a-minimal-web-server-for-testing-kubernetes/)
   [`thttpd`](https://acme.com/software/thttpd/) as a *very* lightweight solution for
-  local development and testing.~~
+  local development and testing or~~
 * the tiny solution shipped with [BusyBox](https://www.busybox.net/),
   [`httpd`](https://www.busybox.net/downloads/BusyBox.html#httpd), although still
   slightly bigger than the `thttpd` solution above (convince yourself by changing the

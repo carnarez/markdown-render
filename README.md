@@ -13,7 +13,7 @@ extensions to deal with the fancy stuff:
 * [`HighlightExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/highlight/)
   to single out code blocks.
 * [`ImgExtension`](https://github.com/carnarez/markdown-img/) for a [slightly] smarter
-  image management via option in the usual `![]()` marker.
+  image management via options embedded in the usual `![]()` marker.
 * [`InsertExtension`](https://github.com/carnarez/markdown-insert/) to support addition
   of external content into the processed document via the `&[]()` marker.
 * [`InsertSupExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/caret/)

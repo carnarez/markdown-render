@@ -37,8 +37,9 @@ a couple `JavaScript` libraries donwloaded from [cdnjs.com](https://cdnjs.com/):
 * [`Mermaid`](https://mermaidjs.github.io/) to render diagrams and flowcharts.
 
 Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
-[`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler included.
-But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in progress...
+[`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler
+included. But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in
+progress...
 
 Run `make serve` to get the HTTP server started at
 [http://localhost:8000/](http://localhost:8000/) using ~~a niftily
@@ -46,5 +47,4 @@ Run `make serve` to get the HTTP server started at
 [`thttpd`](https://acme.com/software/thttpd/) as a *very* lightweight solution for
 local development and testing or~~ the tiny solution shipped with [BusyBox](https://www.busybox.net/),
 [`httpd`](https://www.busybox.net/downloads/BusyBox.html#httpd), although still
-slightly bigger than the `thttpd` solution above (convince yourself by changing the
-source `Dockerfile`).
+slightly bigger than the `thttpd` solution previously used.

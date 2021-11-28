@@ -37,7 +37,11 @@ RUN apt-get update \
  && mkdir -p /usr/local/www \
  && find . -name "*.md" | while read f; do \
       mkdir -p /usr/local/www/`dirname $f`; \
-      python render.py $f > /usr/local/www/`echo $f | sed 's/.md$/.html/g'`; \
+      python render.py $f > `echo $f | sed 's/.md$/.html/g'`; \
+    done \
+ && find . -name "*.css" -o -name "*.html" -o -name "*.js" | while read f; do \
+      mkdir -p /usr/local/www/`dirname $f`; \
+      python minify.py $f > /usr/local/www/$f; \
     done
 
 
@@ -50,6 +54,5 @@ WORKDIR /
 
 COPY --from=thttpd /usr/local/bin/thttpd /bin/thttpd
 COPY --from=render /usr/local/www /www
-COPY static /www
 
 ENTRYPOINT ["/bin/thttpd", "-D", "-d", "/www", "-l", "/dev/null"]

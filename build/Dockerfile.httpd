@@ -6,6 +6,7 @@ WORKDIR /usr/src
 
 COPY build .
 COPY prose .
+COPY static .
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
@@ -15,7 +16,11 @@ RUN apt-get update \
  && mkdir -p /usr/local/www \
  && find . -name "*.md" | while read f; do \
       mkdir -p /usr/local/www/`dirname $f`; \
-      python render.py $f > /usr/local/www/`echo $f | sed 's/.md$/.html/g'`; \
+      python render.py $f > `echo $f | sed 's/.md$/.html/g'`; \
+    done \
+ && find . -name "*.css" -o -name "*.html" -o -name "*.js" | while read f; do \
+      mkdir -p /usr/local/www/`dirname $f`; \
+      python minify.py $f > /usr/local/www/$f; \
     done
 
 
@@ -29,11 +34,7 @@ RUN addgroup -S www \
  && echo "/bin/httpd -c /etc/httpd.conf -f -h /var/www -p 0.0.0.0:80" > /usr/sbin/entrypoint.sh \
  && chmod +x /usr/sbin/entrypoint.sh
 
-WORKDIR /var/www
-
-COPY --from=render /usr/local/www .
-
-COPY static .
+COPY --from=render /usr/local/www /var/www
 
 USER www
 

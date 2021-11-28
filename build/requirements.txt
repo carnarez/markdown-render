@@ -3,4 +3,5 @@ git+https://github.com/carnarez/markdown-img@master
 git+https://github.com/carnarez/markdown-insert@master
 git+https://github.com/carnarez/markdown-script@master
 markdown
+minify-html
 pymdown-extensions

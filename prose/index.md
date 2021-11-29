@@ -1,16 +1,14 @@
 This page stands as an example of supported Markdown-to-HTML processing. Plenty more details and variants available, check respective documentation.
 
-# Blockquotes & footnote
+# Blockquotes
 
-Napoleon alledgedly said[^#]:
+Napoleon alledgedly said:
 
 ```markdown
 > Un bon croquis vaut mieux qu'un long discours.
 ```
 
 > Un bon croquis vaut mieux qu'un long discours.
-
-[^#]: [I did not invent it.](https://en.wikipedia.org/wiki/A_picture_is_worth_a_thousand_words#Equivalents)
 
 # Emphasis
 
@@ -73,6 +71,20 @@ And here is an inline equation: $2 \pi i \xi x$.
 ```
 
 And here is an inline equation: $2 \pi i \xi x$.
+
+# Footnotes
+
+Napoleon alledgedly said[^1]:
+
+[^1]: [I did not invent it.](https://en.wikipedia.org/wiki/A_picture_is_worth_a_thousand_words#Equivalents)
+
+```markdown
+Napoleon alledgedly said[^1]:
+
+[^1]: Footnote content.
+```
+
+> Un bon croquis vaut mieux qu'un long discours.
 
 # Images
 

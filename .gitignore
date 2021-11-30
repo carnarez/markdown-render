@@ -1,5 +1,2 @@
 *.html
-__pycache__
-*.swp
 !template.html
-.venv

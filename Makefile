@@ -1,3 +1,5 @@
+.PHONY: build
+
 style:
 	/bin/bash build/style-highlight.sh > static/style-highlight.css
 

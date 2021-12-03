@@ -2,25 +2,19 @@
 
 FROM python:slim as render
 
-WORKDIR /usr/src
-
-COPY build .
-COPY prose .
-COPY static .
+COPY build /usr/src
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends -y git \
  && pip install -U pip \
- && pip install -r requirements.txt \
- && mkdir -p /usr/local/www \
- && find . -name "*.md" | while read f; do \
+ && pip install -r /usr/src/requirements.txt
+
+COPY prose /usr/local/www
+
+RUN find . -name "*.md" | while read f; do \
       mkdir -p /usr/local/www/`dirname $f`; \
-      python render.py $f > `echo $f | sed 's/.md$/.html/g'`; \
-    done \
- && find . -name "*.css" -o -name "*.html" -o -name "*.js" | while read f; do \
-      mkdir -p /usr/local/www/`dirname $f`; \
-      python minify.py $f > /usr/local/www/$f; \
+      python /usr/src/render.py $f /usr/src/template.html > `echo $f | sed 's/.md$/.html/g'`; \
     done
 
 
@@ -35,6 +29,7 @@ RUN addgroup -S www \
  && chmod +x /usr/sbin/entrypoint.sh
 
 COPY --from=render /usr/local/www /var/www
+COPY static /var/www
 
 USER www
 

@@ -8,6 +8,7 @@ from markdown import markdown
 from markdown.extensions import Extension
 from markdown.extensions.footnotes import FootnoteExtension
 from markdown.extensions.md_in_html import MarkdownInHtmlExtension
+from markdown.extensions.meta import MetaExtension
 from markdown.extensions.tables import TableExtension
 from markdown.extensions.toc import TocExtension
 from markdown_astdocs import AstdocsExtension
@@ -29,6 +30,7 @@ exts: typing.List[Extension] = [
     InsertExtension(parent_path=os.getcwd()),
     InsertSupExtension(),
     MarkdownInHtmlExtension(),
+    MetaExtension(),
     ScriptExtension(),
     SuperFencesCodeExtension(
         custom_fences=[

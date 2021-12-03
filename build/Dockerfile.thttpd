@@ -24,29 +24,24 @@ RUN apk --no-cache add curl gcc make musl-dev patch tar \
 
 FROM python:slim as render
 
-WORKDIR /usr/src
-
-COPY build .
-COPY prose .
+COPY build /usr/src
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends -y git \
  && pip install -U pip \
- && pip install -r requirements.txt \
- && mkdir -p /usr/local/www \
- && find . -name "*.md" | while read f; do \
+ && pip install -r /usr/src/requirements.txt
+
+COPY prose /usr/local/www
+
+RUN find . -name "*.md" | while read f; do \
       mkdir -p /usr/local/www/`dirname $f`; \
-      python render.py $f > `echo $f | sed 's/.md$/.html/g'`; \
-    done \
- && find . -name "*.css" -o -name "*.html" -o -name "*.js" | while read f; do \
-      mkdir -p /usr/local/www/`dirname $f`; \
-      python minify.py $f > /usr/local/www/$f; \
+      python /usr/src/render.py $f /usr/src/template.html > `echo $f | sed 's/.md$/.html/g'`; \
     done
 
 
 # run as root, but there is literally NOTHING in this container
-# and this is for local development
+# this is for local development anyway
 
 FROM scratch
 
@@ -54,5 +49,6 @@ WORKDIR /
 
 COPY --from=thttpd /usr/local/bin/thttpd /bin/thttpd
 COPY --from=render /usr/local/www /www
+COPY static /www
 
 ENTRYPOINT ["/bin/thttpd", "-D", "-d", "/www", "-l", "/dev/null"]

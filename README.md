@@ -20,6 +20,8 @@ extensions to deal with the fancy stuff:
   to introduce underlined and superscript text.
 * [`MarkdownInHtmlExtension`](https://python-markdown.github.io/extensions/md_in_html/)
   to parse and render Markdown located *within* HTML blocks.
+* [`MetaExtension`](https://python-markdown.github.io/extensions/meta/) to parse front
+  matter content (metadata).
 * [`ScriptExtension`](https://github.com/carnarez/markdown-script) to include
   `JavaScript` content via the `%[]()` marker.
 * [`SuperFencesCodeExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/superfences/)
@@ -30,7 +32,7 @@ extensions to deal with the fancy stuff:
   table of contents and anchor the titles.
 
 Once generated, some extra rendering is done in the browser -*i.e.*, on the client- via
-a couple `JavaScript` libraries donwloaded from [cdnjs.com](https://cdnjs.com/):
+a couple `JavaScript` libraries:
 
 * [`highlight.js`](https://highlightjs.org/) for syntax highlighting.
 * [`KaTeX`](https://katex.org/) to render equations written in LaTeX.

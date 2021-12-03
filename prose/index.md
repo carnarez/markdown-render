@@ -159,19 +159,33 @@ Note the insert is [also available rendered](insert.html); fancy scripting (in t
 
 # Markdown in HTML
 
-```markdown
+````markdown
 <details markdown="1">
-<summary>Test</summary>
+<summary markdown="1">Test with `code`.</summary>
 
-**This is bold**, ^^this is underlined^^.
+**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
 
-</details>
+```python
+import polars as pl
 ```
 
-<details markdown="1">
-<summary>Test</summary>
+</details>
+````
 
-**This is bold**, ^^this is underlined^^.
+* Note the `markdown="1"` attribute to make sure the content inside those tags is being parsed
+  and converted properly.
+* Mind the necessary spaces:
+    - After the `<summary>...</summary>` line.
+    - Before the closing `</details>` tag.
+
+<details markdown="1">
+<summary markdown="1">Test with `code`.</summary>
+
+**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
+
+```python
+import polars as pl
+```
 
 </details>
 
@@ -228,6 +242,15 @@ Rendered in the browser via [`highlight.js`](https://highlightjs.org/).
 ````markdown
 ```python
 import polars as pl
+
+q = (
+    pl.scan_csv("iris.csv")
+    .filter(pl.col("sepal_length") > 5)
+    .groupby("species")
+    .agg(pl.all().sum())
+)
+
+df = q.collect()
 ```
 ````
 

@@ -24,7 +24,7 @@ from pymdownx.tilde import DeleteSubExtension
 exts: typing.List[Extension] = [
     AstdocsExtension(),
     DeleteSubExtension(),
-    FootnoteExtension(),
+    FootnoteExtension(BACKLINK_TEXT='<i class="far fa-caret-square-up"></i>'),
     HighlightExtension(use_pygments=False),
     ImgExtension(),
     InsertExtension(parent_path=os.getcwd()),

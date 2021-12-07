@@ -141,6 +141,17 @@ span.katex-display:after {
   padding: 0 0 0 2rem;
 }
 
+/* footnotes */
+
+.footnote {
+  font-size: 80%;
+  line-height: 1rem;
+}
+
+.footnote li:first-child {
+  margin-top: 1.5rem;
+}
+
 /* links */
 
 a {

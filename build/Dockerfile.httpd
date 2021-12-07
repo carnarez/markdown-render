@@ -10,11 +10,11 @@ RUN apt-get update \
  && pip install -U pip \
  && pip install -r /usr/src/requirements.txt
 
-COPY prose /usr/local/www
+COPY prose .
 
 RUN find . -name "*.md" | while read f; do \
       mkdir -p /usr/local/www/`dirname $f`; \
-      python /usr/src/render.py $f /usr/src/template.html > `echo $f | sed 's/.md$/.html/g'`; \
+      python /usr/src/render.py $f /usr/src/template.html > /usr/local/www/`echo $f | sed 's/.md$/.html/g'`; \
     done
 
 

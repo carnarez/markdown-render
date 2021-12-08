@@ -1,6 +1,6 @@
 This page stands as an example of supported Markdown-to-HTML processing. Plenty more details and variants available, check respective documentation.
 
-# Blockquotes
+# Blockquote
 
 Napoleon alledgedly said:
 
@@ -48,7 +48,18 @@ H~2~O
 
 Copyright^©^
 
-# Equations
+# Emoji
+
+```markdown
+:wink: :fish: :scream:
+```
+
+:wink: :fish: :scream:
+
+See [this file](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md) for
+a complete list of available emojis.
+
+# Equation
 
 Rendered in the browser via [`KaTeX`](https://katex.org/). `$$` and `$` notations are supported.
 
@@ -86,7 +97,7 @@ Napoleon alledgedly said[^1]:
 
 > Un bon croquis vaut mieux qu'un long discours.
 
-# Images
+# Image
 
 Hijacked and rendered via [`markdown-img`](https://github.com/carnarez/markdown-img).
 
@@ -119,7 +130,7 @@ Syntax is abused from the Markdown link, and works even within code blocks: `&[]
 
 Note the insert is [also available rendered](insert.html); fancy scripting (in the `Dockerfile` for instance) could get rid of it.
 
-# Links
+# Link
 
 ```markdown
 [My GitHub](https://github.com/carnarez)
@@ -127,23 +138,9 @@ Note the insert is [also available rendered](insert.html); fancy scripting (in t
 
 [My GitHub](https://github.com/carnarez)
 
-# Lists
+# List
 
-## Unordered list
-
-```markdown
-* Item
-* Item
-    * Subitem
-    * Subitem
-```
-
-* Item
-* Item
-    * Subitem
-    * Subitem
-
-## Ordered list
+## Ordered
 
 ```markdown
 1. Item 1
@@ -157,7 +154,21 @@ Note the insert is [also available rendered](insert.html); fancy scripting (in t
     1. Item 2a
     1. Item 2b
 
-# Markdown in HTML
+## Unordered
+
+```markdown
+* Item
+* Item
+    * Subitem
+    * Subitem
+```
+
+* Item
+* Item
+    * Subitem
+    * Subitem
+
+# Markdown-in-HTML
 
 ````markdown
 <details markdown="1">
@@ -225,7 +236,7 @@ sequenceDiagram
 
 Check [this page](https://mermaid-js.github.io/mermaid/#/theming) to style diagrams.
 
-# Scripts
+# Script
 
 Rendered via [`markdown-script`](https://github.com/carnarez/markdown-script).
 
@@ -267,7 +278,7 @@ q = (
 df = q.collect()
 ```
 
-# Tables
+# Table
 
 ```markdown
 First Header | Second Header

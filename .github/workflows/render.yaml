@@ -16,6 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install Node dependencies
+        run: |
+          npm config set update-notifier false
+          npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli prettier terser
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -23,21 +33,62 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          python -m pip install -U pip
-          python -m pip install ghp-import -r build/requirements.txt
+          python -m pip install --upgrade pip
+          python -m pip install ghp-import --requirement build/requirements.txt
 
       - name: Render Markdown content
         run: |
           cd prose
+
           find . -name "*.md" | while read f; do
-            b=`basename $f | sed 's|.md$|.html|'`
-            d=`dirname $f | sed -r 's|^prose[/]?||'`
-            mkdir -p /tmp/www/$d
-            python ../build/render.py $f ../build/template.html > /tmp/www/$d/$b
+            mkdir -p /tmp/www/`dirname $f`
+            python ../build/render.py $f ../build/template.html > /tmp/www/${f/.md/.html}
           done
+
           cd -
 
-#      - name: Publish via GitHub Pages
+      - name: Prettify via Prettier
+        run: |
+          cd /tmp/www
+
+          prettier --write .
+
+          cd -
+
+      - name: Minify via clean-css, html-minifier and terser
+        run: |
+          cd /tmp/www
+
+          find . -name "*.css" | while read f; do
+            postcss $f --replace --use autoprefixer
+            cleancss --output $f $f
+          done
+
+          find . -name "*.html" | while read f; do
+            html-minifier --collapse-boolean-attributes \
+                          --collapse-whitespace \
+                          --output $f \
+                          --minify-css true \
+                          --minify-js true \
+                          --remove-attribute-quotes \
+                          --remove-comments \
+                          --remove-empty-attributes \
+                          --remove-empty-elements \
+                          --remove-optional-tags \
+                          --remove-redundant-attributes \
+                          --remove-script-type-attributes \
+                          --remove-style-link-type-attributes \
+                          --use-short-doctype \
+                          $f
+          done
+
+          find . -name "*.js" | while read f; do
+            terser --compress --mangle --mangle-props --output $f $f
+          done
+
+          cd -
+
+#      - name: Publish to GitHub Pages
 #        run: |
 #          ghp-import --no-jekyll /tmp/www
 #          git push --force --quiet https://${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git pages

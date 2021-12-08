@@ -32,11 +32,8 @@ WORKDIR /var/www
 RUN npm config set update-notifier false \
  && npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli terser \
  && find . -name "*.css" | while read f; do \
-      postcss $f \
-              --replace \
-              --use autoprefixer; \
-      cleancss --output $f \
-               $f; \
+      postcss $f --replace --use autoprefixer; \
+      cleancss --output $f $f; \
     done \
  && find . -name "*.html" | while read f; do \
       html-minifier --collapse-boolean-attributes \

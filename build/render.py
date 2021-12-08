@@ -1,6 +1,7 @@
 """Template script to render Markdown to HTML. Fanciness included."""
 
 import os
+import re
 import sys
 import typing
 
@@ -16,6 +17,7 @@ from markdown_img import ImgExtension
 from markdown_insert import InsertExtension
 from markdown_script import ScriptExtension
 from pymdownx.caret import InsertSupExtension
+from pymdownx.emoji import EmojiExtension, gemoji, to_svg
 from pymdownx.highlight import HighlightExtension
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 from pymdownx.tilde import DeleteSubExtension
@@ -24,6 +26,7 @@ from pymdownx.tilde import DeleteSubExtension
 exts: typing.List[Extension] = [
     AstdocsExtension(),
     DeleteSubExtension(),
+    EmojiExtension(emoji_index=gemoji),
     FootnoteExtension(BACKLINK_TEXT='<i class="far fa-caret-square-up"></i>'),
     HighlightExtension(use_pygments=False),
     ImgExtension(),
@@ -44,7 +47,17 @@ exts: typing.List[Extension] = [
 # add table of contents
 html: str = markdown(f'[TOC]\n\n{open(sys.argv[1]).read()}', extensions=exts)
 
+# escape mermaid code blocks
+html = re.sub(
+    '(<div class="mermaid">.*?</div>)',
+    r"<!-- htmlmin:ignore -->\n<!-- prettier-ignore -->\n\1\n<!-- htmlmin:ignore -->",
+    html,
+    flags=re.DOTALL
+)
+
 # chunk of a html template
 tmpl: str = open("template.html" if len(sys.argv) < 3 else sys.argv[2]).read()
 
-print(tmpl.replace("%CONTENT%", html).strip())
+# render and output
+sys.stdout.write(tmpl.replace("%CONTENT%", html).strip())
+sys.stderr.write(f'{sys.argv[1].lstrip("./")}\n')

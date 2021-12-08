@@ -8,6 +8,8 @@ extensions to deal with the fancy stuff:
   [`astdocs`](https://github.com/carnarez/astdocs/)-specific syntax.
 * [`DeleteSubExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/tilde/)
   to introduce crossed out and subscript text.
+* [`EmojiExtension`](https://python-markdown.github.io/extensions/emoji/) to add support
+  for [GitHub emojis](https://github.com/github/gemoji).
 * [`FootnoteExtension`](https://python-markdown.github.io/extensions/footnotes/) to
   handle, well, footnotes.
 * [`HighlightExtension`](https://facelessuser.github.io/pymdown-extensions/extensions/highlight/)
@@ -38,10 +40,20 @@ a couple `JavaScript` libraries:
 * [`KaTeX`](https://katex.org/) to render equations written in LaTeX.
 * [`Mermaid`](https://mermaidjs.github.io/) to render diagrams and flowcharts.
 
+The free [Solid](https://fontawesome.com/v5.15/icons?d=gallery&s=solid&m=free), 
+[Regular](https://fontawesome.com/v5.15/icons?d=gallery&s=regular&m=free) & 
+[Brands](https://fontawesome.com/v5.15/icons?d=gallery&p=2&s=solid&m=free)
+[Font Awesome](https://fontawesome.com/) icon sets are also made available.
+
 Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
 [`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler
 included. But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in
 progress...
+
+Served files can be prettified via [Prettier](https://github.com/prettier/prettier), but
+rather minified using a mix of [clean-css](https://github.com/clean-css/clean-css),
+[html-minifier](https://github.com/kangax/html-minifier) and
+[terser](https://github.com/terser/terser).
 
 Run `make serve` to get the HTTP server started at
 [http://localhost:8000/](http://localhost:8000/) using ~~a niftily

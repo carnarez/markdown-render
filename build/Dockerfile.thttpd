@@ -16,7 +16,7 @@ RUN apk --no-cache add curl gcc make musl-dev patch tar \
  && curl -fs -o config.sub https://git.savannah.gnu.org/cgit/config.git/plain/config.sub \
  && ./configure \
  && make CCOPT="-O2 -g -static -w" thttpd \
- && install -m 755 thttpd /usr/local/bin
+ && install -m 755 thttpd /usr/sbin
 
 
 # render markdown to html
@@ -27,17 +27,33 @@ FROM python:slim as render
 COPY build /usr/src
 
 RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive \
-    apt-get install --no-install-recommends -y git \
- && pip install -U pip \
- && pip install -r /usr/src/requirements.txt
+ && apt-get install --no-install-recommends --no-install-suggests --yes git \
+ && pip install --upgrade pip \
+ && pip install --requirement /usr/src/requirements.txt
 
-COPY prose .
+COPY prose /usr/src
+
+WORKDIR /usr/src
 
 RUN find . -name "*.md" | while read f; do \
-      mkdir -p /usr/local/www/`dirname $f`; \
-      python /usr/src/render.py $f /usr/src/template.html > /usr/local/www/`echo $f | sed 's/.md$/.html/g'`; \
+      mkdir -p /var/www/`dirname $f`; \
+      python render.py $f > /var/www/`echo $f | sed 's/.md$/.html/g'`; \
     done
+
+COPY static /var/www
+
+
+# prettify everything in place
+
+FROM node:alpine as bundle
+
+COPY --from=render /var/www /var/www
+
+WORKDIR /var/www
+
+RUN npm config set update-notifier false \
+ && npm install --global --no-audit --no-fund prettier \
+ && prettier --write .
 
 
 # run as root, but there is literally NOTHING in this container
@@ -47,8 +63,7 @@ FROM scratch
 
 WORKDIR /
 
-COPY --from=thttpd /usr/local/bin/thttpd /bin/thttpd
-COPY --from=render /usr/local/www /www
-COPY static /www
+COPY --from=thttpd /usr/sbin/thttpd /bin/thttpd
+COPY --from=bundle /var/www /www
 
 ENTRYPOINT ["/bin/thttpd", "-D", "-d", "/www", "-l", "/dev/null"]

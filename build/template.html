@@ -1,34 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" href="style.css">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
-    onload="hljs.highlightAll();"
-  ></script>
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
-    onload="mermaid.initialize();"
-  ></script>
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
-  ></script>
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/contrib/auto-render.min.js"
-    onload="renderMathInElement(
-      document.body,
-      {delimiters: [
-        {left: '$$', right: '$$', display: true},
-        {left: '$', right: '$', display: false},
-      ]}
-    );"
-  ></script>
   <script>
     function setTheme(name) {
       localStorage.setItem("theme", name);
@@ -55,12 +31,41 @@
       setTheme("light");
     }
   </script>
+  <script
+    defer
+    src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
+    onload="hljs.highlightAll();"
+  ></script>
+  <script
+    defer
+    src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
+    onload="mermaid.initialize();"
+  ></script>
+  <script
+    defer
+    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
+  ></script>
+  <script
+    defer
+    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/contrib/auto-render.min.js"
+    onload="renderMathInElement(
+      document.body,
+      {delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+      ]}
+    );"
+  ></script>
   <title>Markdown rendering test</title>
 </head>
-<body>
-<a onclick="toggleTheme();">theme</a>
 
+  <body>
+    <a onclick="toggleTheme();">theme</a>
+  
+    <!-- begin of rendered content -->
 %CONTENT%
+    <!-- end of rendered content -->
+  
+  </body>
 
-</body>
 </html>

@@ -97,6 +97,40 @@ Napoleon alledgedly said[^1]:
 
 > Un bon croquis vaut mieux qu'un long discours.
 
+# HTML and Markdown-in-HTML
+
+Example of the `<details>` and `<summary>` tags:
+
+* Note the `markdown="1"` attribute to make sure the content inside those tags is being parsed
+  and converted properly.
+* Mind the necessary spaces:
+    - After the `<summary>...</summary>` line.
+    - Before the closing `</details>` tag.
+
+````markdown
+<details markdown="1">
+<summary markdown="1">Test with `code`.</summary>
+
+**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
+
+```python
+import polars as pl
+```
+
+</details>
+````
+
+<details markdown="1">
+<summary markdown="1">Test with `code`.</summary>
+
+**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
+
+```python
+import polars as pl
+```
+
+</details>
+
 # Image
 
 Hijacked and rendered via [`markdown-img`](https://github.com/carnarez/markdown-img).
@@ -167,38 +201,6 @@ Note the insert is [also available rendered](insert.html); fancy scripting (in t
 * Item
     * Subitem
     * Subitem
-
-# Markdown-in-HTML
-
-````markdown
-<details markdown="1">
-<summary markdown="1">Test with `code`.</summary>
-
-**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
-
-```python
-import polars as pl
-```
-
-</details>
-````
-
-* Note the `markdown="1"` attribute to make sure the content inside those tags is being parsed
-  and converted properly.
-* Mind the necessary spaces:
-    - After the `<summary>...</summary>` line.
-    - Before the closing `</details>` tag.
-
-<details markdown="1">
-<summary markdown="1">Test with `code`.</summary>
-
-**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
-
-```python
-import polars as pl
-```
-
-</details>
 
 # Mermaid diagram
 

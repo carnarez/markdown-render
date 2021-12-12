@@ -17,7 +17,7 @@ from markdown_img import ImgExtension
 from markdown_insert import InsertExtension
 from markdown_script import ScriptExtension
 from pymdownx.caret import InsertSupExtension
-from pymdownx.emoji import EmojiExtension, gemoji, to_svg
+from pymdownx.emoji import EmojiExtension, gemoji
 from pymdownx.highlight import HighlightExtension
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 from pymdownx.tilde import DeleteSubExtension
@@ -45,14 +45,14 @@ exts: typing.List[Extension] = [
 ]
 
 # add table of contents
-html: str = markdown(f'[TOC]\n\n{open(sys.argv[1]).read()}', extensions=exts)
+html: str = markdown(f"[TOC]\n\n{open(sys.argv[1]).read()}", extensions=exts)
 
 # escape mermaid code blocks
 html = re.sub(
     '(<div class="mermaid">.*?</div>)',
     r"<!-- htmlmin:ignore -->\n<!-- prettier-ignore -->\n\1\n<!-- htmlmin:ignore -->",
     html,
-    flags=re.DOTALL
+    flags=re.DOTALL,
 )
 
 # chunk of a html template

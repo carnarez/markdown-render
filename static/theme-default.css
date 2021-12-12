@@ -1,0 +1,152 @@
+/* general */
+
+:root {
+  --body-max-width: 1200px;
+  --footer-height: 75px;
+  --header-height: 300px;
+  --random-image: url("https://source.unsplash.com/random/1200x600/?forest");
+  --toc-height: 50px;
+}
+
+.light {
+  --toc-background: rgb(246, 248, 250, 0.8);
+}
+
+.dark {
+  --toc-background: rgb(22, 27, 34, 0.8);
+}
+
+.dark_dimmed {
+  --toc-background: rgb(45, 51, 59, 0.8);
+}
+
+body {
+  margin: 0 auto;
+  max-width: var(--body-max-width);
+  padding: 0 0.5rem;
+  position: relative;
+}
+
+/* header */
+
+body::before {
+  background-color: var(--background-color);
+  background-image: var(--random-image);
+  background-position: center;
+  border-radius: 0 0 10px 10px;
+  content: ' ';
+  display: block;
+  height: var(--header-height);
+  overflow: hidden;
+}
+
+/* hide the text from the theme-toggler, and make it an icon */
+
+.theme-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  visibility: hidden;
+}
+
+.theme-toggle::after {
+  content: "\f042";
+  font-family: "Font Awesome 5 Free";
+  font-size: 1.2rem;
+  font-weight: 900;
+  right: 1rem;
+  position: absolute;
+  text-align: right;
+  visibility: visible;
+}
+
+/* toc */
+
+.toc {
+  background-color: var(--toc-background);
+  border-radius: 0 0 10px 10px;
+  height: var(--toc-height);
+  margin-top: calc(-1 * var(--toc-height));
+  overflow: hidden;
+  padding: 0 1rem;
+  white-space: nowrap;
+}
+
+.toc a,
+.toc a:focus,
+.toc a:hover {
+  text-decoration: none;
+}
+
+.toc ul {
+  align-content: stretch;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc ul li {
+  align-items: center;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 6px 0 3px 0;
+  display: flex;
+  height: 100%;
+  padding: 0 1rem;
+  overflow: hidden;
+}
+
+.toc ul li:focus,
+.toc ul li:hover {
+  border-color: transparent transparent var(--link-color) transparent;
+  font-weight: bold;
+  overflow: visible;
+}
+
+.toc ul li:last-child {
+  margin-right: 1rem;
+}
+
+.toc ul li:last-child:focus,
+.toc ul li:last-child:hover {
+  margin-right: 0;
+}
+
+.toc ul li:focus a::after,
+.toc ul li:hover a::after {
+  content: "\f309";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-left: 0.5rem;
+}
+
+.toc ul li ul {
+  display: none;
+}
+
+/* footer */
+
+body::after {
+  background-color: var(--background-color);
+  background-image: var(--random-image);
+  background-position: center;
+  border-radius: 10px 10px 0 0;
+  content: ' ';
+  display: block;
+  height: var(--footer-height);
+  margin-top: 3rem;
+  overflow: hidden;
+}
+
+/* tablets and higher */
+
+@media (min-width: 600px) {
+}
+
+/* tablets and higher */
+
+@media (min-width: 1000px) {
+}

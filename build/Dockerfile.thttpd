@@ -52,7 +52,7 @@ COPY --from=render /var/www /var/www
 WORKDIR /var/www
 
 RUN npm config set update-notifier false \
- && npm install --global --no-audit --no-fund prettier \
+ && npm install --global --no-audit --no-fund prettier | grep -v ^$ \
  && prettier --write .
 
 

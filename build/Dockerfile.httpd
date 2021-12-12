@@ -30,7 +30,7 @@ COPY --from=render /var/www /var/www
 WORKDIR /var/www
 
 RUN npm config set update-notifier false \
- && npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli terser \
+ && npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli terser | grep -v ^$ \
  && find . -name "*.css" | while read f; do \
       postcss $f --replace --use autoprefixer; \
       cleancss --output $f $f; \
@@ -44,7 +44,6 @@ RUN npm config set update-notifier false \
                     --remove-attribute-quotes \
                     --remove-comments \
                     --remove-empty-attributes \
-                    --remove-empty-elements \
                     --remove-optional-tags \
                     --remove-redundant-attributes \
                     --remove-script-type-attributes \

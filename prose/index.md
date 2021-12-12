@@ -83,7 +83,7 @@ And here is an inline equation: $2 \pi i \xi x$.
 
 And here is an inline equation: $2 \pi i \xi x$.
 
-# Footnotes
+# Footnote
 
 Napoleon alledgedly said[^1]:
 
@@ -97,9 +97,9 @@ Napoleon alledgedly said[^1]:
 
 > Un bon croquis vaut mieux qu'un long discours.
 
-# HTML and Markdown-in-HTML
+# Markdown-in-HTML
 
-Example of the `<details>` and `<summary>` tags:
+HTML is allowed within the document; nested Markown too. Example of the `<details>` and `<summary>` tags:
 
 * Note the `markdown="1"` attribute to make sure the content inside those tags is being parsed
   and converted properly.

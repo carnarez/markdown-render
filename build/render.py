@@ -27,7 +27,7 @@ exts: typing.List[Extension] = [
     AstdocsExtension(),
     DeleteSubExtension(),
     EmojiExtension(emoji_index=gemoji),
-    FootnoteExtension(BACKLINK_TEXT='<i class="far fa-caret-square-up"></i>'),
+    FootnoteExtension(BACKLINK_TEXT=""),
     HighlightExtension(use_pygments=False),
     ImgExtension(),
     InsertExtension(parent_path=os.getcwd()),

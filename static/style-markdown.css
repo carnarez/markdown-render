@@ -37,7 +37,7 @@ pre {
   border-radius: 0.3rem;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-  font-size: 90%;
+  font-size: 95%;
 }
 
 code {
@@ -51,6 +51,10 @@ pre {
 
 pre > code {
   padding: 0;
+}
+
+.hljs {
+  background: none; /* due to some weird decisions in the official stylesheet */
 }
 
 /* details */
@@ -86,12 +90,39 @@ span.katex-display:after {
 /* footnotes */
 
 .footnote {
-  font-size: 80%;
+  font-size: 90%;
   line-height: 1rem;
+}
+
+.footnote hr {
+  border-color: var(--background-color-alt);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  margin: 0;
+  width: 50%;
 }
 
 .footnote li:first-child {
   margin-top: 1.5rem;
+}
+
+.footnote .footnote-backref::after {
+  content: "\f30c";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+/* links */
+
+a {
+  color: var(--link-color);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:focus,
+a:hover {
+  text-decoration: underline;
 }
 
 /* tables */

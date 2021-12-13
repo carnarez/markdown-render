@@ -47,6 +47,11 @@ exts: typing.List[Extension] = [
 # add table of contents
 html: str = markdown(f"[TOC]\n\n{open(sys.argv[1]).read()}", extensions=exts)
 
+# remove table of contents if empty
+html = re.sub(
+    '<div class="toc">\s*?<ul>\s*?</ul>\s*?</div>\s*?', "", html, flags=re.DOTALL
+)
+
 # escape mermaid code blocks
 html = re.sub(
     '(<div class="mermaid">.*?</div>)',

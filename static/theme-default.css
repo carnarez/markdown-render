@@ -1,4 +1,4 @@
-/* general */
+/* variables */
 
 :root {
   --body-max-width: 1200px;
@@ -20,9 +20,12 @@
   --toc-background: rgb(45, 51, 59, 0.8);
 }
 
+/* making sure the footer is at the bottom even if the content is short */
+
 body {
   margin: 0 auto;
   max-width: var(--body-max-width);
+  min-height: calc(100vh - 2rem - var(--footer-height));
   padding: 0 0.5rem;
   position: relative;
 }
@@ -37,10 +40,28 @@ body::before {
   content: ' ';
   display: block;
   height: var(--header-height);
+  margin-bottom: 2rem;
   overflow: hidden;
 }
 
-/* hide the text from the theme-toggler, and make it an icon */
+/* footer position is absolute, little margin trick to make it count in the flow */
+
+body::after {
+  background-color: var(--background-color);
+  background-image: var(--random-image);
+  background-position: center;
+  border-radius: 10px 10px 0 0;
+  bottom: 0;
+  content: ' ';
+  display: block;
+  height: var(--footer-height);
+  margin-bottom: calc(-2rem - var(--footer-height));
+  overflow: hidden;
+  position: absolute;
+  width: calc(100% - 1rem);
+}
+
+/* replace the text from the theme-toggler by an icon */
 
 .theme-toggle {
   position: absolute;
@@ -60,15 +81,14 @@ body::before {
   visibility: visible;
 }
 
-/* toc */
+/* table of contents */
 
 .toc {
   background-color: var(--toc-background);
   border-radius: 0 0 10px 10px;
   height: var(--toc-height);
-  margin-top: calc(-1 * var(--toc-height));
-  overflow: hidden;
-  padding: 0 1rem;
+  margin-top: calc(-2rem - var(--toc-height));
+  overflow: auto;
   white-space: nowrap;
 }
 
@@ -79,7 +99,7 @@ body::before {
 }
 
 .toc ul {
-  align-content: stretch;
+  align-content: center;
   align-items: center;
   display: flex;
   height: 100%;
@@ -96,7 +116,6 @@ body::before {
   display: flex;
   height: 100%;
   padding: 0 1rem;
-  overflow: hidden;
 }
 
 .toc ul li:focus,
@@ -106,47 +125,42 @@ body::before {
   overflow: visible;
 }
 
-.toc ul li:last-child {
-  margin-right: 1rem;
-}
-
-.toc ul li:last-child:focus,
-.toc ul li:last-child:hover {
-  margin-right: 0;
-}
-
-.toc ul li:focus a::after,
-.toc ul li:hover a::after {
-  content: "\f309";
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  margin-left: 0.5rem;
-}
-
 .toc ul li ul {
   display: none;
 }
 
-/* footer */
+/* tablets */
 
-body::after {
-  background-color: var(--background-color);
-  background-image: var(--random-image);
-  background-position: center;
-  border-radius: 10px 10px 0 0;
-  content: ' ';
-  display: block;
-  height: var(--footer-height);
-  margin-top: 3rem;
-  overflow: hidden;
-}
+@media (min-width: 768px) {}
 
-/* tablets and higher */
+/* laptops */
 
-@media (min-width: 600px) {
-}
+@media (min-width: 1200px) {
 
-/* tablets and higher */
+  body {
+    padding: 0;
+  }
 
-@media (min-width: 1000px) {
+  .toc {
+    overflow: hidden;
+    padding: 0 1rem;
+  }
+
+  .toc ul {
+    align-content: stretch;
+  }
+
+  .toc ul li {
+    overflow: hidden;
+  }
+
+  .toc ul li:last-child {
+    margin-right: 1rem;
+  }
+
+  .toc ul li:last-child:focus,
+  .toc ul li:last-child:hover {
+    margin-right: 0;
+  }
+
 }

@@ -1,7 +1,8 @@
-/* forked from https://github.com/mermaid-js/mermaid/tree/develop/src/themes */
+/* general */
 
 div.mermaid svg {
   display: block;
   line-height: 1rem;
   margin: 0 auto;
+  overflow: auto;
 }

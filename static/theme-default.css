@@ -1,30 +1,31 @@
 /* variables */
 
 :root {
-  --body-max-width: 1200px;
+  --body-width: 1200px;
   --footer-height: 75px;
   --header-height: 300px;
+  --logo-size: 150px;
   --random-image: url("https://source.unsplash.com/random/1200x600/?forest");
   --toc-height: 50px;
 }
 
 .light {
-  --toc-background: rgb(246, 248, 250, 0.8);
+  --filigrane: rgb(246, 248, 250, 0.8);
 }
 
 .dark {
-  --toc-background: rgb(22, 27, 34, 0.8);
+  --filigrane: rgb(22, 27, 34, 0.8);
 }
 
 .dark_dimmed {
-  --toc-background: rgb(45, 51, 59, 0.8);
+  --filigrane: rgb(45, 51, 59, 0.8);
 }
 
 /* making sure the footer is at the bottom even if the content is short */
 
 body {
   margin: 0 auto;
-  max-width: var(--body-max-width);
+  max-width: var(--body-width);
   min-height: calc(100vh - 2rem - var(--footer-height));
   padding: 0 0.5rem;
   position: relative;
@@ -61,6 +62,34 @@ body::after {
   width: calc(100% - 1rem);
 }
 
+/* add a logo, demonstrating the use of font awesome icons */
+
+.logo {
+  align-items: center;
+  border-radius: 10px;
+  display: flex;
+  height: var(--logo-size);
+  position: absolute;
+  left: 2rem;
+  top: 1rem;
+  width: var(--logo-size);
+}
+
+.logo:focus,
+.logo:hover {
+  background-color: var(--filigrane);
+  text-decoration: none;
+}
+
+.logo::after {
+  content: "\f4fb";
+  font-family: "Font Awesome 5 Free";
+  font-size: calc(0.75 * var(--logo-size));
+  font-weight: 900;
+  text-align: center;
+  width: var(--logo-size);
+}
+
 /* replace the text from the theme-toggler by an icon */
 
 .theme-toggle {
@@ -70,21 +99,28 @@ body::after {
   visibility: hidden;
 }
 
+.theme-toggle:focus:after,
+.theme-toggle:hover:after {
+  background-color: var(--filigrane);
+}
+
 .theme-toggle::after {
+  border-radius: 10px;
   content: "\f042";
   font-family: "Font Awesome 5 Free";
   font-size: 1.2rem;
   font-weight: 900;
   right: 1rem;
   position: absolute;
-  text-align: right;
+  text-align: center;
   visibility: visible;
+  width: 2rem;
 }
 
-/* table of contents */
+/* table of contents: show only the highest titles */
 
 .toc {
-  background-color: var(--toc-background);
+  background-color: var(--filigrane);
   border-radius: 0 0 10px 10px;
   height: var(--toc-height);
   margin-top: calc(-2rem - var(--toc-height));
@@ -99,7 +135,6 @@ body::after {
 }
 
 .toc ul {
-  align-content: center;
   align-items: center;
   display: flex;
   height: 100%;
@@ -129,11 +164,11 @@ body::after {
   display: none;
 }
 
-/* tablets */
+/* tablets, same behaviour as mobiles: fingers are nimbler than the mouse */
 
 @media (min-width: 768px) {}
 
-/* laptops */
+/* laptops, big screens */
 
 @media (min-width: 1200px) {
 

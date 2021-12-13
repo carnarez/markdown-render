@@ -1,4 +1,4 @@
-"""Template script to render Markdown to HTML. Fanciness included."""
+"""Template script to render Markdown to HTML."""
 
 import os
 import re
@@ -30,7 +30,7 @@ exts: typing.List[Extension] = [
     FootnoteExtension(BACKLINK_TEXT=""),
     HighlightExtension(use_pygments=False),
     ImgExtension(),
-    InsertExtension(parent_path=os.getcwd()),
+    InsertExtension(parent_path=os.path.dirname(os.path.realpath(sys.argv[1]))),
     InsertSupExtension(),
     MarkdownInHtmlExtension(),
     MetaExtension(),

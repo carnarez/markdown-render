@@ -90,30 +90,30 @@ body::after {
   width: var(--logo-size);
 }
 
-/* replace the text from the theme-toggler by an icon */
+/* add an icon for the theme-toggler */
 
 .theme-toggle {
+  align-items: center;
+  border-radius: 10px;
+  display: flex;
   position: absolute;
   right: 1rem;
   top: 1rem;
-  visibility: hidden;
+  width: 2rem;
 }
 
-.theme-toggle:focus:after,
-.theme-toggle:hover:after {
+.theme-toggle:focus,
+.theme-toggle:hover {
   background-color: var(--filigrane);
+  text-decoration: none;
 }
 
 .theme-toggle::after {
-  border-radius: 10px;
   content: "\f042";
   font-family: "Font Awesome 5 Free";
   font-size: 1.2rem;
   font-weight: 900;
-  right: 1rem;
-  position: absolute;
   text-align: center;
-  visibility: visible;
   width: 2rem;
 }
 

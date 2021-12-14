@@ -1,72 +1,84 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/theme-default.css">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>
-    function setTheme(name) {
-      localStorage.setItem("theme", name);
-      document.documentElement.className = name;
-    }
+  <head>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/theme-default.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="Markdown rendering playground">
+    <meta name="description" content="This page demonstrates the supported Markdown-to-HTML processing.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="Markdown rendering playground">
+    <meta property="og:description" content="This page demonstrates the supported Markdown-to-HTML processing.">
+    <meta property="og:image" content="">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="Markdown rendering playground">
+    <meta property="twitter:description" content="This page demonstrates the supported Markdown-to-HTML processing.">
+    <meta property="twitter:image" content="">
+    <script>
+      function setTheme(name) {
+        localStorage.setItem("theme", name);
+        document.documentElement.className = name;
+      }
 
-    function toggleTheme() {
-      if (localStorage.getItem("theme") === "light") {
+      function toggleTheme() {
+        if (localStorage.getItem("theme") === "light") {
+          setTheme("dark");
+        } else if (localStorage.getItem("theme") === "dark") {
+          setTheme("dark_dimmed");
+        } else {
+          setTheme("light");
+        }
+      }
+
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (
+          !("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        )
+      ) {
         setTheme("dark");
-      } else if (localStorage.getItem("theme") === "dark") {
+      } else if (localStorage.getItem("theme") === "dark_dimmed") {
         setTheme("dark_dimmed");
       } else {
         setTheme("light");
       }
-    }
-
-    if (
-      localStorage.getItem("theme") === "dark" ||
-      (
-        !("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      )
-    ) {
-      setTheme("dark");
-    } else if (localStorage.getItem("theme") === "dark_dimmed") {
-      setTheme("dark_dimmed");
-    } else {
-      setTheme("light");
-    }
-  </script>
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
-    onload="hljs.highlightAll();"
-  ></script>
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
-    onload="mermaid.initialize();"
-  ></script>
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
-  ></script>
-  <script
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/contrib/auto-render.min.js"
-    onload="renderMathInElement(
-      document.body,
-      {delimiters: [
-        {left: '$$', right: '$$', display: true},
-        {left: '$', right: '$', display: false},
-      ]}
-    );"
-  ></script>
-  <title>Markdown rendering test</title>
-</head>
+    </script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
+      onload="hljs.highlightAll();"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
+      onload="mermaid.initialize();"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/contrib/auto-render.min.js"
+      onload="renderMathInElement(
+        document.body,
+        {delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+        ]}
+      );"
+    ></script>
+    <title>Playground</title>
+  </head>
 
   <body>
     <a class="logo" href="/"></a>
-    <a class="theme-toggle" onclick="toggleTheme();">theme</a>
+    <a class="theme-toggle" onclick="toggleTheme();"></a>
   
     <!-- begin of rendered content -->
 %CONTENT%

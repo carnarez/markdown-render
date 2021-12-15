@@ -5,7 +5,9 @@ import re
 import sys
 import typing
 
-from markdown import markdown
+from jinja2 import Environment, BaseLoader, Template
+from markdown import Markdown
+
 from markdown.extensions import Extension
 from markdown.extensions.footnotes import FootnoteExtension
 from markdown.extensions.md_in_html import MarkdownInHtmlExtension
@@ -44,15 +46,19 @@ exts: typing.List[Extension] = [
     TocExtension(),
 ]
 
-# add table of contents
-html: str = markdown(f"[TOC]\n\n{open(sys.argv[1]).read()}", extensions=exts)
+# jinja2 template
+jenv: Environment = Environment(loader=BaseLoader())
+try:
+    tmpl: Template = jenv.from_string(open(sys.argv[2]).read())
+except IndexError:
+    tmpl: Template = jenv.from_string(open("template.html").read())
 
-# remove table of contents if empty
-html = re.sub(
-    r'<div class="toc">\s*?<ul>\s*?</ul>\s*?</div>\s*?', "", html, flags=re.DOTALL
-)
+# process the markdown
+mkdw: Markdown = Markdown(extensions=exts)
+html: str = mkdw.convert(open(sys.argv[1]).read())
+meta: typing.Dict[str, str] = {k: " ".join(v) for k, v in mkdw.Meta.items()}
 
-# escape mermaid code blocks
+# postprocess: escape mermaid code blocks
 html = re.sub(
     '(<div class="mermaid">.*?</div>)',
     r"<!-- htmlmin:ignore -->\n<!-- prettier-ignore -->\n\1\n<!-- htmlmin:ignore -->",
@@ -60,9 +66,10 @@ html = re.sub(
     flags=re.DOTALL,
 )
 
-# chunk of a html template
-tmpl: str = open("template.html" if len(sys.argv) < 3 else sys.argv[2]).read()
+# postprocess: generate metadata if undefined
+if "title" not in meta:
+    meta["title"] = re.sub(".md$", "", sys.argv[1].split("/")[-2].capitalize())
 
-# render and output
-sys.stdout.write(tmpl.replace("%CONTENT%", html).strip())
+# render template/output to stdout and log to stderr
+sys.stdout.write(tmpl.render(content=html, **meta))
 sys.stderr.write(f'{sys.argv[1].lstrip("./")}\n')

@@ -2,22 +2,27 @@
 <html>
 
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <!-- metatags -->
+    <title>{{ title }}</title>
+    <meta name="title" content="{{ title }}">
+    <meta name="description" content="{{ description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url }}">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="og:image" content="{{ image }}">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url }}">
+    <meta property="twitter:title" content="{{ title }}">
+    <meta property="twitter:description" content="{{ description }}">
+    <meta property="twitter:image" content="{{ image }}">
+
+    <!-- styling -->
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/theme-default.css">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="title" content="Markdown rendering playground">
-    <meta name="description" content="This page demonstrates the supported Markdown-to-HTML processing.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="">
-    <meta property="og:title" content="Markdown rendering playground">
-    <meta property="og:description" content="This page demonstrates the supported Markdown-to-HTML processing.">
-    <meta property="og:image" content="">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="">
-    <meta property="twitter:title" content="Markdown rendering playground">
-    <meta property="twitter:description" content="This page demonstrates the supported Markdown-to-HTML processing.">
-    <meta property="twitter:image" content="">
     <script>
       function setTheme(name) {
         localStorage.setItem("theme", name);
@@ -28,7 +33,7 @@
         if (localStorage.getItem("theme") === "light") {
           setTheme("dark");
         } else if (localStorage.getItem("theme") === "dark") {
-          setTheme("dark_dimmed");
+          setTheme("dimmed");
         } else {
           setTheme("light");
         }
@@ -42,12 +47,14 @@
         )
       ) {
         setTheme("dark");
-      } else if (localStorage.getItem("theme") === "dark_dimmed") {
-        setTheme("dark_dimmed");
+      } else if (localStorage.getItem("theme") === "dimmed") {
+        setTheme("dimmed");
       } else {
         setTheme("light");
       }
     </script>
+
+    <!-- external javascript libraries -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
@@ -73,17 +80,23 @@
         ]}
       );"
     ></script>
-    <title>Playground</title>
+
   </head>
 
   <body>
     <a class="logo" href="/"></a>
-    <a class="theme-toggle" onclick="toggleTheme();"></a>
-  
-    <!-- begin of rendered content -->
-%CONTENT%
-    <!-- end of rendered content -->
-  
+
+    <span class="buttons">
+      {%- for button in buttons %}
+      <a class="{{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
+      {% endfor -%}
+      <a class="theme-toggle" onclick="toggleTheme();"></a>
+    </span>
+
+    <!-- begin of rendered markdown -->
+    {{ content }}
+    <!-- end of rendered markdonw -->
+
   </body>
 
 </html>

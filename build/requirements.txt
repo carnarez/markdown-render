@@ -5,3 +5,4 @@ git+https://github.com/carnarez/markdown-script@master
 jinja2
 markdown
 pymdown-extensions
+pyyaml

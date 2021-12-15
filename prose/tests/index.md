@@ -2,6 +2,10 @@
 
 This page stands as an example of supported Markdown-to-HTML processing. Plenty more details and variants available, check respective documentation.
 
+# Astdocs
+
+Files including [`astdocs`](https://github.com/carnarez/markdown-insert) `%%%` markers are parsed and rendered via the [`markdown-astdocs`](https://github.com/carnarez/markdown-astdocs) extension.
+
 # Blockquote
 
 Napoleon alledgedly said:
@@ -21,36 +25,40 @@ Napoleon alledgedly said:
 
 **This text should be bold.** __This should also be bold.__
 
-^^This text should be underlined.^^
-
-~~This text should be crossed out.~~
-
-_One **can** ^^combine^^ all ~~those~~._
+_One **can** ^^combine^^ all ~~them~~ emphases._
 ```
 
 *This text should be italic.* _This should also be italic._
 
 **This text should be bold.** __This should also be bold.__
 
-^^This text should be underlined.^^
-
-~~This text should be crossed out.~~
-
-_One **can** ^^combine^^ all ~~those~~._
+_One **can** ^^combine^^ all ~~them~~ emphases._
 
 ## Sub-/super-script
 
+Rendered via the [`caret`](https://facelessuser.github.io/pymdown-extensions/extensions/caret/) and [`tilde`](https://facelessuser.github.io/pymdown-extensions/extensions/tilde/) extensions.
+
 ```markdown
-H~2~O
+^^This text should be underlined.^^
 
 Copyright^©^
+
+~~This text should be crossed out.~~
+
+H~2~O
 ```
 
-H~2~O
+^^This text should be underlined.^^
 
 Copyright^©^
 
+~~This text should be crossed out.~~
+
+H~2~O
+
 # Emoji
+
+Rendered via the [`emoji`](https://python-markdown.github.io/extensions/emoji/) extension.
 
 ```markdown
 :wink: :fish: :scream:
@@ -87,19 +95,80 @@ And here is an inline equation: $2 \pi i \xi x$.
 
 # Footnote
 
-Napoleon alledgedly said[^1]:
+Rendered via the `footnotes` extension.[^1]
 
-[^1]: [I did not invent it.](https://en.wikipedia.org/wiki/A_picture_is_worth_a_thousand_words#Equivalents)
+[^1]: See [this link](https://python-markdown.github.io/extensions/footnotes/).
 
 ```markdown
-Napoleon alledgedly said[^1]:
+Napoleon alledgedly said:[^2]
 
-[^1]: Footnote content.
+[^2]: Footnote content (_including_ Markdown).
+
+> Un bon croquis vaut mieux qu'un long discours.
 ```
+
+Napoleon alledgedly said:[^2]
+
+[^2]: I [did not invent it](https://en.wikipedia.org/wiki/A_picture_is_worth_a_thousand_words#Equivalents).
 
 > Un bon croquis vaut mieux qu'un long discours.
 
+<details markdown="1">
+<summary markdown="1">Manually check footnote numbering</summary>
+
+The extension is ~~not smart~~ what it is and one has to keep track of footnote numbering. A quick check could look like follows:
+
+```python
+# python check_footnotes.py <FILE>
+
+import re
+import sys
+
+markers = {}
+
+# read the file
+with open(sys.argv[1]) as f:
+    text = f.read()
+
+# find all references in the document
+# results stored as lists as we are going to iterate twice over them
+as_footnote = list(re.finditer(r"^[\t ]*(\[\^\S+\]):.*", text, flags=re.MULTILINE))
+in_document = list(re.finditer(r".+(\[\^\S+\])", text))
+
+for m in as_footnote + in_document:
+    if m.group(1) not in markers:
+        markers[m.group(1)] = {"defs": [], "refs": []}
+
+# parse references defining footnotes
+for m in as_footnote:
+    markers[m.group(1)]["defs"].append((text[:m.start()].count("\n") + 1, m.group(0)))
+
+# parse references in text proper
+for m in in_document:
+    markers[m.group(1)]["refs"].append((text[:m.start()].count("\n") + 1, m.group(0)))
+
+# https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+default = "\033[0m"
+gray = "\033[1;30m"
+red = "\033[0;31m"
+
+# in red what is never referenced or corresponding to multiple footnotes
+for m in markers:
+    defs, refs = markers[m]["defs"], markers[m]["refs"]
+    color = default if len(defs) == 1 and len(refs) else red
+
+    print(f"{color}{m}{default}")
+    for line, text in defs:
+        print(f'{color}{" "*4}{text[:50]:50s} {gray}{line:-4d}{default}')
+    for line, text in refs:
+        print(f'{color}{" "*8}{text[:46]:46s} {gray}{line:-4d}{default}')
+```
+
+</details>
+
 # Markdown-in-HTML
+
+Parsed via the [`md_in_html`](https://python-markdown.github.io/extensions/md_in_html/) extension.
 
 HTML is allowed within the document; nested Markown too. Example of the `<details>` and `<summary>` tags:
 
@@ -111,7 +180,7 @@ HTML is allowed within the document; nested Markown too. Example of the `<detail
 
 ````markdown
 <details markdown="1">
-<summary markdown="1">Test with `code`.</summary>
+<summary markdown="1">Test with some `code` in the summary text</summary>
 
 **This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
 
@@ -123,7 +192,7 @@ import polars as pl
 ````
 
 <details markdown="1">
-<summary markdown="1">Test with `code`.</summary>
+<summary markdown="1">Test with some `code` in the summary text</summary>
 
 **This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
 
@@ -135,7 +204,7 @@ import polars as pl
 
 # Image
 
-Hijacked and rendered via [`markdown-img`](https://github.com/carnarez/markdown-img).
+Hijacked and rendered via the [`markdown-img`](https://github.com/carnarez/markdown-img) extension.
 
 ```markdown
 ![Polars Python Logo ?size=200px*](https://raw.githubusercontent.com/pola-rs/polars-static/master/web/polars-logo-python.svg)
@@ -153,7 +222,7 @@ Inline code blocks such as `import polars as pl` are not highlighted.
 
 # Insert
 
-Rendered via [`markdown-insert`](https://github.com/carnarez/markdown-insert).
+Rendered via the [`markdown-insert`](https://github.com/carnarez/markdown-insert) extension.
 
 ```bash
 $ cat insert.md
@@ -164,15 +233,26 @@ Syntax is abused from the Markdown link, and works even within code blocks: `&[]
 
 &[](insert.md)
 
-Note the insert is [also available rendered](insert.html); fancy scripting (in the `Dockerfile` for instance) could get rid of it.
+<details markdown="1">
+<summary markdown="1">Fancy scripting with regular expressions</summary>
+
+Note the insert is [also available rendered](insert.html). A couple lines could get rid of the rendered HTML file:
+
+```bash
+$ grep -ER '^&\[.*\]\(.+\)\s*$' . | sed -r 's#/[^/]+:&\[.*\]\((.+)\)#/\1#g;s/\.md$/\.html/g' | while read f; do
+>   rm /usr/local/www/$f
+> done
+```
+
+</details>
 
 # Link
 
 ```markdown
-[My GitHub](https://github.com/carnarez)
+[GitHub Docs](https://docs.github.com/)
 ```
 
-[My GitHub](https://github.com/carnarez)
+[GitHub Docs](https://docs.github.com/)
 
 # List
 
@@ -206,7 +286,7 @@ Note the insert is [also available rendered](insert.html); fancy scripting (in t
 
 # Mermaid diagram
 
-Rendered in the browser via [`Mermaid`](https://mermaidjs.github.io/).
+Picked up by the [`superfences`](https://facelessuser.github.io/pymdown-extensions/extensions/superfences/) extension, and rendered in the browser via [`Mermaid`](https://mermaidjs.github.io/).
 
 ````markdown
 ```mermaid
@@ -242,7 +322,7 @@ Check [this page](https://mermaid-js.github.io/mermaid/#/theming) to style diagr
 
 # Script
 
-Rendered via [`markdown-script`](https://github.com/carnarez/markdown-script).
+Rendered via the [`markdown-script`](https://github.com/carnarez/markdown-script) extension.
 
 ```markdown
 %[Some JavaScript](/wherever/script.js)
@@ -252,7 +332,7 @@ Rendered via [`markdown-script`](https://github.com/carnarez/markdown-script).
 
 # Syntax highlighting
 
-Rendered in the browser via [`highlight.js`](https://highlightjs.org/).
+Picked up by the [`superfences`](https://facelessuser.github.io/pymdown-extensions/extensions/superfences/) extension, and parsed/rendered in the browser via [`highlight.js`](https://highlightjs.org/).
 
 ````markdown
 ```python
@@ -284,6 +364,8 @@ df = q.collect()
 
 # Table
 
+Rendered via the [`tables`](https://python-markdown.github.io/extensions/tables/) extension.
+
 ```markdown
 First Header | Second Header
 ------------ | -------------
@@ -297,6 +379,16 @@ First Header | Second Header
 Content from cell 1 | Content from cell 2
 Content in the first column | Content in the second column
 $2 \pi r^{2}$ | With inline equation
+
+# Tables of Contents
+
+Rendered via the [`toc`](https://python-markdown.github.io/extensions/toc/) extension.
+
+```markdown
+[TOC]
+```
+
+[TOC]
 
 # Title
 

@@ -4,7 +4,7 @@ blockquote {
   border-color: var(--link-color);
   border-style: solid;
   border-width: 0 0 0 3px;
-  margin: 0;
+  margin: 0 0 1rem 0;
   padding: 0 1rem;
 }
 
@@ -34,7 +34,7 @@ blockquote > p:before {
 code,
 pre {
   background-color: var(--background-color-alt);
-  border-radius: 0.3rem;
+  border-radius: 5px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
   font-size: 95%;
@@ -47,7 +47,7 @@ code {
 pre {
   line-height: 1.5rem;
   overflow: auto;
-  padding: 0.2rem 0.6rem;
+  padding: 0.3rem 0.6rem;
 }
 
 pre > code {
@@ -60,8 +60,32 @@ pre > code {
 
 /* details */
 
-summary {
+details {
+  border: 1px solid var(--background-color-alt);
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+}
+
+details > summary {
   cursor: pointer;
+  font-weight: bold;
+  list-style-type: "";
+}
+
+details > summary::before {
+  content: "\f054";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.5rem;
+}
+
+details[open] > summary::before {
+  content: "\f078";
+}
+
+details > summary:hover:before,
+details[open] > summary::before {
+  color: var(--link-color);
 }
 
 /* emojis */
@@ -81,11 +105,15 @@ span.katex-display {
   display: flex;
 }
 
-span.katex-display:after {
+span.katex-display::after {
   color: var(--font-color);
   content: "[" counter(eqn) "]";
   counter-increment: eqn;
   padding: 0 0 0 2rem;
+}
+
+span.katex-display:hover:after {
+  color: var(--link-color);
 }
 
 /* footnotes */

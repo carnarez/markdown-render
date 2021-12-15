@@ -17,7 +17,7 @@
   --filigrane: rgb(22, 27, 34, 0.8);
 }
 
-.dark_dimmed {
+.dimmed {
   --filigrane: rgb(45, 51, 59, 0.8);
 }
 
@@ -62,23 +62,38 @@ body::after {
   width: calc(100% - 1rem);
 }
 
-/* add a logo, demonstrating the use of font awesome icons */
+/* general style for the logo and buttons */
 
-.logo {
+.logo,
+.buttons {
   align-items: center;
   border-radius: 10px;
   display: flex;
-  height: var(--logo-size);
+  justify-content: center;
   position: absolute;
-  left: 2rem;
   top: 1rem;
-  width: var(--logo-size);
 }
 
 .logo:focus,
-.logo:hover {
+.logo:hover,
+.buttons:focus,
+.buttons:hover {
   background-color: var(--filigrane);
+}
+
+.logo a:focus,
+.logo a:hover,
+.buttons a:focus,
+.buttons a:hover {
   text-decoration: none;
+}
+
+/* add a logo, abusing font awesome icons */
+
+.logo {
+  height: var(--logo-size);
+  left: 2rem;
+  width: var(--logo-size);
 }
 
 .logo::after {
@@ -90,23 +105,21 @@ body::after {
   width: var(--logo-size);
 }
 
-/* add an icon for the theme-toggler */
+/* buttons */
 
-.theme-toggle {
-  align-items: center;
-  border-radius: 10px;
-  display: flex;
-  position: absolute;
+.buttons {
+  gap: 1rem;
+  min-width: 2rem;
+  padding: 0 0.5rem;
   right: 1rem;
-  top: 1rem;
-  width: 2rem;
 }
 
-.theme-toggle:focus,
-.theme-toggle:hover {
-  background-color: var(--filigrane);
-  text-decoration: none;
+.buttons a:focus,
+.buttons a:hover {
+  font-weight: bold;
 }
+
+/* add an icon for the theme-toggler */
 
 .theme-toggle::after {
   content: "\f042";

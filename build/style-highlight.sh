@@ -30,7 +30,7 @@ format_vars github-dark.css
 echo '}'
 echo
 
-echo '.dark_dimmed {'
+echo '.dimmed {'
 format_vars github-dark-dimmed.css
 echo '}'
 echo

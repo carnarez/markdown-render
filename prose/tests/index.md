@@ -239,9 +239,7 @@ Syntax is abused from the Markdown link, and works even within code blocks: `&[]
 Note the insert is [also available rendered](insert.html). A couple lines could get rid of the rendered HTML file:
 
 ```bash
-$ grep -ER '^&\[.*\]\(.+\)\s*$' . | sed -r 's#/[^/]+:&\[.*\]\((.+)\)#/\1#g;s/\.md$/\.html/g' | while read f; do
->   rm /usr/local/www/$f
-> done
+$ grep -ER '^&\[.*\]\(.+\)\s*$' . | sed -r 's#/[^/]+:&\[.*\]\((.+)\)#/\1#g;s/\.md$/\.html/g' | while read f; do rm $f; done
 ```
 
 </details>
@@ -380,7 +378,7 @@ Content from cell 1 | Content from cell 2
 Content in the first column | Content in the second column
 $2 \pi r^{2}$ | With inline equation
 
-# Tables of Contents
+# Table of Contents
 
 Rendered via the [`toc`](https://python-markdown.github.io/extensions/toc/) extension.
 
@@ -393,6 +391,32 @@ Rendered via the [`toc`](https://python-markdown.github.io/extensions/toc/) exte
 # Title
 
 Using the `#` to `######` notation.
+
+```markdown
+# Title
+
+Text
+
+## Subtitle
+
+Text
+
+### Section
+
+Text
+
+#### Subsection
+
+Text
+
+##### Paragraph
+
+Text
+
+###### Subparagraph
+
+Text
+```
 
 ## Subtitle
 

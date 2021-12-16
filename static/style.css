@@ -45,9 +45,9 @@
 body {
   background-color: var(--background-color);
   color: var(--font-color);
-  counter-reset: eqn;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   font-size: 1rem;
   line-height: 2rem;
+  margin: 0;
 }

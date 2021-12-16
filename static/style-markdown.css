@@ -37,7 +37,7 @@ pre {
   border-radius: 5px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-  font-size: 95%;
+  font-size: 98%;
 }
 
 code {
@@ -95,6 +95,10 @@ details[open] > summary::before {
 }
 
 /* equations */
+
+body {
+  counter-reset: eqn;
+}
 
 .katex {
   width: 100%;
@@ -199,9 +203,12 @@ h2 {
   padding: 2rem 0 0 0;
 }
 
-h3,
+h3 {
+  font-size: 135%;
+}
+
 h4 {
-  font-size: 130%;
+  font-size: 115%;
 }
 
 h5,

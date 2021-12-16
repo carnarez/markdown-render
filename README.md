@@ -1,8 +1,22 @@
 **Templates for rendering and styling Markdown-generated HTML.** For my opinionated
-usage, hate if you will.
+usage.
+
+# Rendering
+
+## Server-side
 
 Rendering done via [`Python-Markdown`](https://python-markdown.github.io/). Plenty
-extensions to deal with the fancy stuff:
+extensions to deal with the fancy stuff, see below. Styling code (`.css` files) are
+processed through [`autoprfeixer`](https://github.com/postcss/autoprefixer) to add
+vendor prefxes.
+
+Served files could be prettified via [Prettier](https://github.com/prettier/prettier),
+but are currently minified using a mix of
+[clean-css](https://github.com/clean-css/clean-css),
+[html-minifier](https://github.com/kangax/html-minifier) and
+[terser](https://github.com/terser/terser).
+
+### Extensions
 
 * [`AstdocsExtension`](https://github.com/carnarez/markdown-astdocs/) to parse
   [`astdocs`](https://github.com/carnarez/astdocs/)-specific syntax.
@@ -31,10 +45,35 @@ extensions to deal with the fancy stuff:
 * [`TocExtension`](https://python-markdown.github.io/extensions/toc/) to generate the
   table of contents and anchor the titles.
 
-Front matter options (in _valid_ [YAML v1.1 format](https://yaml.org/spec/1.1/)) is
-extracted via regular expression and parsed using
-[`PyYAML`](https://github.com/yaml/pyyaml). It is removed from the document before
-processing it.
+### Front matter
+
+Front matter options (in _valid_ [YAML v1.1 format](https://yaml.org/spec/1.1/)) are
+extracted from any `index.md` file via regular expression and properly parsed using
+[`PyYAML`](https://github.com/yaml/pyyaml). Supported [keys](https://ogp.me/) listed
+below.
+
+The whole front matter block (including `---` markers) is removed from the document
+before processing it.
+
+#### Metatags
+
+* `author` for the `article:author` metatag;
+* `description` for the `og:description` metatag;
+* `image` for the `og:image` metatag (> 1200x650 pixels for high resolution screens);
+* `date` for the `article:published_time` metatag (`YYYY/MM/DD` format);
+* `tags` for the `article:tag` metatag (list of keywords);
+* `title` for the `og:title` metatag (defaults to the name of the folder otherwise);
+* `url` for the `og:url` metatag;
+
+Aside from `title`, all metatags are left empty if absent from the front matter.
+
+#### Extras
+
+* `link` to provide a link to the author's favourite website.
+* `theme` to select a supported theme (the corresponding `.css` file should be called
+  `theme-<NAME>`, with `NAME` the value of the `theme` front matter key).
+
+## Client-side
 
 Once generated, some extra rendering is done in the browser -*i.e.*, on the client- via
 a couple `JavaScript` libraries:
@@ -43,20 +82,17 @@ a couple `JavaScript` libraries:
 * [`KaTeX`](https://katex.org/) to render equations written in LaTeX.
 * [`Mermaid`](https://mermaidjs.github.io/) to render diagrams and flowcharts.
 
-The free [Solid](https://fontawesome.com/v5.15/icons?d=gallery&s=solid&m=free), 
-[Regular](https://fontawesome.com/v5.15/icons?d=gallery&s=regular&m=free) & 
-[Brands](https://fontawesome.com/v5.15/icons?d=gallery&p=2&s=solid&m=free)
-[Font Awesome](https://fontawesome.com/) icon sets are also made available.
-
 Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
 [`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler
 included. But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in
 progress...
 
-Served files can be prettified via [Prettier](https://github.com/prettier/prettier), but
-rather minified using a mix of [clean-css](https://github.com/clean-css/clean-css),
-[html-minifier](https://github.com/kangax/html-minifier) and
-[terser](https://github.com/terser/terser).
+The free [Solid](https://fontawesome.com/v5.15/icons?d=gallery&s=solid&m=free), 
+[Regular](https://fontawesome.com/v5.15/icons?d=gallery&s=regular&m=free) & 
+[Brands](https://fontawesome.com/v5.15/icons?d=gallery&p=2&s=solid&m=free)
+[Font Awesome](https://fontawesome.com/) icon sets are also made available.
+
+# Deploy locally
 
 Run `make serve` to get the HTTP server started at
 [http://localhost:8000/](http://localhost:8000/) using ~~a niftily

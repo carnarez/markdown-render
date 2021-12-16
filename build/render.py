@@ -55,12 +55,12 @@ except IndexError:
 
 # raw markdown content
 with open(sys.argv[1]) as f:
-    text = f.read().strip()
+    text: str = f.read().strip()
 
 # preprocess: extract front matter
 meta: typing.Dict[str, typing.Any] = {}
 rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n\n", flags=re.DOTALL)
-if text.startswith("---\n"):
+if text.startswith("---"):
     try:
         meta = yaml.load(re.match(rgxp, text).group(1), Loader=Loader)
         text = re.sub(rgxp, "", text, count=1).strip()
@@ -69,7 +69,11 @@ if text.startswith("---\n"):
 
 # preprocess: generate metadata if undefined
 if "title" not in meta:
-    meta["title"] = re.sub(".md$", "", sys.argv[1].split("/")[-2].capitalize())
+    meta["title"] = sys.argv[1].split("/")[-2].replace(".md", "").capitalize()
+if "url" not in meta:
+    cname = os.environ.get("CNAME", "http://localhost:8000").rstrip("/")
+    title = re.sub("[^A-Za-z0-9 ]+", "", meta["title"]).replace(" ", "-").lower()
+    meta["url"] = f"{cname}/{title}"
 
 # process: convert the markdown
 html: str = markdown(text, extensions=exts)

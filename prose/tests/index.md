@@ -395,27 +395,15 @@ Using the `#` to `######` notation.
 ```markdown
 # Title
 
-Text
-
 ## Subtitle
-
-Text
 
 ### Section
 
-Text
-
 #### Subsection
-
-Text
 
 ##### Paragraph
 
-Text
-
 ###### Subparagraph
-
-Text
 ```
 
 ## Subtitle

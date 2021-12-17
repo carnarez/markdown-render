@@ -14,12 +14,14 @@ COPY prose /usr/src
 WORKDIR /usr/src
 
 RUN python gather.py `ls -1 */index.md | grep -v '^tests/'` >> index.md \
- && ls -1 */index.md | grep -v '^tests/' | while read f; do \
-      ln -s `dirname $f` `grep -B1000 -E -m2 '^---\s*$' $f | sed -nr 's/^title:\s*(.+)/\L\1/p' | sed 's/ /-/g' | tr -cd '[:alnum:]-'` 2>/dev/null; \
-    done \
  && find . -name "*.md" | while read f; do \
       mkdir -p /var/www/`dirname $f`; \
       python render.py $f > /var/www/`echo $f | sed 's/.md$/.html/g'`; \
+    done \
+ && ls -1 */index.md | grep -v '^tests/' | while read f; do \
+      l=`grep -B1000 -E -m2 '^---\s*$' $f | sed -nr 's/^title:\s*(.+)/\L\1/p' | sed 's/ /-/g' | tr -cd '[:alnum:]-'`; \
+      ln -s `dirname $f` $l 2>/dev/null; \
+      mv $l /var/www 2>/dev/null; \
     done
 
 COPY static /var/www

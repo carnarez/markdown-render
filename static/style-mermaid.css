@@ -1,8 +1,16 @@
 /* general */
 
+:root {
+  --mermaid-font-family: var(--font-family);
+}
+
+div.mermaid * {
+  font-family: var(--mermaid-font-family);
+  font-size: 1rem;
+}
+
 div.mermaid svg {
   display: block;
-  line-height: 1rem;
   margin: 0 auto;
   overflow: auto;
 }

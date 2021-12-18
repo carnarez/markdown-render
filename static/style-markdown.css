@@ -37,7 +37,7 @@ pre {
   border-radius: 5px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-  font-size: 98%;
+  font-size: 96%;
 }
 
 code {
@@ -150,12 +150,13 @@ span.katex-display:hover:after {
 a {
   color: var(--link-color);
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: transparent;
 }
 
 a:focus,
 a:hover {
-  text-decoration: underline;
+  text-decoration-color: var(--link-color);
 }
 
 /* tables */
@@ -194,6 +195,9 @@ h6 {
 }
 
 h1 {
+  border-bottom-color: var(--background-color-alt);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
   font-size: 200%;
   padding: 4rem 0 1rem 0;
 }

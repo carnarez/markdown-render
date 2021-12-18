@@ -19,7 +19,7 @@
     <meta property="og:image" content="{{ image }}">
     <link rel="canonical" href="{{ canonical or url }}">
 
-    <!-- styling -->
+    <!-- styling and color scheme -->
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/theme-{{ theme or "default" }}.css">
     <script>
@@ -84,17 +84,19 @@
 
   <body>
  
-    <!-- logo is always present but nothing defined within -->
-    <a class="logo" href="/"></a>
-
-    <!-- theme-toggler and additional buttons (if defined) -->
-    <span class="buttons">
+    <!-- header is always present but nothing defined within -->
+    <span class="header-container">
+      <a class="header" href="/"></a>
+    </span>
+    
+    <!-- theme-toggler and additional buttons, if defined -->
+    <span class="button-container">
       {%- for button in buttons %}
       <a class="{{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
       {% endfor -%}
       <a class="theme-toggle" onclick="toggleTheme();"></a>
     </span>
-
+    
     <!-- rendered markdown starts here -->
     {{ content }}
 

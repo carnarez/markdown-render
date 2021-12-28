@@ -1,7 +1,7 @@
 /* variables */
 
 :root {
-  --body-width: 1200px;
+  --main-width: 1200px;
   --footer-height: 75px;
   --header-height: 300px;
   --header-size: 150px;
@@ -35,9 +35,9 @@
 
 /* making sure the footer is at the bottom even if the content is short */
 
-body {
+main {
   margin: 0 auto;
-  max-width: var(--body-width);
+  max-width: var(--main-width);
   min-height: calc(100vh - 2rem - var(--footer-height));
   padding: 0 0.5rem;
   position: relative;
@@ -47,7 +47,7 @@ body {
 
 /* header */
 
-body::before {
+main::before {
   background-color: var(--background-color);
   background-image: var(--random-image);
   background-position: center;
@@ -61,7 +61,7 @@ body::before {
 
 /* footer position is absolute, little margin trick to make it count in the flow */
 
-body::after {
+main::after {
   background-color: var(--background-color);
   background-image: var(--random-image);
   background-position: center;
@@ -200,7 +200,7 @@ body::after {
 
 @media (min-width: 1200px) {
 
-  body {
+  main {
     padding: 0;
   }
 

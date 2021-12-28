@@ -18,6 +18,7 @@
     <meta property="og:description" content="{{ description }}">
     <meta property="og:image" content="{{ image }}">
     <link rel="canonical" href="{{ canonical or url }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🥝</text></svg>">
 
     <!-- styling and color scheme -->
     <link rel="stylesheet" href="/style.css">
@@ -53,6 +54,14 @@
       }
     </script>
 
+    <!-- progress indicator -->
+    <script>
+      window.addEventListener("scroll", () => {
+        let scrolled = Math.round(100 * window.scrollY / (document.body.offsetHeight - window.innerHeight));
+        document.getElementById("scroll-indicator").style.width = scrolled + "%";
+      });
+    </script>
+
     <!-- external javascript libraries -->
     <script
       defer
@@ -83,22 +92,29 @@
   </head>
 
   <body>
+
+    <!-- show scrolling progress -->
+    <div id="scroll-indicator"></div>
+
+    <main>
  
-    <!-- header is always present but nothing defined within -->
-    <span class="header-container">
-      <a class="header" href="/"></a>
-    </span>
-    
-    <!-- theme-toggler and additional buttons, if defined -->
-    <span class="button-container">
-      {%- for button in buttons %}
-      <a class="{{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
-      {% endfor -%}
-      <a class="theme-toggle" onclick="toggleTheme();"></a>
-    </span>
-    
-    <!-- rendered markdown starts here -->
-    {{ content }}
+      <!-- header is always present but nothing defined within -->
+      <span class="header-container">
+        <a class="header" href="/"></a>
+      </span>
+
+      <!-- theme-toggler and additional buttons, if defined -->
+      <span class="button-container">
+        {%- for button in buttons %}
+        <a class="{{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
+        {% endfor -%}
+        <a class="theme-toggle" onclick="toggleTheme();"></a>
+      </span>
+
+      <!-- rendered markdown starts here -->
+      {{ content }}
+
+    </main>
 
   </body>
 

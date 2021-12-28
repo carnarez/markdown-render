@@ -2,10 +2,28 @@
 
 :root {
   --reading-zone-width: 800px;
-  --reading-zone-height: 100px;
+  --reading-zone-height: 3rem;
+}
+
+/* hide scrollbars, while keeping the content scrollable */
+
+* {
+  -ms-overflow-style: none;  /* edge, ie 10+ */
+}
+
+* {
+  scrollbar-width: none;  /* firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* chrome, safari, opera */
 }
 
 /* general */
+
+* {
+  scroll-margin-top: 1rem;
+}
 
 *,
 *::before,
@@ -17,13 +35,24 @@
   transition-property: color, opacity, text-decoration-color;
 }
 
-body {
-  margin: 0 auto;
+main {
+  margin: 2px auto 0 auto;
   max-width: var(--reading-zone-width);
   padding: var(--reading-zone-height) 0.5rem;
   position: relative;
   text-align: justify;
   text-justify: inter-word;
+}
+
+/* scroll indicator */
+
+#scroll-indicator {
+  background-color: var(--link-color);
+  height: 2px;
+  position: fixed;
+  top: 0;
+  width: 0;
+  z-index: 10;
 }
 
 /* general style for the header and buttons */
@@ -77,10 +106,10 @@ body {
 @media (min-width: 1200px) {
 
   :root {
-    --reading-zone-height: 250px;
+    --reading-zone-height: 10rem;
   }
 
-  body {
+  main {
     padding: var(--reading-zone-height) 0;
   }
 
@@ -95,20 +124,6 @@ body {
   .header-container:hover,
   .button-container:hover {
     opacity: 1;
-  }
-
-  /* hide scrollbars, while keeping the content scrollable */
-
-  * {
-    -ms-overflow-style: none;  /* edge, ie 10+ */
-  }
-
-  * {
-    scrollbar-width: none;  /* firefox */
-  }
-
-  *::-webkit-scrollbar {
-    display: none; /* chrome, safari, opera */
   }
 
 }

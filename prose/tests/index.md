@@ -323,10 +323,10 @@ Check [this page](https://mermaid-js.github.io/mermaid/#/theming) to style diagr
 Rendered via the [`markdown-script`](https://github.com/carnarez/markdown-script) extension.
 
 ```markdown
-%[Some JavaScript](/wherever/script.js)
+%[Chart](chart.js)
 ```
 
-%[Some JavaScript](/wherever/script.js)
+%[Chart](chart.js)
 
 # Syntax highlighting
 

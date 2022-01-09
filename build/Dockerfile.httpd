@@ -2,18 +2,17 @@
 
 FROM python:slim as render
 
-COPY build /usr/src
+WORKDIR /usr/src
+
+COPY build .
+COPY prose .
 
 RUN apt-get update \
  && apt-get install --no-install-recommends --no-install-suggests --yes git \
  && pip install --upgrade pip \
  && pip install --requirement /usr/src/requirements.txt
 
-COPY prose /usr/src
-
-WORKDIR /usr/src
-
-RUN python gather.py `ls -1 */index.md | grep -v '^tests/'` >> index.md \
+RUN python gather.py `ls -1 */index.md` >> index.md \
  && find . -name "*.md" | while read f; do \
       mkdir -p /var/www/`dirname $f`; \
       python render.py $f > /var/www/`echo $f | sed 's/.md$/.html/g'`; \
@@ -24,18 +23,20 @@ RUN python gather.py `ls -1 */index.md | grep -v '^tests/'` >> index.md \
       mv $l /var/www 2>/dev/null; \
     done
 
-COPY static /var/www
-
 
 # minify everything in place
 
 FROM node:alpine as bundle
 
-COPY --from=render /var/www /var/www
-
 WORKDIR /var/www
 
-RUN npm config set update-notifier false \
+COPY --from=render /var/www .
+
+COPY prose .
+COPY static .
+
+RUN rm `find . -name "*.md"` \
+ && npm config set update-notifier false \
  && npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli terser | grep -v ^$ \
  && find . -name "*.css" | while read f; do \
       postcss $f --replace --use autoprefixer; \
@@ -58,7 +59,7 @@ RUN npm config set update-notifier false \
                     $f; \
     done \
  && find . -name "*.js" | while read f; do \
-      terser --compress --mangle --mangle-props --output $f $f; \
+      terser --compress --mangle --output $f $f; \
     done
 
 

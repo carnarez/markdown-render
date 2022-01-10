@@ -23,16 +23,6 @@
 
 /* general */
 
-*,
-*::before,
-*::after,
-*:hover,
-*:hover:before,
-*:hover:after {
-  transition-duration: 0.5s;
-  transition-property: background-color, color, text-decoration-color;
-}
-
 body {
   margin: 0;
 }
@@ -40,7 +30,7 @@ body {
 /* making sure the footer is at the bottom even if the content is short */
 
 main {
-  margin: 0 auto;
+  margin: 1px auto 0 auto;
   max-width: var(--main-width);
   min-height: calc(100vh - 2rem - var(--footer-height));
   padding: 0 0.5rem;
@@ -78,6 +68,12 @@ main::after {
   overflow: hidden;
   position: absolute;
   width: calc(100% - 1rem);
+}
+
+/* scroll indicator */
+
+#scroll-indicator {
+  margin-left: 0;
 }
 
 /* general style for the header and buttons */

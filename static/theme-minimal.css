@@ -21,20 +21,6 @@
 
 /* general */
 
-* {
-  scroll-margin-top: 1rem;
-}
-
-*,
-*::before,
-*::after,
-*:hover,
-*:hover:before,
-*:hover:after {
-  transition-duration: 1s;
-  transition-property: color, opacity, text-decoration-color;
-}
-
 body {
   margin: 0;
 }
@@ -51,12 +37,7 @@ main {
 /* scroll indicator */
 
 #scroll-indicator {
-  background-color: var(--link-color);
-  height: 1px;
-  position: fixed;
-  top: 0;
-  width: 0;
-  z-index: 10;
+  margin-left: 0;
 }
 
 /* general style for the header and buttons */
@@ -125,7 +106,9 @@ main {
     transition: all 1s;
   }
 
+  .header-container:focus,
   .header-container:hover,
+  .button-container:focus,
   .button-container:hover {
     opacity: 1;
   }

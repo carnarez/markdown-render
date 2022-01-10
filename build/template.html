@@ -64,7 +64,6 @@
       });
     </script>
 
-    <!-- if mermaid %} -->
     <!-- harmonize styling of mermaid diagrams; see
          https://github.com/mermaid-js/mermaid/blob/develop/docs/theming.md -->
     <script>
@@ -82,22 +81,18 @@
         mermaid.initialize({'theme': 'base', 'themeVariables': themeVariables});
       }
     </script>
-    <!-- endif %} -->
 
-    <!-- required external javascript libraries -->
+    <!-- external javascript libraries -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
       onload="hljs.highlightAll();"
     ></script>
-    <!-- if mermaid %} -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
       onload="mermaidInitialize();"
     ></script>
-    <!-- endif %} -->
-    <!-- if katex %} -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
@@ -123,7 +118,6 @@
         }
       );"
     ></script>
-    <!-- endif %} -->
 
   </head>
 

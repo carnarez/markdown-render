@@ -47,6 +47,20 @@
 * {
   box-sizing: border-box;
   scroll-behavior: smooth;
+  scroll-margin-top: 1rem;
+}
+
+*,
+*:focus,
+*:focus:before,
+*:focus:after,
+*:hover,
+*:hover:before,
+*:hover:after,
+*::before,
+*::after {
+  transition-duration: 1s;
+  transition-property: color, opacity, text-decoration-color;
 }
 
 body {
@@ -55,7 +69,10 @@ body {
   font-family: var(--font-family);
   font-size: 1rem;
   line-height: 2rem;
+  margin: 8px; /* default value in all major browsers */
 }
+
+/* vanilla buttons */
 
 .header::after {
   content: "home";
@@ -63,4 +80,16 @@ body {
 
 .theme-toggle::after {
   content: "theme";
+}
+
+/* scroll indicator */
+
+#scroll-indicator {
+  background-color: var(--link-color);
+  height: 1px;
+  margin-left: -8px; /* to be modified with body margin-left */
+  position: fixed;
+  top: 0;
+  width: 0;
+  z-index: 10;
 }

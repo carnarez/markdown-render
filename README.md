@@ -59,7 +59,7 @@ before processing it.
 
 * `author` for the `article:author` metatag;
 * `description` for the `og:description` metatag;
-* `image` for the `og:image` metatag (> 1200x650 pixels for high resolution screens);
+* `image` for the `og:image` metatag (above 1200x650 pixels for high resolution screens);
 * `date` for the `article:published_time` metatag (`YYYY/MM/DD` format);
 * `tags` for the `article:tag` metatag (list of keywords);
 * `title` for the `og:title` metatag (defaults to the name of the folder otherwise);
@@ -83,7 +83,7 @@ a couple `JavaScript` libraries:
 * [`Mermaid`](https://mermaidjs.github.io/) to render diagrams and flowcharts.
 
 Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
-[`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler
+[`style-highlight.sh`](build/style-highlight.sh). Crude light/dimmed/dark toggler
 included. As usual `Mermaid` is quite hard to style consistently, but an effort of
 integration has been made via the `mermaidInitialize()` function in the
 [template](build/template.html).

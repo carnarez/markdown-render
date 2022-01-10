@@ -2,22 +2,7 @@ All examples taken from [this page](https://github.com/mermaid-js/mermaid/blob/d
 
 # Flowchart
 
-```mermaid
-graph TD
-  A[Christmas] -->|Get money| B(Go shopping)
-  B --> C{Let me think}
-  B --> G[/Another/]
-  C ==>|One| D[Laptop]
-  C -->|Two| E[iPhone]
-  C -->|Three| F[fa:fa-car Car]
-  subgraph section
-    C
-    D
-    E
-    F
-    G
-  end
-```
+## Current release
 
 ```mermaid
 graph TD
@@ -36,7 +21,24 @@ graph TD
   end
 ```
 
-# Flowchart (beta)
+```mermaid
+graph TD
+  A[Christmas] -->|Get money| B(Go shopping)
+  B --> C{Let me think}
+  B --> G[/Another/]
+  C ==>|One| D[Laptop]
+  C -->|Two| E[iPhone]
+  C -->|Three| F[fa:fa-car Car]
+  subgraph section
+    C
+    D
+    E
+    F
+    G
+  end
+```
+
+## Beta
 
 ```mermaid
 flowchart TD
@@ -135,6 +137,8 @@ gantt
 
 # State diagram
 
+## Current release
+
 ```mermaid
 stateDiagram
   [*] --> Active
@@ -163,7 +167,7 @@ stateDiagram
   SomethingElse --> [*]
 ```
 
-# State diagram (beta)
+## Beta
 
 ```mermaid
 stateDiagram-v2

@@ -300,23 +300,7 @@ graph LR
   B --> C
 ```
 
-And a more complicated one from the official website:
-
-```mermaid
-sequenceDiagram
-  participant Alice
-  participant Bob
-  Alice ->> John: Hello John, how are you?
-  loop Healthcheck
-    John ->> John: Fight against hypochondria
-  end
-  Note right of John: Rational thoughts <br/>prevail!
-  John -->> Alice: Great!
-  John ->> Bob: How about you?
-  Bob -->> John: Jolly good!
-```
-
-Check [this page](https://mermaid-js.github.io/mermaid/#/theming) to style diagrams.
+For more examples (taken from the official documentation), see [this test page](mermaid.html). Note some adjustements are made to the theme (see the `mermaidInitialize()` function in the HTML template) to take into account our own colour schemes. Check [this page](https://github.com/mermaid-js/mermaid/blob/develop/docs/theming.md) to further style diagrams.
 
 # Script
 

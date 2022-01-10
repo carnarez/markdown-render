@@ -55,5 +55,12 @@ body {
   font-family: var(--font-family);
   font-size: 1rem;
   line-height: 2rem;
-  margin: 0;
+}
+
+.header::after {
+  content: "home";
+}
+
+.theme-toggle::after {
+  content: "theme";
 }

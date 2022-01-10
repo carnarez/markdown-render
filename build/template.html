@@ -23,6 +23,8 @@
     <!-- styling and color scheme -->
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/theme-{{ theme or "default" }}.css">
+
+    <!-- theme toggler -->
     <script>
       function setTheme(name) {
         localStorage.setItem("theme", name);
@@ -57,22 +59,45 @@
     <!-- progress indicator -->
     <script>
       window.addEventListener("scroll", () => {
-        let scrolled = Math.round(100 * window.scrollY / (document.body.offsetHeight - window.innerHeight));
+        const scrolled = Math.round(100 * window.scrollY / (document.body.offsetHeight - window.innerHeight));
         document.getElementById("scroll-indicator").style.width = scrolled + "%";
       });
     </script>
 
-    <!-- external javascript libraries -->
+    <!-- if mermaid %} -->
+    <!-- harmonize styling of mermaid diagrams; see
+         https://github.com/mermaid-js/mermaid/blob/develop/docs/theming.md -->
+    <script>
+      function mermaidInitialize() {
+        const style = getComputedStyle(document.body);
+
+        const themeVariables = {
+          "darkMode": document.documentElement.className === "light" ? false : true,
+          "background": style.getPropertyValue("--background-color"),
+          "fontFamily": style.fontFamily,
+          "fontSize": style.fontSize,
+          "primaryColor": style.getPropertyValue("--background-color-alt")
+        }
+
+        mermaid.initialize({'theme': 'base', 'themeVariables': themeVariables});
+      }
+    </script>
+    <!-- endif %} -->
+
+    <!-- required external javascript libraries -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
       onload="hljs.highlightAll();"
     ></script>
+    <!-- if mermaid %} -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
-      onload="mermaid.initialize();"
+      onload="mermaidInitialize();"
     ></script>
+    <!-- endif %} -->
+    <!-- if katex %} -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
@@ -82,12 +107,23 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/contrib/auto-render.min.js"
       onload="renderMathInElement(
         document.body,
-        {delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-        ]}
+        {
+          delimiters: [
+            {
+              left: '$$',
+              right: '$$',
+              display: true
+            },
+            {
+              left: '$',
+              right: '$',
+              display: false
+            },
+          ]
+        }
       );"
     ></script>
+    <!-- endif %} -->
 
   </head>
 
@@ -105,10 +141,10 @@
 
       <!-- theme-toggler and additional buttons, if defined -->
       <span class="button-container">
-        {%- for button in buttons %}
+        {% for button in buttons %}
         <a class="{{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
-        {% endfor -%}
-        <a class="theme-toggle" onclick="toggleTheme();"></a>
+        {% endfor %}
+        <a class="theme-toggle" href="" onclick="toggleTheme();"></a>
       </span>
 
       <!-- rendered markdown starts here -->

@@ -33,6 +33,10 @@
   transition-property: background-color, color, text-decoration-color;
 }
 
+body {
+  margin: 0;
+}
+
 /* making sure the footer is at the bottom even if the content is short */
 
 main {

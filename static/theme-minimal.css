@@ -35,6 +35,10 @@
   transition-property: color, opacity, text-decoration-color;
 }
 
+body {
+  margin: 0;
+}
+
 main {
   margin: 1px auto 0 auto;
   max-width: var(--reading-zone-width);

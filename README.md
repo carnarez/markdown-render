@@ -84,8 +84,9 @@ a couple `JavaScript` libraries:
 
 Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
 [`style-highlight.sh`](build/style-highlight.sh). Crude light/dark (dimmed) toggler
-included. But the `Mermaid` [stylesheet](static/style-mermaid.css) will forever be in
-progress...
+included. As usual `Mermaid` is quite hard to style consistently, but an effort of
+integration has been made via the `mermaidInitialize()` function in the
+[template](build/template.html).
 
 The free [Solid](https://fontawesome.com/v5.15/icons?d=gallery&s=solid&m=free), 
 [Regular](https://fontawesome.com/v5.15/icons?d=gallery&s=regular&m=free) & 

@@ -64,8 +64,12 @@
       });
     </script>
 
-    <!-- harmonize styling of mermaid diagrams; see
-         https://github.com/mermaid-js/mermaid/blob/develop/docs/theming.md -->
+    <!-- external javascript libraries -->
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
+      onload="hljs.highlightAll();"
+    ></script>
     <script>
       function mermaidInitialize() {
         const style = getComputedStyle(document.body);
@@ -81,13 +85,6 @@
         mermaid.initialize({'theme': 'base', 'themeVariables': themeVariables});
       }
     </script>
-
-    <!-- external javascript libraries -->
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
-      onload="hljs.highlightAll();"
-    ></script>
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
@@ -124,7 +121,7 @@
   <body>
 
     <!-- show scrolling progress -->
-    <div id="scroll-indicator"></div>
+    <nav id="scroll-indicator"></nav>
 
     <main>
  

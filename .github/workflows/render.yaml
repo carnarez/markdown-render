@@ -99,7 +99,7 @@ jobs:
           done
 
           find . -name "*.js" | while read f; do
-            terser --compress --mangle --mangle-props --output $f $f
+            terser --compress --mangle --output $f $f
           done
 
           cd -

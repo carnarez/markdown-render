@@ -86,6 +86,13 @@ html = re.sub(
     flags=re.DOTALL,
 )
 
+# check for the presence of code and/or equations and/or mermaid blocks
+pre = True if '<pre class="highlight">' in html else False
+eqs = True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False  # false positives
+mmd = True if '<div class="mermaid">' in html else False
+
 # render template/output to stdout and log to stderr
-sys.stdout.write(tmpl.render(content=html, **meta))
+sys.stdout.write(
+    tmpl.render(content=html, highlight=pre, katex=eqs, mermaid=mmd, **meta)
+)
 sys.stderr.write(f'{sys.argv[1].lstrip("./")}\n')

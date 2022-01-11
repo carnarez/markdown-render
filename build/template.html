@@ -65,31 +65,14 @@
     </script>
 
     <!-- external javascript libraries -->
+    {% if highlight %}
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"
       onload="hljs.highlightAll();"
     ></script>
-    <script>
-      function mermaidInitialize() {
-        const style = getComputedStyle(document.body);
-
-        const themeVariables = {
-          "darkMode": document.documentElement.className === "light" ? false : true,
-          "background": style.getPropertyValue("--background-color"),
-          "fontFamily": style.fontFamily,
-          "fontSize": style.fontSize,
-          "primaryColor": style.getPropertyValue("--background-color-alt")
-        }
-
-        mermaid.initialize({'theme': 'base', 'themeVariables': themeVariables});
-      }
-    </script>
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
-      onload="mermaidInitialize();"
-    ></script>
+    {% endif %}
+    {% if katex %}
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.0/katex.min.js"
@@ -115,6 +98,29 @@
         }
       );"
     ></script>
+    {% endif %}
+    {% if mermaid %}
+    <script>
+      function mermaidInitialize() {
+        const style = getComputedStyle(document.body);
+
+        const themeVariables = {
+          "darkMode": document.documentElement.className === "light" ? false : true,
+          "background": style.getPropertyValue("--background-color"),
+          "fontFamily": style.fontFamily,
+          "fontSize": style.fontSize,
+          "primaryColor": style.getPropertyValue("--background-color-alt")
+        }
+
+        mermaid.initialize({'theme': 'base', 'themeVariables': themeVariables});
+      }
+    </script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"
+      onload="mermaidInitialize();"
+    ></script>
+    {% endif %}
 
   </head>
 

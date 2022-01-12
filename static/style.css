@@ -16,14 +16,14 @@
 :root {
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  --font-family-monospace: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
 }
 
 :root,
 .light {
   --background-color: #ffffff;
-  --background-color-alt: #f6f8fa;
+  --background-color-alt: #f3f5f7;
   --font-color: #24292e;
   --link-color: #0969da;
 }

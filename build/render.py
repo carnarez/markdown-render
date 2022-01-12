@@ -70,6 +70,7 @@ if text.startswith("---"):
 # preprocess: generate metadata if undefined
 if "title" not in meta:
     meta["title"] = sys.argv[1].split("/")[-2].replace(".md", "").capitalize()
+    meta["title"] = "Home" if meta["title"] == "." else meta["title"]
 if "url" not in meta:
     cname = os.environ.get("CNAME", "http://localhost:8000").rstrip("/")
     title = re.sub("[^A-Za-z0-9 ]+", "", meta["title"]).replace(" ", "-").lower()

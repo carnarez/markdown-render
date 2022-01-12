@@ -75,15 +75,33 @@ Rendered in the browser via [`KaTeX`](https://katex.org/). `$$` and `$` notation
 
 ## Block
 
-```markdown
+```latex
 $$E = m \, c^{2}$$
 
-$$f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi) \, e^{2 \pi i \xi x} \, d\xi$$
+$$
+\begin{aligned}
+3x^{2} + 9y &= 3i - 6z \\\\
+3(x^{2} + 3y) &= 3(i - 2z) \\\\
+x^{2} + 3y &= i - 2z
+\end{aligned}
+$$
+
+$$f(x) = \int_{-\infty}^{+\infty} \hat{f}(\xi) \, e^{2 \pi i \xi x} \, d\xi$$
 ```
 
+Note the `\\\\` for a new line instead of the regular `\\` (`html-minifier` mangles double to single).
+
 $$E = m \, c^{2}$$
 
-$$f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi) \, e^{2 \pi i \xi x} \, d\xi$$
+$$
+\begin{aligned}
+3x^{2} + 9y &= 3i - 6z \\\\
+3(x^{2} + 3y) &= 3(i - 2z) \\\\
+x^{2} + 3y &= i - 2z
+\end{aligned}
+$$
+
+$$f(x) = \int_{-\infty}^{+\infty} \hat{f}(\xi) \, e^{2 \pi i \xi x} \, d\xi$$
 
 ## Inline
 

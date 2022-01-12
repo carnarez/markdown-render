@@ -36,6 +36,7 @@ pre {
   background-color: var(--background-color-alt);
   border-radius: 5px;
   font-family: var(--font-family-monospace);
+  font-size: 95%;
 }
 
 code {

@@ -2,6 +2,7 @@
 <html>
 
   <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -59,7 +60,7 @@
     <!-- progress indicator -->
     <script>
       window.addEventListener("scroll", () => {
-        const scrolled = Math.round(100 * window.scrollY / (document.body.offsetHeight - window.innerHeight));
+        const scrolled = 100 * window.scrollY / (document.body.offsetHeight - window.innerHeight);
         document.getElementById("scroll-indicator").style.width = scrolled + "%";
       });
     </script>

@@ -69,6 +69,8 @@ Aside from `title`, all metatags are left empty if absent from the front matter.
 
 #### Extras
 
+* `canonical` to provide the canonical link of the article (defaults to `url` if not
+   provided).
 * `link` to provide a link to the author's favourite website.
 * `theme` to select a supported theme (the corresponding `.css` file should be called
   `theme-<NAME>`, with `NAME` the value of the `theme` front matter key).

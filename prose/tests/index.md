@@ -318,7 +318,7 @@ graph LR
   B --> C
 ```
 
-For more examples (taken from the official documentation), see [this test page](mermaid.html). Note some adjustements are made to the theme (see the `mermaidInitialize()` function in the [HTML template](https://github.com/carnarez/markdown-tests/blob/master/build/template.html)) to take into account our own colour schemes. Check [this page](https://github.com/mermaid-js/mermaid/blob/develop/docs/theming.md) to further style diagrams.
+For more examples (taken from the official documentation), see [this test page](/tests/mermaid). Note some adjustements are made to the theme (see the `mermaidInitialize()` function in [this script](https://github.com/carnarez/markdown-tests/blob/master/static/mermaid.js)) to take into account our own colour schemes. Check ~~[this totally obsolete documentation](https://github.com/mermaid-js/mermaid/blob/develop/docs/theming.md)~~ [the variables defined in the theme](https://github.com/mermaid-js/mermaid/blob/develop/src/themes/theme-base.js) to further style diagrams.
 
 # Script
 

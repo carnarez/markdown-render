@@ -164,7 +164,6 @@ del,
 del a {
   text-decoration: line-through;
   text-decoration-color: var(--link-color);
-  text-decoration-style: double;
 }
 
 /* tables */

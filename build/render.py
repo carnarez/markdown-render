@@ -53,6 +53,9 @@ try:
 except IndexError:
     tmpl: Template = jenv.from_string(open("template.html").read())
 
+# relative path
+path: str = "/".join(sys.argv[1].lstrip("./").split("/")[:-1])
+
 # raw markdown content
 with open(sys.argv[1]) as f:
     text: str = f.read().strip()
@@ -94,6 +97,6 @@ mmd = True if '<div class="mermaid">' in html else False
 
 # render template/output to stdout and log to stderr
 sys.stdout.write(
-    tmpl.render(content=html, highlight=pre, katex=eqs, mermaid=mmd, **meta)
+    tmpl.render(path=path, content=html, highlight=pre, katex=eqs, mermaid=mmd, **meta)
 )
 sys.stderr.write(f'{sys.argv[1].lstrip("./")}\n')

@@ -1,0 +1,9 @@
+.toc ul {
+  flex-wrap: wrap;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}

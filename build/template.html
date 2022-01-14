@@ -24,6 +24,9 @@
     <!-- styling and color scheme -->
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/theme-{{ theme or "default" }}.css">
+    {% if path != "" %}
+    <link rel="stylesheet" href="style.css">
+    {% endif %}
 
     <!-- theme toggler -->
     <script>
@@ -101,21 +104,7 @@
     ></script>
     {% endif %}
     {% if mermaid %}
-    <script>
-      function mermaidInitialize() {
-        const style = getComputedStyle(document.body);
-
-        const themeVariables = {
-          "darkMode": document.documentElement.className === "light" ? false : true,
-          "background": style.getPropertyValue("--background-color"),
-          "fontFamily": style.fontFamily,
-          "fontSize": style.fontSize,
-          "primaryColor": style.getPropertyValue("--background-color-alt")
-        }
-
-        mermaid.initialize({'theme': 'base', 'themeVariables': themeVariables});
-      }
-    </script>
+    <script src="/mermaid.js"></script>
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.3/mermaid.min.js"

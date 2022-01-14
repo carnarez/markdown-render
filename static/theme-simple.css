@@ -139,7 +139,7 @@ main::after {
 .theme-toggle::after {
   content: "\f042";
   font-family: "Font Awesome 5 Free";
-  font-size: 1.2rem;
+  font-size: 120%;
   font-weight: 900;
   text-align: center;
   width: 2rem;

@@ -14,7 +14,7 @@ for arg in sys.argv[1:]:
         text: str = f.read().strip()
 
     # extract front matter
-    meta: typing.Dict[str, typing.Any] = {}
+    meta: dict[str, typing.Any] = {}
     rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n\n", flags=re.DOTALL)
     if text.startswith("---"):
         try:

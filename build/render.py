@@ -26,7 +26,7 @@ from pymdownx.tilde import DeleteSubExtension
 from yaml import Loader
 
 # check extension respective documentations for configuration
-exts: typing.List[Extension] = [
+exts: list[Extension] = [
     AstdocsExtension(),
     DeleteSubExtension(),
     EmojiExtension(emoji_index=gemoji),
@@ -61,7 +61,7 @@ with open(sys.argv[1]) as f:
     text: str = f.read().strip()
 
 # preprocess: extract front matter
-meta: typing.Dict[str, typing.Any] = {}
+meta: dict[str, typing.Any] = {}
 rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n\n", flags=re.DOTALL)
 if text.startswith("---"):
     try:

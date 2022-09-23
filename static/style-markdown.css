@@ -34,13 +34,28 @@ blockquote > p:before {
 code,
 pre {
   background-color: var(--background-color-alt);
+  border-color: var(--background-color-alt);
   border-radius: 5px;
   font-family: var(--font-family-monospace);
   font-size: 95%;
+  transition: border-color var(--transition-duration),
+              border-radius 0s ease-out var(--transition-duration);
 }
 
 code {
   padding: 0.2rem 0.4rem;
+}
+
+a:focus code,
+a:hover code,
+code a:focus,
+code a:hover {
+  border-color: var(--link-color);
+  border-radius: 5px 5px 0 0;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  transition: border-color var(--transition-duration),
+              border-radius 0s;
 }
 
 pre {
@@ -60,7 +75,9 @@ pre > code {
 /* details */
 
 details {
-  border: 1px solid var(--background-color-alt);
+  border-color: var(--background-color-alt);
+  border-style: solid;
+  border-width: 1px;
   border-radius: 5px;
   padding: 0.3rem 0.6rem;
 }
@@ -147,23 +164,40 @@ span.katex-display:hover:after {
 /* links */
 
 a {
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0 0 1px 0;
   color: var(--link-color);
   cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: transparent;
+  text-decoration-line: none;
 }
 
 a:focus,
 a:hover {
-  text-decoration-color: var(--link-color);
+  border-color: var(--link-color);
 }
 
 /* strikethrough */
 
-del,
+del {
+  text-decoration-line: line-through;
+  text-decoration-color: var(--font-color);
+}
+
+a del,
 del a {
-  text-decoration: line-through;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  text-decoration-line: line-through;
   text-decoration-color: var(--link-color);
+}
+
+a:focus del,
+a:hover del,
+del a:focus,
+del a:hover {
+  border-color: var(--link-color);
 }
 
 /* tables */

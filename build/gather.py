@@ -5,7 +5,7 @@ import re
 import sys
 import typing
 
-import yaml
+from yaml import Loader, load
 
 page: str = ""
 
@@ -18,7 +18,7 @@ for arg in sys.argv[1:]:
     rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n\n", flags=re.DOTALL)
     if text.startswith("---"):
         try:
-            meta = yaml.load(re.match(rgxp, text).group(1), Loader=Loader)
+            meta = load(re.match(rgxp, text).group(1), Loader=Loader)  # type: ignore
         except AttributeError:
             pass
 

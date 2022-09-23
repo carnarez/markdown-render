@@ -5,9 +5,7 @@ import re
 import sys
 import typing
 
-import yaml
-
-from jinja2 import Environment, BaseLoader, Template
+from jinja2 import BaseLoader, Environment, Template
 from markdown import markdown
 from markdown.extensions import Extension
 from markdown.extensions.footnotes import FootnoteExtension
@@ -23,7 +21,7 @@ from pymdownx.emoji import EmojiExtension, gemoji
 from pymdownx.highlight import HighlightExtension
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 from pymdownx.tilde import DeleteSubExtension
-from yaml import Loader
+from yaml import Loader, load
 
 # check extension respective documentations for configuration
 exts: list[Extension] = [
@@ -48,10 +46,11 @@ exts: list[Extension] = [
 
 # jinja2 template
 jenv: Environment = Environment(loader=BaseLoader())
+tmpl: Template
 try:
-    tmpl: Template = jenv.from_string(open(sys.argv[2]).read())
+    tmpl = jenv.from_string(open(sys.argv[2]).read())
 except IndexError:
-    tmpl: Template = jenv.from_string(open("template.html").read())
+    tmpl = jenv.from_string(open("template.html").read())
 
 # relative path
 path: str = "/".join(sys.argv[1].lstrip("./").split("/")[:-1])
@@ -65,7 +64,7 @@ meta: dict[str, typing.Any] = {}
 rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n\n", flags=re.DOTALL)
 if text.startswith("---"):
     try:
-        meta = yaml.load(re.match(rgxp, text).group(1), Loader=Loader)
+        meta = load(re.match(rgxp, text).group(1), Loader=Loader)  # type: ignore
         text = re.sub(rgxp, "", text, count=1).strip()
     except AttributeError:
         pass

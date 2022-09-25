@@ -1,5 +1,6 @@
 """Template script to render Markdown to HTML."""
 
+import datetime
 import os
 import re
 import sys
@@ -70,6 +71,8 @@ if text.startswith("---"):
         pass
 
 # preprocess: generate metadata if undefined
+if "date" not in meta:
+    meta["date"] = datetime.date.today().strftime("%Y-%m-%d")
 if "title" not in meta:
     meta["title"] = sys.argv[1].split("/")[-2].replace(".md", "").capitalize()
     meta["title"] = "Home" if meta["title"] == "." else meta["title"]

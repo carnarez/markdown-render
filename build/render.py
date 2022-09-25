@@ -62,7 +62,7 @@ with open(sys.argv[1]) as f:
 
 # preprocess: extract front matter
 meta: dict[str, typing.Any] = {}
-rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n\n", flags=re.DOTALL)
+rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n", flags=re.DOTALL)
 if text.startswith("---"):
     try:
         meta = load(re.match(rgxp, text).group(1), Loader=Loader)  # type: ignore

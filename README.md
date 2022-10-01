@@ -7,7 +7,7 @@ usage.
 
 Rendering done via [`Python-Markdown`](https://python-markdown.github.io/). Plenty
 extensions to deal with the fancy stuff, see below. Styling code (`.css` files) are
-processed through [`autoprfeixer`](https://github.com/postcss/autoprefixer) to add
+processed through [`autoprefixer`](https://github.com/postcss/autoprefixer) to add
 vendor prefxes.
 
 Served files could be prettified via [Prettier](https://github.com/prettier/prettier),

@@ -392,20 +392,33 @@ Rendered via the [`toc`](https://python-markdown.github.io/extensions/toc/) exte
 
 # Title
 
-Using the `#` to `######` notation.
+Using the `#` to `######` notation. Note that titles can also be immediately followed by
+other titles.
 
 ```markdown
 # Title
 
+Text
+
 ## Subtitle
+
+Text
 
 ### Section
 
+Text
+
 #### Subsection
+
+Text
 
 ##### Paragraph
 
+Text
+
 ###### Subparagraph
+
+Text
 ```
 
 ## Subtitle
@@ -427,3 +440,27 @@ Text
 ###### Subparagraph
 
 Text
+
+```markdown
+# Title
+
+## Subtitle
+
+### Section
+
+#### Subsection
+
+##### Paragraph
+
+###### Subparagraph
+```
+
+## Subtitle
+
+### Section
+
+#### Subsection
+
+##### Paragraph
+
+###### Subparagraph

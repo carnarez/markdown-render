@@ -90,7 +90,7 @@ details > summary {
 
 details > summary::before {
   content: "\f054";
-  font-family: "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free";
   font-weight: 900;
   margin-right: 0.5rem;
 }
@@ -157,7 +157,7 @@ span.katex-display:hover:after {
 
 .footnote .footnote-backref::after {
   content: "\f30c";
-  font-family: "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free";
   font-weight: 900;
 }
 
@@ -235,6 +235,14 @@ h6 {
   padding: 0;
 }
 
+h1 + h2,
+h2 + h3,
+h3 + h4,
+h4 + h5,
+h5 + h6 {
+  padding: 1rem 0 0 0;
+}
+
 h1 {
   border-bottom-color: var(--background-color-alt);
   border-bottom-style: solid;
@@ -262,5 +270,6 @@ h6 {
 }
 
 h6 {
+  font-style: italic;
   font-weight: normal;
 }

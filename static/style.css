@@ -76,25 +76,31 @@ body {
 
 /* vanilla buttons */
 
-nav .button {
-  gap: 1rem;
+nav .button,
+nav .button:hover {
+  border-width: 0;
+  color: var(--font-color);
+  margin: 0 0.5rem;
 }
 
 nav .button.home::after {
   content: "\f3c5";
   font-family: "Font Awesome 6 Free";
+  font-size: 1.25rem;
   font-weight: 900;
 }
 
 nav .button.repo::after {
   content: "\f09b";
-  font-family: "Font Awesome 6 Free";
+  font-family: "Font Awesome 6 Brands";
+  font-size: 1.25rem;
   font-weight: 900;
 }
 
 nav .button.theme::after {
   content: "\f042";
   font-family: "Font Awesome 6 Free";
+  font-size: 1.25rem;
   font-weight: 900;
 }
 

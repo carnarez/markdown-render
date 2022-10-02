@@ -12,21 +12,17 @@
     <meta name="description" content="{{ description }}">
     <meta property="article:author" content="{{ author }}">
     <meta property="article:published_time" content="{{ date }}">
-    <meta property="article:tag" content="{{ tags }}">
     <meta property="og:type" content="article">
     <meta property="og:url" content="{{ url }}">
     <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="{{ description }}">
     <meta property="og:image" content="{{ image }}">
     <link rel="canonical" href="{{ canonical or url }}">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🥝</text></svg>">
+    <link rel="icon" href="favicon.ico" type="image/png">
 
     <!-- styling and color scheme -->
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/theme-{{ theme or "default" }}.css">
-    {% if path != "" %}
     <link rel="stylesheet" href="style.css">
-    {% endif %}
 
     <!-- theme toggler -->
     <script>
@@ -120,19 +116,18 @@
     <nav id="scroll-indicator"></nav>
 
     <main>
- 
-      <!-- header is always present but nothing defined within -->
-      <span class="header-container">
-        <a class="header" href="/"></a>
-      </span>
 
-      <!-- theme-toggler and additional buttons, if defined -->
-      <span class="button-container">
+      <!-- buttons -->
+      <nav>
+        <a class="button home" href="/"></a>
         {% for button in buttons %}
-        <a class="{{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
+        <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
         {% endfor %}
-        <a class="theme-toggle" href="" onclick="toggleTheme();"></a>
-      </span>
+        {% if repo is defined %}
+        <a class="button repo" href="{{ repo }}"></a>
+        {% endif %}
+        <a class="button theme" href="" onclick="toggleTheme();"></a>
+      </nav>
 
       <!-- rendered markdown starts here -->
       {{ content }}

@@ -76,12 +76,26 @@ body {
 
 /* vanilla buttons */
 
-.header::after {
-  content: "home";
+nav .button {
+  gap: 1rem;
 }
 
-.theme-toggle::after {
-  content: "theme";
+nav .button.home::after {
+  content: "\f3c5";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+nav .button.repo::after {
+  content: "\f09b";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+nav .button.theme::after {
+  content: "\f042";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
 }
 
 /* scroll indicator */

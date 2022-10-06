@@ -85,6 +85,7 @@ def render_template(tmpl: Template, meta: dict[str, str], html: str) -> str:
         content=html,
         highlight=True if '<pre class="highlight">' in html else False,
         katex=True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False,
+        lunr=True,  # always true
         mermaid=any(
             [
                 True if f'<div class="{m}">' in html else False

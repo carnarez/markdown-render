@@ -21,10 +21,10 @@
     <link rel="icon" href="favicon.ico" type="image/png">
 
     <!-- styling and color scheme -->
-    <link rel="stylesheet" href="/style.css">
     {% if path != "" %}
     <link rel="stylesheet" href="style.css">
     {% endif %}
+    <link rel="stylesheet" href="/style.css">
 
     <!-- theme toggler -->
     <script>
@@ -69,10 +69,11 @@
     <!-- search via lunr; json file will be cached after first query -->
     <script>
       function lunrSearch() {
-        fetch("{{ url | trim("/") }}/lunr-index.json")
+        fetch("{{ root | trim("/") }}/lunr-index.json")
           .then(response => response.json())
           .then(data => {
-            const index = lunr.Index.load(data.indexed),
+            const docs = data.documents,
+                  index = lunr.Index.load(data.indexed),
                   input = document.querySelector('input[id="search-input"]');
             console.log(index.search(terms));
           });

@@ -60,11 +60,13 @@ def load_template(filepath: str = "./template.html") -> Template:
     return Environment(loader=BaseLoader()).from_string(open(filepath).read())
 
 
-def render_template(tmpl: Template, meta: dict[str, str], html: str) -> str:
+def render_template(root: str, tmpl: Template, meta: dict[str, str], html: str) -> str:
     """Render the `Jinja2` template after checking for presence of specific content.
 
     Parameters
     ----------
+    root : str
+        Root of the served content.
     tmpl : jinja2.Template
         `Jinja2` template ready to be used.
     meta : dict[str, str]
@@ -82,6 +84,7 @@ def render_template(tmpl: Template, meta: dict[str, str], html: str) -> str:
     The current check for equations easily returns false positives.
     """
     return tmpl.render(
+        root=root,
         content=html,
         highlight=True if '<pre class="highlight">' in html else False,
         katex=True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False,
@@ -357,10 +360,22 @@ if __name__ == "__main__":
     # flags
     parser = argparse.ArgumentParser(description="Render and index Markdown content.")
     parser.add_argument(
-        "-p", "--prefix", default=".", help="Prefix for the output path."
+        "-p",
+        "--prefix",
+        default=".",
+        help="Path prefix for the output (where generated content will be written).",
     )
     parser.add_argument(
-        "-t", "--template", default="template.html", help="Path to the HTML template."
+        "-r",
+        "--root",
+        default="http://localhost:8000/",
+        help="Root of the exposed content.",
+    )
+    parser.add_argument(
+        "-t",
+        "--template",
+        default="template.html",
+        help="Path to the HTML template to use during conversion.",
     )
     flags, files = parser.parse_known_args()
 
@@ -381,7 +396,7 @@ if __name__ == "__main__":
 
         # process the markdown file
         meta, html, text = process_document(filepath)
-        html = render_template(tmpl, meta, html)
+        html = render_template(flags.root, tmpl, meta, html)
 
         # save content for later
         metas[output] = meta

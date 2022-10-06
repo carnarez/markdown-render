@@ -25,7 +25,7 @@ import re
 import xml
 
 from jinja2 import BaseLoader, Environment, Template
-from lunr import lunr
+from lunr import lunr, get_default_builder
 from markdown import Markdown
 from markdown.extensions import Extension
 from markdown.extensions.footnotes import FootnoteExtension
@@ -313,6 +313,9 @@ def index_documents(documents: dict[str, str]) -> str:
     : str
         JSON content ready to be loaded by [`lunr.py`](https://lunr.readthedocs.io/).
     """
+    builder = get_default_builder()
+    builder.metadata_whitelist.append("position")
+
     return json.dumps(
         {
             "documents": documents,
@@ -320,6 +323,7 @@ def index_documents(documents: dict[str, str]) -> str:
                 ref="path",
                 fields=["text"],
                 documents=[{"path": p, "text": t} for p, t in documents.items()],
+                builder=builder,
             ).serialize(),
         }
     )

@@ -24,7 +24,7 @@
     {% if path != "" %}
     <link rel="stylesheet" href="style.css">
     {% endif %}
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="{{ root | trim("/") }}/style.css">
 
     <!-- theme toggler -->
     <script>
@@ -68,14 +68,48 @@
 
     <!-- search via lunr; json file will be cached after first query -->
     <script>
+      function clearField() {
+        const input = document.querySelector("#search-input"),
+              output = document.querySelector("#search-output");
+        input.value = "";
+        output.replaceChildren();
+      }
+
       function lunrSearch() {
         fetch("{{ root | trim("/") }}/lunr-index.json")
           .then(response => response.json())
           .then(data => {
-            const docs = data.documents,
+            const prose = data.documents,
                   index = lunr.Index.load(data.indexed),
-                  input = document.querySelector('input[id="search-input"]');
-            console.log(index.search(terms));
+                  input = document.querySelector("#search-input").value,
+                  result = [],
+                  output = document.querySelector("#search-output");
+
+            if (input.length > 2) {
+              index.search(input).forEach(match => {
+                const text = prose[match.ref],
+                      attr = Object.keys(match.matchData.metadata)[0];
+
+                match.matchData.metadata[attr].text.position.forEach(arr => {
+                  const elm = document.createElement("li"),
+                        pos = parseInt(arr[0]),
+                        len = parseInt(arr[1]);
+
+                  elm.innerHTML = `
+                    <a href="">${match.ref.replace(/\/index.html$/, "")}</a>
+                    :
+                    ${text.slice(Math.max(0, pos - 50), pos)}
+                    <span class="search-text">${text.slice(pos, pos + len)}</span>
+                    ${text.slice(pos + len, Math.min(pos + len + 50, text.length))}
+                  `;
+
+                  result.push(elm);
+                });
+
+              });
+            }
+
+            output.replaceChildren(...result);
           });
       }
     </script>
@@ -122,7 +156,7 @@
     ></script>
     {% endif %}
     {% if mermaid %}
-    <script src="/mermaid.js"></script>
+    <script src="{{ root | trim("/") }}/mermaid.js"></script>
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"
@@ -143,8 +177,10 @@
       <nav>
         {% if lunr %}
         <div class="button search">
+          <input id="search-click" onclick="lunrSearch();" type="button">
           <input id="search-input" onkeyup="lunrSearch();" type="text">
-          <div id="search-results"></div>
+          <input id="search-clear" onclick="clearField();" type="button">
+          <ul id="search-output"></ul>
         </div>
         {% endif %}
         <a class="button home" href="{{ url }}"></a>

@@ -22,7 +22,9 @@
 
     <!-- styling and color scheme -->
     <link rel="stylesheet" href="/style.css">
+    {% if path != "" %}
     <link rel="stylesheet" href="style.css">
+    {% endif %}
 
     <!-- theme toggler -->
     <script>
@@ -64,6 +66,19 @@
       });
     </script>
 
+    <!-- search via lunr; json file will be cached after first query -->
+    <script>
+      function lunrSearch() {
+        fetch("{{ url | trim("/") }}/lunr-index.json")
+          .then(response => response.json())
+          .then(data => {
+            const index = lunr.Index.load(data.indexed),
+                  input = document.querySelector('input[id="search-input"]');
+            console.log(index.search(terms));
+          });
+      }
+    </script>
+
     <!-- external javascript libraries -->
     {% if highlight %}
     <script
@@ -99,6 +114,12 @@
       );"
     ></script>
     {% endif %}
+    {% if lunr %}
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js"
+    ></script>
+    {% endif %}
     {% if mermaid %}
     <script src="/mermaid.js"></script>
     <script
@@ -119,7 +140,13 @@
 
       <!-- buttons -->
       <nav>
-        <a class="button home" href="/"></a>
+        {% if lunr %}
+        <div class="button search">
+          <input id="search-input" onkeyup="lunrSearch();" type="text">
+          <div id="search-results"></div>
+        </div>
+        {% endif %}
+        <a class="button home" href="{{ url }}"></a>
         {% for button in buttons %}
         <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
         {% endfor %}

@@ -3,6 +3,7 @@ git+https://github.com/carnarez/markdown-img@master
 git+https://github.com/carnarez/markdown-insert@master
 git+https://github.com/carnarez/markdown-script@master
 jinja2
+lunr
 markdown
 pymdown-extensions
 pyyaml

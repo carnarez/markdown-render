@@ -22,7 +22,6 @@ import io
 import json
 import os
 import re
-import sys
 import xml
 
 from jinja2 import BaseLoader, Environment, Template
@@ -87,7 +86,10 @@ def render_template(tmpl: Template, meta: dict[str, str], html: str) -> str:
         highlight=True if '<pre class="highlight">' in html else False,
         katex=True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False,
         mermaid=any(
-            [True if f'<div class="{m}">' else False for m in ("mermaid", "naiad")]
+            [
+                True if f'<div class="{m}">' in html else False
+                for m in ("mermaid", "naiad")
+            ]
         ),
         **meta,
     )

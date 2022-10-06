@@ -117,7 +117,7 @@ def load_document(filepath: str) -> tuple[dict[str, str], str]:
 
     # parse front matter if present
     if mdwn.startswith("---"):
-        if m := re.match(rgxp, mdwn) is not None:
+        if (m := re.match(rgxp, mdwn)) is not None:
             meta = load(m.group(1), Loader=Loader)  # type: ignore
             mdwn = re.sub(rgxp, "", mdwn, count=1).strip()
 

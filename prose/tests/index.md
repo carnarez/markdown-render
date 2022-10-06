@@ -184,42 +184,6 @@ for m in markers:
 
 </details>
 
-# Markdown-in-HTML
-
-Parsed via the [`md_in_html`](https://python-markdown.github.io/extensions/md_in_html/) extension.
-
-HTML is allowed within the document; nested Markown too. Example of the `<details>` and `<summary>` tags:
-
-* Note the `markdown="1"` attribute to make sure the content inside those tags is being parsed
-  and converted properly.
-* Mind the necessary spaces:
-    - After the `<summary>...</summary>` line.
-    - Before the closing `</details>` tag.
-
-````markdown
-<details markdown="1">
-<summary markdown="1">Test with some `code` in the summary text</summary>
-
-**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
-
-```python
-import polars as pl
-```
-
-</details>
-````
-
-<details markdown="1">
-<summary markdown="1">Test with some `code` in the summary text</summary>
-
-**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
-
-```python
-import polars as pl
-```
-
-</details>
-
 # Image
 
 Hijacked and rendered via the [`markdown-img`](https://github.com/carnarez/markdown-img) extension.
@@ -299,6 +263,42 @@ $ grep -ER '^&\[.*\]\(.+\)\s*$' . | sed -r 's#/[^/]+:&\[.*\]\((.+)\)#/\1#g;s/\.m
 * Item
     * Subitem
     * Subitem
+
+# Markdown-in-HTML
+
+Parsed via the [`md_in_html`](https://python-markdown.github.io/extensions/md_in_html/) extension.
+
+HTML is allowed within the document; nested Markown too. Example of the `<details>` and `<summary>` tags:
+
+* Note the `markdown="1"` attribute to make sure the content inside those tags is being parsed
+  and converted properly.
+* Mind the necessary spaces:
+    - After the `<summary>...</summary>` line.
+    - Before the closing `</details>` tag.
+
+````markdown
+<details markdown="1">
+<summary markdown="1">Test with some `code` in the summary text</summary>
+
+**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
+
+```python
+import polars as pl
+```
+
+</details>
+````
+
+<details markdown="1">
+<summary markdown="1">Test with some `code` in the summary text</summary>
+
+**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
+
+```python
+import polars as pl
+```
+
+</details>
 
 # Mermaid diagram
 

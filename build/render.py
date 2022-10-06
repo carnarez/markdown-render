@@ -294,25 +294,6 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
     return meta, html, text
 
 
-def list_documents(meta: dict[str, dict[str, str]]) -> str:
-    """List all documents: establish the general Table of Contents.
-
-    Parameters
-    ----------
-    meta : dict[str, dict[str, str]]
-        Metadata for each document encountered.
-
-    Results
-    -------
-    : str
-        HTML-converted list of documents.
-
-    Note
-    ----
-    If an `index` file exists this function will return nothing.
-    """
-
-
 def index_documents(documents: dict[str, str]) -> str:
     """Index all documents for [`lunr.js`](https://lunrjs.com/).
 

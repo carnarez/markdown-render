@@ -2,7 +2,7 @@
 
 This page stands as an example of supported Markdown-to-HTML processing. Plenty more details and variants available, check respective documentation.
 
-# Astdocs
+# `astdocs`
 
 Files including [`astdocs`](https://github.com/carnarez/markdown-insert) `%%%` markers are parsed and rendered via the [`markdown-astdocs`](https://github.com/carnarez/markdown-astdocs) extension.
 

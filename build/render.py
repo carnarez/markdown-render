@@ -184,6 +184,9 @@ def clean_document(mdwn: str, ellipsis: str = " [...] ") -> str:
     # remove html tags
     mdwn = re.sub(r"<.+?>", ellipsis, mdwn)
 
+    # replace title markers
+    mdwn = re.sub(r"^[#]+\s*(.*)$", r"%%%SECTION\1%%%PARAGRAPH", mdwn, flags=re.MULTILINE)
+
     return mdwn
 
 
@@ -300,22 +303,44 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
     return meta, html, text
 
 
-def index_documents(documents: dict[str, str]) -> str:
+def index_documents(texts: dict[str, str]) -> str:
     """Index all documents for [`lunr.js`](https://lunrjs.com/).
 
     Parameters
     ----------
-    documents : dict[str, str]
-        Path: plain text content pairs to be indexed by `Lunr`.
+    texts : dict[str, str]
+        Path: plain text content pairs to be indexed by `Lunr`. Expects `%%%SECTION` and
+        `%%%PARAGRAPH` markers to split the document in sections.
 
     Returns
     -------
     : str
         JSON content ready to be loaded by [`lunr.py`](https://lunr.readthedocs.io/).
     """
+    documents: dict[str, str] = {}
+
+    # add position to the metadata
     builder = get_default_builder()
     builder.metadata_whitelist.append("position")
 
+    # split per section
+    for filepath, text in texts.items():
+        endpoint = re.sub("index.html$", "", filepath)
+
+        for section in text.split("%%%SECTION"):
+
+            if "%%%PARAGRAPH" in section:
+                title, section = section.split("%%%PARAGRAPH")
+                anchor = title.lower().replace(".", "").replace(" ", "-")  # github
+                href = f'{endpoint}#{anchor}'
+            else:
+                href = endpoint
+
+            section = section.strip()
+            if len(section):
+                documents[href] = section
+
+    # convert to json
     return json.dumps(
         {
             "documents": documents,
@@ -358,8 +383,8 @@ if __name__ == "__main__":
 
     # keep track of the output and documents to be processed for lunr
     metas: dict[str, dict[str, str]] = {}
-    pages: dict[str, str] = {}
-    prose: dict[str, str] = {}
+    htmls: dict[str, str] = {}
+    texts: dict[str, str] = {}
 
     # flags
     parser = argparse.ArgumentParser(description="Render and index Markdown content.")
@@ -404,14 +429,14 @@ if __name__ == "__main__":
 
         # save content for later
         metas[output] = meta
-        pages[output] = html
-        prose[output] = text
+        htmls[output] = html
+        texts[output] = text
 
     # documents and pre-indexed content to be parsed by lunr
-    index = index_documents(prose)
+    index = index_documents(texts)
 
     # output each page
-    for o, p in pages.items():
+    for o, p in htmls.items():
         with open(f"{flags.prefix}/{o}", "w") as f:
             f.write(p)
 

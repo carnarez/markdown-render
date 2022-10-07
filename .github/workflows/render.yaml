@@ -26,85 +26,74 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.10
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install ghp-import --requirement build/requirements.txt
 
-      - name: List articles
-        run: |
-          cd prose
-
-          python ../build/gather.py `ls -1 */index.md | grep -v '^tests/'` >> index.md
-
-          cd -
-
       - name: Render Markdown content
         run: |
-          cd prose
+          (
+            cd prose
 
-          find . -name "*.md" | while read f; do
-            mkdir -p /tmp/www/`dirname $f`
-            python ../build/render.py $f ../build/template.html > /tmp/www/${f/.md/.html}
-          done
-
-          cd -
+            find . -name "*.md" | while read f; do mkdir -p /tmp/www/`dirname $f`; done
+            python ../build/render.py --prefix=/tmp/www `find . -name "*.md"`
+          )
 
       - name: List articles by their titles (SEO)
         run: |
-          cd prose
+          (
+            cd prose
 
-          ls -1 */index.md | grep -v '^tests/' | while read f; do
-            l=`grep -B1000 -E -m2 '^---\s*$' $f | sed -nr 's/^title:\s*(.+)/\L\1/p' | sed 's/ /-/g' | tr -cd '[:alnum:]-'`
-            ln -s `dirname $f` $l 2>/dev/null
-            mv $l /tmp/www 2>/dev/null
-          done
-
-          cd -
+            ls -1 */index.md | grep -v '^tests/' | while read f; do
+              l=`grep -B1000 -E -m2 '^---\s*$' $f | sed -nr 's/^title:\s*(.+)/\L\1/p' | sed 's/ /-/g' | tr -cd '[:alnum:]-'`
+              ln -s `dirname $f` $l 2>/dev/null
+              mv $l /tmp/www 2>/dev/null
+            done
+          )
 
       - name: Prettify via Prettier
         run: |
-          cd /tmp/www
+          (
+            cd /tmp/www
 
-          prettier --write .
-
-          cd -
+            prettier --write .
+          )
 
       - name: Minify via clean-css, html-minifier and terser
         run: |
-          cd /tmp/www
-
-          find . -name "*.css" | while read f; do
-            postcss $f --replace --use autoprefixer
-            cleancss --output $f $f
-          done
-
-          find . -name "*.html" | while read f; do
-            html-minifier --collapse-boolean-attributes \
-                          --collapse-whitespace \
-                          --output $f \
-                          --minify-css true \
-                          --minify-js true \
-                          --remove-attribute-quotes \
-                          --remove-comments \
-                          --remove-empty-attributes \
-                          --remove-optional-tags \
-                          --remove-redundant-attributes \
-                          --remove-script-type-attributes \
-                          --remove-style-link-type-attributes \
-                          --use-short-doctype \
-                          $f
-          done
-
-          find . -name "*.js" | while read f; do
-            terser --compress --mangle --output $f $f
-          done
-
-          cd -
+          (
+            cd /tmp/www
+            
+            find . -name "*.css" | while read f; do
+              postcss $f --replace --use autoprefixer
+              cleancss --output $f $f
+            done
+            
+            find . -name "*.html" | while read f; do
+              html-minifier --collapse-boolean-attributes \
+                            --collapse-whitespace \
+                            --output $f \
+                            --minify-css true \
+                            --minify-js true \
+                            --remove-attribute-quotes \
+                            --remove-comments \
+                            --remove-empty-attributes \
+                            --remove-optional-tags \
+                            --remove-redundant-attributes \
+                            --remove-script-type-attributes \
+                            --remove-style-link-type-attributes \
+                            --use-short-doctype \
+                            $f
+            done
+            
+            find . -name "*.js" | while read f; do
+              terser --compress --mangle --output $f $f
+            done
+          )
 
 #      - name: Publish to GitHub Pages
 #        run: |
-#          ghp-import --no-jekyll /tmp/www
-#          git push --force --quiet https://${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git pages
+#          ghp-import --branch www --force --no-jekyll --push /tmp/www

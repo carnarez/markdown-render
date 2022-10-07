@@ -91,16 +91,18 @@
                       attr = Object.keys(match.matchData.metadata)[0];
 
                 match.matchData.metadata[attr].text.position.forEach(arr => {
-                  const elm = document.createElement("li"),
+                  const elm = document.createElement("div"),
                         pos = parseInt(arr[0]),
                         len = parseInt(arr[1]);
 
                   elm.innerHTML = `
-                    <a href="">${match.ref.replace(/\/index.html$/, "")}</a>
-                    :
+                    <a href="{{ root | trim("/") }}/${match.ref}">
+                    <div class="search-text">
                     ${text.slice(Math.max(0, pos - 50), pos)}
-                    <span class="search-text">${text.slice(pos, pos + len)}</span>
+                    <span class="search-word">${text.slice(pos, pos + len)}</span>
                     ${text.slice(pos + len, Math.min(pos + len + 50, text.length))}
+                    </div>
+                    </a>
                   `;
 
                   result.push(elm);

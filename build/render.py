@@ -421,7 +421,7 @@ if __name__ == "__main__":
         # path gymnastics
         dirname = "/".join(filepath.lstrip("./").split("/")[:-1])
         basename = filepath.split("/")[-1]
-        output = re.sub(r"\.md$", ".html", f"{dirname}/{basename}")
+        output = re.sub(r"\.md$", ".html", f"{dirname}/{basename}".strip("/"))
 
         # process the markdown file
         meta, html, text = process_document(filepath)

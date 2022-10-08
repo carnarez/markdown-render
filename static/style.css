@@ -112,24 +112,27 @@ nav {
 .button.repo::after,
 .button.search::after,
 .button.theme::after {
-  font-family: "Font Awesome 6 Free";
   font-size: var(--icon-size);
   font-weight: 900;
 }
 
 .button.home::after {
+  font-family: "Font Awesome 6 Free";
   content: "\f3c5";
 }
 
 .button.repo::after {
+  font-family: "Font Awesome 6 Brands";
   content: "\f09b";
 }
 
 .button.search::after {
+  font-family: "Font Awesome 6 Free";
   content: "\f002";
 }
 
 .button.theme::after {
+  font-family: "Font Awesome 6 Free";
   content: "\f042";
 }
 

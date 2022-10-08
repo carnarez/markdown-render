@@ -68,13 +68,6 @@
 
     <!-- search via lunr; json file will be cached after first query -->
     <script>
-      function clearField() {
-        const input = document.querySelector("#search-input"),
-              output = document.querySelector("#search-output");
-        input.value = "";
-        output.replaceChildren();
-      }
-
       function lunrSearch() {
         fetch("{{ root | trim("/") }}/lunr-index.json")
           .then(response => response.json())
@@ -91,16 +84,16 @@
                       attr = Object.keys(match.matchData.metadata)[0];
 
                 match.matchData.metadata[attr].text.position.forEach(arr => {
-                  const elm = document.createElement("div"),
+                  const elm = document.createElement("li"),
                         pos = parseInt(arr[0]),
                         len = parseInt(arr[1]);
 
                   elm.innerHTML = `
                     <a href="{{ root | trim("/") }}/${match.ref}">
-                    <div class="search-text">
-                    ${text.slice(Math.max(0, pos - 50), pos)}
-                    <span class="search-word">${text.slice(pos, pos + len)}</span>
-                    ${text.slice(pos + len, Math.min(pos + len + 50, text.length))}
+                    <div>
+                    <span class="result-text">${text.slice(Math.max(0, pos - 50), pos)}</span>
+                    <span class="search-term">${text.slice(pos, pos + len)}</span>
+                    <span class="result-text">${text.slice(pos + len, Math.min(pos + len + 50, text.length))}</span>
                     </div>
                     </a>
                   `;
@@ -177,22 +170,18 @@
 
       <!-- buttons -->
       <nav>
-        {% if lunr %}
-        <div class="button search">
-          <input id="search-click" onclick="lunrSearch();" type="button">
-          <input id="search-input" onkeyup="lunrSearch();" type="text">
-          <input id="search-clear" onclick="clearField();" type="button">
-          <ul id="search-output"></ul>
-        </div>
-        {% endif %}
         <a class="button home" href="{{ url }}"></a>
         {% for button in buttons %}
         <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
         {% endfor %}
+        {% if lunr %}
+        <span class="search-bar"><input id="search-input" onkeyup="lunrSearch();" type="text"><span class="button search" onclick="document.querySelector('#search-input').focus();"></span></span>
+        {% endif %}
         {% if repo is defined %}
         <a class="button repo" href="{{ repo }}"></a>
         {% endif %}
-        <a class="button theme" href="" onclick="toggleTheme();"></a>
+        <span class="button theme" onclick="toggleTheme();"></span>
+        <ul id="search-output"></ul>
       </nav>
 
       <!-- rendered markdown starts here -->

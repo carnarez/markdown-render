@@ -7,14 +7,14 @@ function mermaidInitialize() {
 
   let darkMode = document.documentElement.className === "light" ? false : true;
 
-  let background = style.getPropertyValue("--background-color");
-  let fontFamily = style.getPropertyValue("--font-family");
-  let fontSize = style.getPropertyValue("--font-size");
+  let background = style.getPropertyValue("--background-color").trim();
+  let fontFamily = style.getPropertyValue("--font-family").trim();
+  let fontSize = style.getPropertyValue("--font-size").trim();
 
-  let textColor = style.getPropertyValue("--font-color");
-  let linkColor = style.getPropertyValue("--link-color");
+  let textColor = style.getPropertyValue("--font-color").trim();
+  let linkColor = style.getPropertyValue("--link-color").trim();
 
-  let primaryColor = style.getPropertyValue("--background-color-alt");
+  let primaryColor = style.getPropertyValue("--background-color-alt").trim();
   let primaryBorderColor = primaryColor;
   let primaryTextColor = textColor;
 

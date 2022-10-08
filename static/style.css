@@ -19,6 +19,7 @@
   --font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
                            "Liberation Mono", monospace;
   --font-size: 16px;
+  --icon-size: 20px;
   --transition-duration: 0.5s;
 }
 
@@ -62,7 +63,7 @@
 *::before,
 *::after {
   transition-duration: var(--transition-duration);
-  transition-property: border-color, color, opacity, text-decoration-color;
+  transition-property: background-color, border-color, color, opacity, text-decoration-color, width;
 }
 
 body {
@@ -76,32 +77,139 @@ body {
 
 /* vanilla buttons */
 
-nav .button,
-nav .button:hover {
-  border-width: 0;
+nav {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.button {
+  border: 0;
+  border-radius: 50%;
   color: var(--font-color);
-  margin: 0 0.5rem;
+  cursor: pointer;
+  padding: 1rem;
 }
 
-nav .button.home::after {
+.button.search {
+  border-color: var(--background-color);
+  border-radius: 0 50% 50% 0;
+  border-style: solid;
+  border-width: 0 0 0 2px;
+}
+
+.button:hover {
+  background-color: var(--background-color-alt);
+}
+
+.button::after {
+  display: inline-block;
+  text-align: center;
+  width: var(--icon-size);
+}
+
+.button.home::after,
+.button.repo::after,
+.button.search::after,
+.button.theme::after {
+  font-family: "Font Awesome 6 Free";
+  font-size: var(--icon-size);
+  font-weight: 900;
+}
+
+.button.home::after {
   content: "\f3c5";
-  font-family: "Font Awesome 6 Free";
-  font-size: 1.25rem;
-  font-weight: 900;
 }
 
-nav .button.repo::after {
+.button.repo::after {
   content: "\f09b";
-  font-family: "Font Awesome 6 Brands";
-  font-size: 1.25rem;
+}
+
+.button.search::after {
+  content: "\f002";
+}
+
+.button.theme::after {
+  content: "\f042";
+}
+
+/* search */
+
+.search-bar {
+  background-color: var(--background-color-alt);
+  border-radius: calc(1rem + var(--icon-size));
+  padding: 1rem 0 1rem 1.5rem;
+}
+
+#search-input {
+  background-color: var(--background-color-alt);
+  border: 0;
+  color: var(--font-color);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: 2rem;
+  width: 20%;
+}
+
+#search-input:focus {
+  outline: none;
+  width: 50%;
+}
+
+#search-output {
+  border-color: var(--background-color);
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  padding: 0;
+}
+
+#search-output:not(:empty) {
+  border-color: var(--background-color-alt);
+}
+
+#search-output a {
+  color: var(--font-color);
+  text-decoration: none;
+}
+
+#search-output li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#search-output li a div::before,
+#search-output li a div::after {
+  font-family: "Font Awesome 6 Free";
   font-weight: 900;
 }
 
-nav .button.theme::after {
-  content: "\f042";
-  font-family: "Font Awesome 6 Free";
-  font-size: 1.25rem;
-  font-weight: 900;
+#search-output li a div:hover:before,
+#search-output li a div:hover:after {
+  color: var(--link-color);
+}
+
+#search-output li a div::before {
+  content: "\f054";
+  padding: 0 1rem 0 0;
+}
+
+#search-output li a div::after {
+  content: "\f08e";
+  font-size: 80%;
+  padding: 0 0 0 1rem;
+}
+
+#search-output li:first-child {
+  margin: 1.5rem 0 0 0;
+}
+
+#search-output li:last-child {
+  margin: 0 0 1rem 0;
+}
+
+.search-term {
+  color: var(--link-color);
+  font-weight: bold;
 }
 
 /* scroll indicator */
@@ -109,7 +217,7 @@ nav .button.theme::after {
 #scroll-indicator {
   background-color: var(--link-color);
   height: 1px;
-  margin-left: -8px; /* to be modified with body margin-left */
+  margin: 0 0 0 -8px; /* to be modified with body margin */
   position: fixed;
   top: 0;
   width: 0;

@@ -21,10 +21,10 @@
     <link rel="icon" href="favicon.ico" type="image/png">
 
     <!-- styling and color scheme -->
+    <link rel="stylesheet" href="{{ root | trim("/") }}/style.css">
     {% if path != "" %}
     <link rel="stylesheet" href="style.css">
     {% endif %}
-    <link rel="stylesheet" href="{{ root | trim("/") }}/style.css">
 
     <!-- theme toggler -->
     <script>
@@ -107,6 +107,18 @@
             output.replaceChildren(...result);
           });
       }
+
+      function wipeAndFocus() {
+        const input = document.querySelector("#search-input"),
+              output = document.querySelector("#search-output");
+
+        if (input.value.length > 0) {
+          input.value = "";
+          output.replaceChildren();
+        }
+
+        input.focus();
+      }
     </script>
 
     <!-- external javascript libraries -->
@@ -170,19 +182,21 @@
 
       <!-- buttons -->
       <nav>
-        <a class="button home" href="{{ url }}"></a>
+        <a id="logo" href="{{ url }}"></a>
         {% for button in buttons %}
         <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
         {% endfor %}
         {% if lunr %}
-        <span class="search-bar"><input id="search-input" onkeyup="lunrSearch();" type="text"><span class="button search" onclick="document.querySelector('#search-input').focus();"></span></span>
+        <span class="search-bar"><input id="search-input" onkeyup="lunrSearch();" type="text"><span class="button search" onclick="wipeAndFocus();"></span></span>
         {% endif %}
         {% if repo is defined %}
         <a class="button repo" href="{{ repo }}"></a>
         {% endif %}
         <span class="button theme" onclick="toggleTheme();"></span>
-        <ul id="search-output"></ul>
       </nav>
+
+      <!-- filled up only when lunr search is used -->
+      <ul id="search-output"></ul>
 
       <!-- rendered markdown starts here -->
       {{ content }}

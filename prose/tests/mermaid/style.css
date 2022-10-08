@@ -1,9 +1,15 @@
-.toc ul {
-  flex-wrap: wrap;
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+/* local style */
+
+a {
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  color: green;
+  cursor: pointer;
+  text-decoration-line: none;
+}
+
+a:focus,
+a:hover {
+  border-color: green;
 }

@@ -1,7 +1,5 @@
 All examples taken from [this page](https://github.com/mermaid-js/mermaid/blob/develop/docs/theming.md).
 
-[TOC]
-
 # Class diagram
 
 ```mermaid

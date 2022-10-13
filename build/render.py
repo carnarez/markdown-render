@@ -60,7 +60,7 @@ def load_template(filepath: str = "./template.html") -> Template:
     return Environment(loader=BaseLoader()).from_string(open(filepath).read())
 
 
-def render_template(root: str, tmpl: Template, meta: dict[str, str], html: str) -> str:
+def render_template(root: str, tmpl: Template, meta: dict[str, str], toc: str, html: str) -> str:
     """Render the `Jinja2` template after checking for presence of specific content.
 
     Parameters
@@ -71,6 +71,8 @@ def render_template(root: str, tmpl: Template, meta: dict[str, str], html: str) 
         `Jinja2` template ready to be used.
     meta : dict[str, str]
         Metadata, extracted from the front matter or generated.
+    toc : str
+        Table of Contents of the converted content.
     html : str
         Generated HTML content.
 
@@ -85,6 +87,7 @@ def render_template(root: str, tmpl: Template, meta: dict[str, str], html: str) 
     """
     return tmpl.render(
         root=root,
+        toc=toc,
         content=html,
         highlight=True if '<pre class="highlight">' in html else False,
         katex=True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False,
@@ -195,7 +198,7 @@ def convert_document(
     extensions: list[Extension],
     output_format: str = "html",
     strip_top_level_tags: bool = True,
-) -> str:
+) -> tuple[str, str]:
     """Convert the `Markdown` content to supported formats.
 
     Parameters
@@ -215,12 +218,17 @@ def convert_document(
     Returns
     -------
     : str
+        Table of Contents of the converted document.
+    : str
         `Markdown` converted to the requested format, using the provided extensions.
     """
     md = Markdown(extensions=extensions, output_format=output_format)  # type: ignore
     md.stripTopLevelTags = strip_top_level_tags  # type: ignore
 
-    return md.convert(mdwn)
+    html = md.convert(mdwn)
+    toc = md.toc
+
+    return toc, html
 
 
 def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
@@ -235,6 +243,8 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
     -------
     : dict[str, str]
         Metadata, extracted from the front matter or generated.
+    : str
+        Table of Contents of the converted document.
     : str
         `Markdown` content converted to HTML.
     : str
@@ -269,7 +279,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
 
     # fetch markdown content and convert to html
     meta, mdwn = load_document(filepath)
-    html = convert_document(mdwn, extensions=extensions)
+    toc, html = convert_document(mdwn, extensions=extensions)
 
     # escape certain code blocks (otherwise mangled during minifying)
     for m in ("mermaid", "naiad"):
@@ -287,7 +297,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
 
     # clean markdown from markup and convert to plain text
     mdwn = clean_document(mdwn, ellipsis)
-    text = convert_document(
+    _, text = convert_document(
         mdwn, extensions=extensions, output_format="text", strip_top_level_tags=False
     )
 
@@ -300,7 +310,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
         text = text.replace(f"{cleaned_ellipsis} {cleaned_ellipsis}", cleaned_ellipsis)
         text = re.sub(r"\s+", " ", text)
 
-    return meta, html, text
+    return meta, toc, html, text
 
 
 def index_documents(texts: dict[str, str]) -> str:
@@ -424,8 +434,8 @@ if __name__ == "__main__":
         output = re.sub(r"\.md$", ".html", f"{dirname}/{basename}".strip("/"))
 
         # process the markdown file
-        meta, html, text = process_document(filepath)
-        html = render_template(flags.root, tmpl, meta, html)
+        meta, toc, html, text = process_document(filepath)
+        html = render_template(flags.root, tmpl, meta, toc, html)
 
         # save content for later
         metas[output] = meta

@@ -38,8 +38,9 @@ pre {
   border-radius: 5px;
   font-family: var(--font-family-monospace);
   font-size: 95%;
-  transition-property: background-color, border-color;
-  transition-duration: var(--transition-duration);
+  transition: background-color var(--transition-duration),
+              border-color var(--transition-duration),
+              border-radius 0s ease-out var(--transition-duration);
 }
 
 code {
@@ -54,8 +55,9 @@ code a:hover {
   border-radius: 5px 5px 0 0;
   border-style: solid;
   border-width: 0 0 1px 0;
-  transition-property: background-color, border-color;
-  transition-duration: var(--transition-duration);
+  transition: background-color var(--transition-duration),
+              border-color var(--transition-duration),
+              border-radius 0s;
 }
 
 pre {
@@ -226,98 +228,29 @@ table tbody tr:nth-child(odd) {
 /* table of contents */
 
 .toc {
-  background-color: var(--background-color);
   border-color: var(--background-color-alt);
   border-style: solid;
   border-width: 0 0 0 1px;
-  cursor: pointer;
-  float: right;
-  margin: 0 0 0 1rem;
-  max-width: 50%;
-  min-width: 30%;
-  position: relative;
+  padding: 0 0 0 0.5rem;
 }
 
 .toc li {
   border-radius: 5px;
-  padding: 2px 0.5rem;
+  padding: 0 0.5rem;
 }
 
 .toc li:hover {
   background-color: var(--background-color-alt);
 }
 
-.toc li:hover:before {
-  content: "\f0da";
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  margin: 0 0.5rem 0 0;
-}
-
 .toc ul {
   list-style: none;
-  margin: 0 0 0 1rem;
+  margin: 0;
   padding: 0;
 }
 
-/* # */
-
 .toc ul li ul {
   display: none;
-}
-
-.toc ul li:hover ul {
-  display: block;
-}
-
-/* ## */
-
-.toc ul li:hover ul li ul {
-  display: none;
-}
-
-.toc ul li:hover ul li:hover ul {
-  display: block;
-}
-
-/* ### */
-
-.toc ul li:hover ul li:hover ul li ul {
-  display: none;
-}
-
-.toc ul li:hover ul li:hover ul li:hover ul {
-  display: block;
-}
-
-/* #### */
-
-.toc ul li:hover ul li:hover ul li:hover ul li ul {
-  display: none;
-}
-
-.toc ul li:hover ul li:hover ul li:hover ul li:hover ul {
-  display: block;
-}
-
-/* ##### */
-
-.toc ul li:hover ul li:hover ul li:hover ul li:hover ul li ul {
-  display: none;
-}
-
-.toc ul li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul {
-  display: block;
-}
-
-/* ###### */
-
-.toc ul li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul li ul {
-  display: none;
-}
-
-.toc ul li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul li:hover ul {
-  display: block;
 }
 
 /* titles */

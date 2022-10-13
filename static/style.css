@@ -77,87 +77,71 @@ body {
   margin: 8px; /* default value in all major browsers */
 }
 
-main {
-  margin: 0 auto;
-  max-width: 1200px;
-  position: relative;
+nav {
+  align-items: flex-start;
+  display: flex;
+  margin: 1rem 0;
+  gap: 0.5rem;
 }
 
 /* vanilla buttons */
 
-nav {
-  margin: 1rem 0;
-  text-align: right;
-  width: 100%;
-}
-
-nav > * {
-  text-align: left;
-}
-
 .button {
   border: 0;
-  border-radius: 50%;
+  border-radius: calc(var(--icon-size) + 1rem);
   color: var(--font-color);
   cursor: pointer;
   padding: 1rem;
 }
 
+.button.clear,
 .button.search {
-  border-color: var(--background-color);
-  border-radius: 0 50% 50% 0;
-  border-style: solid;
-  border-width: 0 0 0 2px;
+  background-color: var(--background-color-alt);
 }
 
 .button:hover {
   background-color: var(--background-color-alt);
 }
 
-.button::after {
+.button::before {
   display: inline-block;
   text-align: center;
   width: var(--icon-size);
 }
 
-.button.home::after,
-.button.repo::after,
-.button.search::after,
-.button.theme::after {
+.button.clear::before,
+.button.home::before,
+.button.repo::before,
+.button.search::before,
+.button.theme::before {
   font-size: var(--icon-size);
   font-weight: 900;
+  width: 2rem; /* same as line-height */
 }
 
-.button.home::after {
+.button.clear::before {
+  content: "\f00d";
   font-family: "Font Awesome 6 Free";
+}
+
+.button.home::before {
   content: "\f3c5";
+  font-family: "Font Awesome 6 Free";
 }
 
-.button.repo::after {
-  font-family: "Font Awesome 6 Brands";
+.button.repo::before {
   content: "\f09b";
+  font-family: "Font Awesome 6 Brands";
 }
 
-.button.search::after {
-  font-family: "Font Awesome 6 Free";
+.button.search::before {
   content: "\f002";
+  font-family: "Font Awesome 6 Free";
 }
 
-.button.theme::after {
-  font-family: "Font Awesome 6 Free";
+.button.theme::before {
   content: "\f042";
-}
-
-/* logo */
-
-#logo::after {
-  color: var(--font-color);
-  content: "\f121";
   font-family: "Font Awesome 6 Free";
-  font-size: 3rem;
-  font-weight: 900;
-  left: 0;
-  position: absolute;
 }
 
 /* scroll indicator */

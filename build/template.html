@@ -91,9 +91,9 @@
                   elm.innerHTML = `
                     <a href="{{ root | trim("/") }}/${match.ref}">
                     <div>
-                    <span class="result-text">${text.slice(Math.max(0, pos - 50), pos)}</span>
+                    <span class="result-text">${text.slice(Math.max(0, pos - 45), pos)}</span>
                     <span class="search-term">${text.slice(pos, pos + len)}</span>
-                    <span class="result-text">${text.slice(pos + len, Math.min(pos + len + 50, text.length))}</span>
+                    <span class="result-text">${text.slice(pos + len, Math.min(pos + len + 45, text.length))}</span>
                     </div>
                     </a>
                   `;
@@ -108,8 +108,20 @@
           });
       }
 
-      function wipeAndFocus() {
-        const input = document.querySelector("#search-input"),
+      function showSearch() {
+        const clear = document.querySelector(".button.clear"),
+              input = document.querySelector("#search-input");
+
+        if (input.style.display === "none" || input.style.display === "") {
+          clear.style.display = "inline-block";
+          input.style.display = "inline-block";
+          input.focus();
+        }
+      }
+
+      function wipeSearch() {
+        const clear = document.querySelector(".button.clear"),
+              input = document.querySelector("#search-input"),
               output = document.querySelector("#search-output");
 
         if (input.value.length > 0) {
@@ -117,7 +129,8 @@
           output.replaceChildren();
         }
 
-        input.focus();
+        clear.style.display = "none";
+        input.style.display = "none";
       }
     </script>
 
@@ -126,7 +139,7 @@
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"
-      onload="hljs.highlightAll();"
+      onload="hljs.highlightAll()"
     ></script>
     {% endif %}
     {% if katex %}
@@ -153,7 +166,7 @@
             },
           ]
         }
-      );"
+      )"
     ></script>
     {% endif %}
     {% if lunr %}
@@ -167,7 +180,7 @@
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"
-      onload="mermaidInitialize();"
+      onload="mermaidInitialize()"
     ></script>
     {% endif %}
 
@@ -178,29 +191,27 @@
     <!-- show scrolling progress -->
     <nav id="scroll-indicator"></nav>
 
+    <!-- buttons -->
+    <nav>
+      {% for button in buttons %}
+      <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
+      {% endfor %}
+      {% if repo is defined %}
+      <a class="button repo" href="{{ repo }}"></a>
+      {% endif %}
+      <span class="button theme" onclick="toggleTheme()"></span>
+      {% if lunr %}
+      <div class="search-bar">
+        <span class="button search" onclick="showSearch()"></span>
+        <input id="search-input" onkeyup="lunrSearch()" type="text">
+        <span class="button clear" onclick="wipeSearch()"></span>
+        <ul id="search-output"></ul>
+      </div>
+      {% endif %}
+    </nav>
+
     <main>
-
-      <!-- buttons -->
-      <nav>
-        <a id="logo" href="{{ url }}"></a>
-        {% for button in buttons %}
-        <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
-        {% endfor %}
-        {% if lunr %}
-        <span class="search-bar"><input id="search-input" onkeyup="lunrSearch();" type="text"><span class="button search" onclick="wipeAndFocus();"></span></span>
-        {% endif %}
-        {% if repo is defined %}
-        <a class="button repo" href="{{ repo }}"></a>
-        {% endif %}
-        <span class="button theme" onclick="toggleTheme();"></span>
-      </nav>
-
-      <!-- filled up only when lunr search is used -->
-      <ul id="search-output"></ul>
-
-      <!-- rendered markdown starts here -->
       {{ content }}
-
     </main>
 
   </body>

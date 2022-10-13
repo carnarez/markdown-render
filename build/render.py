@@ -158,12 +158,25 @@ def clean_document(mdwn: str, ellipsis: str = " [...] ") -> str:
     mdwn : str
         Raw `Markdown` content to process.
     ellipsis : str
-        Text to replace non-indexable content.
+        Text to replace non-indexable content. Defaults to ` [...] ` (including the
+        leading/trailing space).
 
     Returns
     -------
     : str
         Cleaned up content.
+
+    Note
+    ----
+    Replace the following string by the provided ellipsis:
+    * Table of Contents markers `[TOC]`.
+    * All footnote markers.
+    * All code blocks.
+    * [`astdocs`](https://github.com/carnarez/astdocs) `%%%SOURCE`, `%%%START` and
+      `%%%END`markers.
+    * All equations (might cause some false positive).
+    * All special syntax: `![]()`, `%[]()`, `&[]()`.
+    * All HTML tags.
     """
     # remove toc
     mdwn = mdwn.replace("[TOC]", "")
@@ -174,6 +187,11 @@ def clean_document(mdwn: str, ellipsis: str = " [...] ") -> str:
     # remove code blocks
     for p in [f"([`]{{{i}}}.+?[`]{{{i}}})" for i in range(7, 2, -1)]:
         mdwn = re.sub(p, ellipsis, mdwn, flags=re.DOTALL)
+
+    # remove astdocs markers
+    mdwn = re.sub("%%%SOURCE.*", "", mdwn)
+    mdwn = re.sub("%%%START [A-Z]+ .*", "", mdwn)
+    mdwn = re.sub("%%%END [A-Z]+ .*", "", mdwn)
 
     # remove equations
     mdwn = re.sub(r"\${2}[^\$]+?\${2}", ellipsis, mdwn, flags=re.DOTALL)

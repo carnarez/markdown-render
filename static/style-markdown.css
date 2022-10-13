@@ -225,7 +225,7 @@ table tbody tr:nth-child(odd) {
   background-color: var(--background-color-alt);
 }
 
-/* table of contents */
+/* table of contents
 
 .toc {
   border-color: var(--background-color-alt);

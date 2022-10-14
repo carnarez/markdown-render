@@ -9,7 +9,7 @@
   border-radius: calc(var(--icon-size) + 1rem);
   display: flex;
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 900px;
 }
 
 #search-input {

@@ -77,14 +77,14 @@ body {
   margin: 8px; /* default value in all major browsers */
 }
 
-nav {
+/* vanilla buttons */
+
+#buttons {
   align-items: flex-start;
   display: flex;
   margin: 1rem 0;
   gap: 0.5rem;
 }
-
-/* vanilla buttons */
 
 .button {
   border: 0;
@@ -92,11 +92,6 @@ nav {
   color: var(--font-color);
   cursor: pointer;
   padding: 1rem;
-}
-
-.button.clear,
-.button.search {
-  background-color: var(--background-color-alt);
 }
 
 .button:hover {

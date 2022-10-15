@@ -12,13 +12,10 @@ RUN apt-get update \
  && pip install --upgrade pip \
  && pip install --requirement /usr/src/requirements.txt
 
-RUN find . -name "*.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
- && python render.py --prefix=/var/www `find . -name "*.md"` \
- && ls -1 */index.md | grep -v '^tests/' | while read f; do \
-      l=`grep -B1000 -E -m2 '^---\s*$' $f | sed -nr 's/^title:\s*(.+)/\L\1/p' | sed 's/ /-/g' | tr -cd '[:alnum:]-'`; \
-      ln -s `dirname $f` $l 2>/dev/null; \
-      mv $l /var/www 2>/dev/null; \
-    done
+RUN find . -name "*.md" | while read f; do \
+      mkdir -p /var/www/`dirname $f`; \
+    done \
+ && python render.py --prefix=/var/www `find . -name "*.md"` 
 
 
 # minify everything in place
@@ -35,6 +32,9 @@ COPY static .
 RUN rm `find . -name "*.md"` \
  && npm config set update-notifier false \
  && npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli terser | grep -v ^$ \
+ && cat style.css style-*.css | grep -v '@import "' > bundle.css
+ && mv bundle.css style.css
+ && rm style-*.css
  && find . -name "*.css" | while read f; do \
       postcss $f --replace --use autoprefixer; \
       cleancss --output $f $f; \

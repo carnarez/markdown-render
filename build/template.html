@@ -74,8 +74,8 @@
           .then(data => {
             const prose = data.documents,
                   index = lunr.Index.load(data.indexed),
+                  results = [],
                   input = document.querySelector("#search-input").value,
-                  result = [],
                   output = document.querySelector("#search-output");
 
             if (input.length > 2) {
@@ -84,43 +84,44 @@
                       attr = Object.keys(match.matchData.metadata)[0];
 
                 match.matchData.metadata[attr].text.position.forEach(arr => {
-                  const elm = document.createElement("li"),
+                  const li = document.createElement("li"),
                         pos = parseInt(arr[0]),
                         len = parseInt(arr[1]);
 
-                  elm.innerHTML = `
+                  li.innerHTML = `
                     <a href="{{ root | trim("/") }}/${match.ref}">
                     <div>
-                    <span class="result-text">${text.slice(Math.max(0, pos - 50), pos)}</span>
-                    <span class="search-term">${text.slice(pos, pos + len)}</span>
-                    <span class="result-text">${text.slice(pos + len, Math.min(pos + len + 50, text.length))}</span>
+                    <span class="result-text">${text.slice(Math.max(0, pos - 100), pos)}</span>
+                    <mark>${text.slice(pos, pos + len)}</mark>
+                    <span class="result-text">${text.slice(pos + len, Math.min(pos + len + 100, text.length))}</span>
                     </div>
                     </a>
                   `;
 
-                  result.push(elm);
+                  results.push(li);
                 });
 
               });
             }
 
-            output.replaceChildren(...result);
+            output.replaceChildren(...results);
           });
       }
 
-      function showSearch() {
-        const clear = document.querySelector(".button.clear"),
+      function toggleSearch() {
+        const div = document.querySelector("#search-bar"),
               input = document.querySelector("#search-input");
 
-        if (input.style.display === "none" || input.style.display === "") {
-          clear.style.display = "inline-block";
-          input.style.display = "inline-block";
+        if (div.style.display === "none" || div.style.display === "") {
+          div.style.display = "inline-block";
           input.focus();
+        } else {
+          div.style.display = "none";
         }
       }
 
-      function wipeSearch() {
-        const clear = document.querySelector(".button.clear"),
+      function deleteSearch() {
+        const div = document.querySelector("#search-bar"),
               input = document.querySelector("#search-input"),
               output = document.querySelector("#search-output");
 
@@ -129,8 +130,7 @@
           output.replaceChildren();
         }
 
-        clear.style.display = "none";
-        input.style.display = "none";
+        div.style.display = "none";
       }
     </script>
 
@@ -192,7 +192,7 @@
     <nav id="scroll-indicator"></nav>
 
     <!-- buttons -->
-    <nav>
+    <nav id="buttons">
       {% for button in buttons %}
       <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
       {% endfor %}
@@ -201,14 +201,17 @@
       {% endif %}
       <span class="button theme" onclick="toggleTheme()"></span>
       {% if lunr %}
-      <div class="search-bar">
-        <span class="button search" onclick="showSearch()"></span>
-        <input id="search-input" onkeyup="lunrSearch()" type="text">
-        <span class="button clear" onclick="wipeSearch()"></span>
-        <ul id="search-output"></ul>
-      </div>
+      <span class="button search" onclick="toggleSearch()"></span>
       {% endif %}
     </nav>
+
+    {% if lunr %}
+    <nav id="search-bar">
+      <input id="search-input" onkeyup="lunrSearch()" placeholder="search with lunr" type="text">
+      <span class="button clear" onclick="deleteSearch()"></span>
+      <ul id="search-output"></ul>
+    </nav>
+    {% endif %}
 
     <main>
       {{ content }}

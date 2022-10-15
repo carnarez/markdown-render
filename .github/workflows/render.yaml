@@ -66,6 +66,10 @@ jobs:
         run: |
           (
             cd /tmp/www
+
+            cat style.css style-*.css | grep -v '@import "' > bundle.css
+            mv bundle.css style.css
+            rm style-*.css
             
             find . -name "*.css" | while read f; do
               postcss $f --replace --use autoprefixer

@@ -1,15 +1,10 @@
-.button.clear {
-  display: none;
-}
-
-.search-bar {
-  align-items: flex-start;
+#search-bar {
   background-color: var(--background-color-alt);
   border: 0;
-  border-radius: calc(var(--icon-size) + 1rem);
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 900px;
+  border-radius: 5px;
+  display: none;
+  padding: 1rem;
+  width: 100%;
 }
 
 #search-input {
@@ -18,29 +13,37 @@
   border-style: solid;
   border-width: 0 0 1px 0;
   color: var(--font-color);
-  display: none;
-  flex-grow: 2;
   font-family: var(--font-family);
   font-size: var(--font-size);
-  line-height: 1.9rem;
-  margin: 1rem 0;
+  line-height: 2rem;
   outline: none;
   padding: 0;
 }
 
+#search-input::placeholder {
+  color: var(--font-color);
+  opacity: 0.25;
+}
+
 #search-output {
-  flex-grow: 4;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 #search-output li {
-  margin: 0 1rem;
+  border-color: var(--background-color);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  padding: 0.5rem 0;
+}
+
+#search-output li:first-child {
+  margin: 1rem 0 0 0;
 }
 
 #search-output li:last-child {
-  margin: 0 1rem 1rem 1rem;
+  border-width: 1px 0;
 }
 
 #search-output a {
@@ -49,6 +52,7 @@
 
 #search-output li a div::before,
 #search-output li a div::after {
+  color: var(--link-color);
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
 }
@@ -64,12 +68,7 @@
   padding: 0 0 0 0.5rem;
 }
 
-#search-output li a div:hover:before,
-#search-output li a div:hover:after {
-  color: var(--link-color);
-}
-
-.search-term {
+mark {
   color: var(--link-color);
   font-weight: bold;
 }

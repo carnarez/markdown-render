@@ -35,12 +35,7 @@ RUN apt-get update \
  && pip install --requirement /usr/src/requirements.txt
 
 RUN find . -name "*.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
- && python render.py --prefix=/var/www `find . -name "*.md"` \
- && ls -1 */index.md | grep -v '^tests/' | while read f; do \
-      l=`grep -B1000 -E -m2 '^---\s*$' $f | sed -nr 's/^title:\s*(.+)/\L\1/p' | sed 's/ /-/g' | tr -cd '[:alnum:]-'`; \
-      ln -s `dirname $f` $l 2>/dev/null; \
-      mv $l /var/www 2>/dev/null; \
-    done
+ && python render.py --prefix=/var/www `find . -name "*.md"`
 
 
 # prettify everything in place

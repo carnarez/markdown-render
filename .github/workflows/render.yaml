@@ -65,11 +65,12 @@ jobs:
       - name: Minify via clean-css, html-minifier and terser
         run: |
           (
-            cd /tmp/www
+            cd static
 
-            cat style.css style-*.css | grep -v '@import "' > bundle.css
-            mv bundle.css style.css
-            rm style-*.css
+            cat style.css style-*.css | grep -v '@import "' > /tmp/www/style.css
+          )
+          (
+            cd /tmp/www
             
             find . -name "*.css" | while read f; do
               postcss $f --replace --use autoprefixer

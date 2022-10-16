@@ -64,8 +64,13 @@
 *::before,
 *::after {
   transition-duration: var(--transition-duration);
-  transition-property: background-color, border-color, color, opacity,
-                       text-decoration-color, width;
+  transition-property: background-color,
+                       border-color,
+                       color,
+                       filter,
+                       margin,
+                       opacity,
+                       text-decoration-color;
 }
 
 body {
@@ -73,18 +78,62 @@ body {
   color: var(--font-color);
   font-family: var(--font-family);
   font-size: var(--font-size);
+  height: 100vh;
   line-height: 2rem;
   margin: 8px; /* default value in all major browsers */
 }
 
-/* vanilla buttons */
+/* scroll indicator */
 
-#buttons {
-  align-items: flex-start;
-  display: flex;
-  margin: 1rem 0;
-  gap: 0.5rem;
+#scroller {
+  background-color: var(--link-color);
+  height: 1px;
+  margin: 0 0 0 -8px; /* to be modified with body margin */
+  position: fixed;
+  top: 0;
+  width: 0;
+  z-index: 10;
 }
+
+/* components */
+
+nav {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  height: 4rem;
+}
+
+main {
+  position: relative;
+}
+
+aside {
+  align-items: flex-start;
+  background-color: var(--background-color);
+  display: flex;
+  gap: 1rem;
+  margin: 0 0 0 -100vw;
+  min-height: calc(100vh - 4rem); /* window height minus nav height */
+  opacity: 0.9;
+  overflow: hidden;
+  padding: 1rem;
+  position: absolute;
+  width: calc(100vw - 2rem); /* window width minus self padding */
+  z-index: 10;
+}
+
+aside > * {
+  flex-basis: 50vw;
+}
+
+article {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 1rem;
+}
+
+/* vanilla buttons */
 
 .button {
   border: 0;
@@ -104,19 +153,15 @@ body {
   width: var(--icon-size);
 }
 
-.button.clear::before,
 .button.home::before,
 .button.repo::before,
+.button.reset::before,
 .button.search::before,
+.button.sidebar::before,
 .button.theme::before {
   font-size: var(--icon-size);
   font-weight: 900;
   width: 2rem; /* same as line-height */
-}
-
-.button.clear::before {
-  content: "\f00d";
-  font-family: "Font Awesome 6 Free";
 }
 
 .button.home::before {
@@ -129,8 +174,18 @@ body {
   font-family: "Font Awesome 6 Brands";
 }
 
+.button.reset::before {
+  content: "\f00d";
+  font-family: "Font Awesome 6 Free";
+}
+
 .button.search::before {
   content: "\f002";
+  font-family: "Font Awesome 6 Free";
+}
+
+.button.sidebar::before {
+  content: "\f0c9";
   font-family: "Font Awesome 6 Free";
 }
 
@@ -139,14 +194,8 @@ body {
   font-family: "Font Awesome 6 Free";
 }
 
-/* scroll indicator */
+/* utils */
 
-#scroll-indicator {
-  background-color: var(--link-color);
-  height: 1px;
-  margin: 0 0 0 -8px; /* to be modified with body margin */
-  position: fixed;
-  top: 0;
-  width: 0;
-  z-index: 10;
+.flex-spacer {
+  flex-grow: 2;
 }

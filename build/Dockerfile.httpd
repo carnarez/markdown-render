@@ -32,9 +32,6 @@ COPY static .
 RUN rm `find . -name "*.md"` \
  && npm config set update-notifier false \
  && npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli terser | grep -v ^$ \
- && cat style.css style-*.css | grep -v '@import "' > bundle.css \
- && mv bundle.css style.css \
- && rm style-*.css \
  && find . -name "*.css" | while read f; do \
       postcss $f --replace --use autoprefixer; \
       cleancss --output $f $f; \

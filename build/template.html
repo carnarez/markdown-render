@@ -62,10 +62,11 @@
     <script>
       window.addEventListener("scroll", () => {
         const scrolled = 100 * window.scrollY / (document.body.offsetHeight - window.innerHeight);
-        document.getElementById("scroll-indicator").style.width = scrolled + "%";
+        document.querySelector("#scroller").style.width = scrolled + "%";
       });
     </script>
 
+    {% if lunr %}
     <!-- search via lunr; json file will be cached after first query -->
     <script>
       function lunrSearch() {
@@ -80,25 +81,24 @@
 
             if (input.length > 2) {
               index.search(input).forEach(match => {
-                const text = prose[match.ref],
-                      attr = Object.keys(match.matchData.metadata)[0];
+                const text = prose[match.ref];
 
-                match.matchData.metadata[attr].text.position.forEach(arr => {
-                  const li = document.createElement("li"),
-                        pos = parseInt(arr[0]),
-                        len = parseInt(arr[1]);
-
-                  li.innerHTML = `
-                    <a href="{{ root | trim("/") }}/${match.ref}">
-                    <div>
-                    <span class="result-text">${text.slice(Math.max(0, pos - 100), pos)}</span>
-                    <mark>${text.slice(pos, pos + len)}</mark>
-                    <span class="result-text">${text.slice(pos + len, Math.min(pos + len + 100, text.length))}</span>
-                    </div>
-                    </a>
-                  `;
-
-                  results.push(li);
+                Object.keys(match.matchData.metadata).forEach(attr => {
+                  match.matchData.metadata[attr].text.position.forEach(arr => {
+                    const li = document.createElement("li"),
+                          pos = parseInt(arr[0]),
+                          len = parseInt(arr[1]);
+                 
+                    li.innerHTML = `
+                      <a class="search-result" href="{{ root | trim("/") }}/${match.ref}">
+                      <span>${text.slice(Math.max(0, pos - 100), pos)}</span>
+                      <mark>${text.slice(pos, pos + len)}</mark>
+                      <span>${text.slice(pos + len, Math.min(pos + len + 100, text.length))}</span>
+                      </a>
+                    `;
+                 
+                    results.push(li);
+                  });
                 });
 
               });
@@ -108,29 +108,38 @@
           });
       }
 
-      function toggleSearch() {
-        const div = document.querySelector("#search-bar"),
-              input = document.querySelector("#search-input");
-
-        if (div.style.display === "none" || div.style.display === "") {
-          div.style.display = "inline-block";
-          input.focus();
-        } else {
-          div.style.display = "none";
-        }
-      }
-
-      function deleteSearch() {
-        const div = document.querySelector("#search-bar"),
-              input = document.querySelector("#search-input"),
+      function resetSearch() {
+        const input = document.querySelector("#search-input"),
               output = document.querySelector("#search-output");
 
         if (input.value.length > 0) {
           input.value = "";
           output.replaceChildren();
         }
+      }
+    </script>
+    {% endif %}
 
-        div.style.display = "none";
+    <!-- show/hide sidebar -->
+    <script>
+      function toggleSidebar(focus = undefined) {
+        const sidebar = document.querySelector("aside"),
+              content = document.querySelector("article");
+
+        // editing css explicitely here, for memory
+        if (sidebar.style.marginLeft === "" || sidebar.style.marginLeft === "-100vw") {
+          sidebar.style.margin = "0";
+          content.style.filter = "blur(6px)";
+          content.style.height = sidebar.offsetHeight + "px";
+          content.style.overflow = "hidden";
+        } else {
+          sidebar.style.margin = "0 0 0 -100vw";
+          content.style.filter = "none";
+          content.style.height = "auto";
+          content.style.overflow = "auto";
+        }
+     
+        if (focus !== undefined) document.querySelector(focus).focus();
       }
     </script>
 
@@ -189,32 +198,50 @@
   <body>
 
     <!-- show scrolling progress -->
-    <nav id="scroll-indicator"></nav>
+    <div id="scroller"></div>
 
     <!-- buttons -->
-    <nav id="buttons">
-      {% for button in buttons %}
-      <a class="button {{ button.class }}" href="{{ button.href }}">{{ button.text }}</a>
-      {% endfor %}
-      {% if repo is defined %}
+    <nav>
+      <span class="button sidebar" onclick="toggleSidebar()"></span>
+      {% if lunr %}
+      <span class="button search" onclick="toggleSidebar('#search-input')"></span>
+      {% endif %}
+      <span class="flex-spacer"></span>
+      {% if repo %}
       <a class="button repo" href="{{ repo }}"></a>
       {% endif %}
       <span class="button theme" onclick="toggleTheme()"></span>
-      {% if lunr %}
-      <span class="button search" onclick="toggleSearch()"></span>
-      {% endif %}
     </nav>
-
-    {% if lunr %}
-    <nav id="search-bar">
-      <input id="search-input" onkeyup="lunrSearch()" placeholder="search with lunr" type="text">
-      <span class="button clear" onclick="deleteSearch()"></span>
-      <ul id="search-output"></ul>
-    </nav>
-    {% endif %}
 
     <main>
-      {{ content }}
+
+      <!-- sidebar drawer overlay thingie -->
+      <aside>
+
+        <!-- table of contents -->
+        <div onclick="toggleSidebar()">{{ toc }}</div>
+
+        {% if lunr %}
+        <!-- search functionalities -->
+        <div class="search">
+          <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
+          <input
+            autocomplete="off"
+            id="search-input"
+            onkeyup="lunrSearch()"
+            placeholder="search with lunr"
+            type="text"
+          >
+          <span class="button reset" onclick="resetSearch()"></span>
+          <ul id="search-output" onclick="toggleSidebar()"></ul>
+        </div>
+        {% endif %}
+
+      </aside>
+
+      <!-- actual content -->
+      <article>{{ content }}</article>
+
     </main>
 
   </body>

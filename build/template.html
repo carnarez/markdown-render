@@ -61,7 +61,7 @@
     <!-- progress indicator -->
     <script>
       window.addEventListener("scroll", () => {
-        const scrolled = 100 * window.scrollY / (document.body.offsetHeight - window.innerHeight);
+        const scrolled = 100 * window.scrollY / (document.querySelector("article").offsetHeight - window.innerHeight);
         document.querySelector("#scroller").style.width = scrolled + "%";
       });
     </script>
@@ -90,7 +90,11 @@
                           len = parseInt(arr[1]);
                  
                     li.innerHTML = `
-                      <a class="search-result" href="{{ root | trim("/") }}/${match.ref}">
+                      <a
+                        class="search-result"
+                        href="{{ root | trim("/") }}/${match.ref}"
+                        onclick="toggleSidebar('#overlay-search')"
+                      >
                       <span>${text.slice(Math.max(0, pos - 100), pos)}</span>
                       <mark>${text.slice(pos, pos + len)}</mark>
                       <span>${text.slice(pos + len, Math.min(pos + len + 100, text.length))}</span>
@@ -116,30 +120,40 @@
           input.value = "";
           output.replaceChildren();
         }
+
+        input.focus();
       }
     </script>
     {% endif %}
 
     <!-- show/hide sidebar -->
     <script>
-      function toggleSidebar(focus = undefined) {
-        const sidebar = document.querySelector("aside"),
-              content = document.querySelector("article");
-
+      function toggleSidebar(asideSelector, focusSelector = undefined) {
+        const aside = document.querySelector("aside" + asideSelector),
+              naside = document.querySelector("aside:not(" + asideSelector + ")"),
+              article = document.querySelector("article");
+        
         // editing css explicitely here, for memory
-        if (sidebar.style.marginLeft === "" || sidebar.style.marginLeft === "-100vw") {
-          sidebar.style.margin = "0";
-          content.style.filter = "blur(6px)";
-          content.style.height = sidebar.offsetHeight + "px";
-          content.style.overflow = "hidden";
-        } else {
-          sidebar.style.margin = "0 0 0 -100vw";
-          content.style.filter = "none";
-          content.style.height = "auto";
-          content.style.overflow = "auto";
-        }
+        if (aside.style.marginLeft === "" || aside.style.marginLeft === "-100vw") {
+
+          aside.style.margin = "0";
+          naside.style.margin = "0 0 0 -100vw";
+
+          article.style.filter = "blur(6px)";
+          article.style.height = aside.offsetHeight + "px";
+          article.style.overflow = "hidden";
      
-        if (focus !== undefined) document.querySelector(focus).focus();
+          if (focusSelector !== undefined) document.querySelector(focusSelector).focus();
+
+        } else {
+
+          aside.style.margin = "0 0 0 -100vw";
+
+          article.style.filter = "none";
+          article.style.height = "auto";
+          article.style.overflow = "auto";
+
+        }
       }
     </script>
 
@@ -202,9 +216,9 @@
 
     <!-- buttons -->
     <nav>
-      <span class="button sidebar" onclick="toggleSidebar()"></span>
+      <span class="button sidebar" onclick="toggleSidebar('#overlay-toc')"></span>
       {% if lunr %}
-      <span class="button search" onclick="toggleSidebar('#search-input')"></span>
+      <span class="button search" onclick="toggleSidebar('#overlay-search', '#search-input')"></span>
       {% endif %}
       <span class="flex-spacer"></span>
       {% if repo %}
@@ -215,29 +229,33 @@
 
     <main>
 
-      <!-- sidebar drawer overlay thingie -->
-      <aside>
+      <!-- table of contents -->
+      <aside id="overlay-toc">{{ toc }}</aside>
+      <script>
+        document.querySelectorAll("#overlay-toc a").forEach(a => {
+          a.setAttribute("onclick", "toggleSidebar('#overlay-toc')");
+        });
+      </script>
 
-        <!-- table of contents -->
-        <div onclick="toggleSidebar()">{{ toc }}</div>
-
-        {% if lunr %}
-        <!-- search functionalities -->
+      {% if lunr %}
+      <!-- search functionalities -->
+      <aside id="overlay-search">
         <div class="search">
-          <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
-          <input
-            autocomplete="off"
-            id="search-input"
-            onkeyup="lunrSearch()"
-            placeholder="search with lunr"
-            type="text"
-          >
-          <span class="button reset" onclick="resetSearch()"></span>
-          <ul id="search-output" onclick="toggleSidebar()"></ul>
+          <div>
+            <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
+            <input
+              autocomplete="off"
+              id="search-input"
+              onkeyup="lunrSearch()"
+              placeholder="search with lunr"
+              type="text"
+            >
+            <span class="button reset" onclick="resetSearch()"></span>
+          </div>
+          <ul id="search-output"></ul>
         </div>
-        {% endif %}
-
       </aside>
+      {% endif %}
 
       <!-- actual content -->
       <article>{{ content }}</article>

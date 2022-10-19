@@ -92,7 +92,7 @@ body {
   position: fixed;
   top: 0;
   width: 0;
-  z-index: 10;
+  z-index: 20;
 }
 
 /* components */
@@ -123,8 +123,9 @@ aside {
   z-index: 10;
 }
 
-aside > * {
-  flex-basis: 50vw;
+aside > div {
+  flex-basis: min(800px, 100vw);
+  margin: 0 auto;
 }
 
 article {

@@ -1,3 +1,7 @@
+.search > div {
+  text-align: center;
+}
+
 .search .button:hover {
   background-color: inherit;
 }
@@ -13,7 +17,7 @@
   line-height: 2rem;
   outline: none;
   padding: 0;
-  width: 50%;
+  width: calc(100% - 2 * (var(--icon-size) + 4rem));
 }
 
 #search-input::placeholder {
@@ -34,6 +38,10 @@
   color: var(--font-color);
   margin: 1rem 0;
   padding: 0 1rem;
+}
+
+#search-output li:first-child {
+  margin: 3rem 0 1rem 0;
 }
 
 #search-output li:hover {

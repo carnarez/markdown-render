@@ -61,7 +61,7 @@
     <!-- progress indicator -->
     <script>
       window.addEventListener("scroll", () => {
-        const scrolled = 100 * window.scrollY / (document.querySelector("article").offsetHeight - window.innerHeight);
+        const scrolled = 100 * window.scrollY / (document.body.offsetHeight - window.innerHeight);
         document.querySelector("#scroller").style.width = scrolled + "%";
       });
     </script>

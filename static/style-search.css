@@ -1,5 +1,7 @@
 .search > div {
-  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .search .button:hover {
@@ -12,12 +14,13 @@
   border-style: solid;
   border-width: 0 0 1px 0;
   color: var(--font-color);
+  flex-grow: 2;
   font-family: var(--font-family);
   font-size: var(--font-size);
   line-height: 2rem;
+  max-width: 400px;
   outline: none;
   padding: 0;
-  width: calc(100% - 2 * (var(--icon-size) + 4rem));
 }
 
 #search-input::placeholder {

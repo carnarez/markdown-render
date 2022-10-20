@@ -78,9 +78,8 @@ body {
   color: var(--font-color);
   font-family: var(--font-family);
   font-size: var(--font-size);
-  height: 100vh;
   line-height: 2rem;
-  margin: 8px; /* default value in all major browsers */
+  margin: 0;
 }
 
 /* scroll indicator */
@@ -88,11 +87,11 @@ body {
 #scroller {
   background-color: var(--link-color);
   height: 1px;
-  margin: 0 0 0 -8px; /* to be modified with body margin */
+  margin: 0;
   position: fixed;
   top: 0;
   width: 0;
-  z-index: 20;
+  z-index: 10;
 }
 
 /* components */
@@ -102,10 +101,12 @@ nav {
   display: flex;
   gap: 0.5rem;
   height: 4rem;
+  margin: 5px 5px 0 5px;
 }
 
 main {
   position: relative;
+  margin: 0 5px 5px 5px;
 }
 
 aside {
@@ -114,17 +115,17 @@ aside {
   display: flex;
   gap: 1rem;
   margin: 0 0 0 -100vw;
-  min-height: calc(100vh - 4rem); /* window height minus nav height */
+  min-height: calc(100vh - 4rem - 11px);
   opacity: 0.9;
   overflow: hidden;
   padding: 1rem;
   position: absolute;
-  width: calc(100vw - 2rem); /* window width minus self padding */
+  width: 100%;
   z-index: 10;
 }
 
 aside > div {
-  flex-basis: min(800px, 100vw);
+  flex-basis: min(800px, 100%);
   margin: 0 auto;
 }
 

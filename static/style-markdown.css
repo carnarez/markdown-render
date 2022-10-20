@@ -64,6 +64,11 @@ pre {
   line-height: 1.5rem;
   overflow: auto;
   padding: 0.3rem 0.6rem;
+  scrollbar-width: none;  /* firefox */
+}
+
+pre::-webkit-scrollbar {
+  display: none;  /* chrome */
 }
 
 pre > code {

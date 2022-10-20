@@ -28,6 +28,7 @@
 .light {
   --background-color: #ffffff;
   --background-color-alt: #f3f5f7;
+  --color-scheme: light;
   --font-color: #24292e;
   --link-color: #0969da;
 }
@@ -35,6 +36,7 @@
 .dark {
   --background-color: #0d1117;
   --background-color-alt: #161b22;
+  --color-scheme: dark;
   --font-color: #c9d1d9;
   --link-color: #539bf5;
 }
@@ -42,6 +44,7 @@
 .dimmed {
   --background-color: #22272e;
   --background-color-alt: #2d333b;
+  --color-scheme: dark;
   --font-color: #adbac7;
   --link-color: #539bf5;
 }
@@ -50,6 +53,7 @@
 
 * {
   box-sizing: border-box;
+  color-scheme: var(--color-scheme);
   scroll-behavior: smooth;
   scroll-margin-top: 1rem;
 }
@@ -106,7 +110,7 @@ nav {
 
 main {
   position: relative;
-  margin: 0 5px 5px 5px;
+  margin: 0 5px;
 }
 
 aside {
@@ -115,7 +119,7 @@ aside {
   display: flex;
   gap: 1rem;
   margin: 0 0 0 -100vw;
-  min-height: calc(100vh - 4rem - 11px);
+  min-height: calc(100vh - 4rem - 6px);
   opacity: 0.9;
   overflow: hidden;
   padding: 1rem;

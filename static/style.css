@@ -114,9 +114,7 @@ main {
 }
 
 aside {
-  align-items: flex-start;
   background-color: var(--background-color);
-  display: flex;
   gap: 1rem;
   margin: 0 0 0 -100vw;
   min-height: calc(100vh - 4rem - 6px);
@@ -129,13 +127,14 @@ aside {
 }
 
 aside > div {
-  flex-basis: min(800px, 100%);
   margin: 0 auto;
+  max-width: 1000px;
+  padding: 1rem;
 }
 
 article {
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 1000px;
   padding: 1rem;
 }
 
@@ -198,6 +197,17 @@ article {
 .button.theme::before {
   content: "\f042";
   font-family: "Font Awesome 6 Free";
+}
+
+/* keyboard shortcuts */
+
+.keys {
+  display: flex;
+  font-size: 80%;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 1000px;
 }
 
 /* utils */

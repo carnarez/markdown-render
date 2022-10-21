@@ -66,8 +66,30 @@
       });
     </script>
 
+    <script>
+      // keyboard shortcuts
+      window.addEventListener("keyup", (event) => {
+        const key = event.key;
+
+        if (event.srcElement.tagName === "BODY") {
+          if (key === "<") {
+            window.location.href = "{{ prev }}";
+          } else if (key === ">") {
+            window.location.href = "{{ next }}";
+          } else if (key === ".") {
+            toggleSidebar("#overlay-menu");
+          } else if (key === "/") {
+            toggleSidebar("#overlay-search", "#search-input");
+          }
+        }
+
+        if (event.srcElement.tagName === "INPUT" && key === "Escape") event.srcElement.blur();
+      });
+    </script>
+
     <!-- show/hide sidebar -->
     <script>
+      // hide the sidebar while unblurring the rest
       function hideSidebar(asideSelector) {
         const aside = document.querySelector("aside" + asideSelector),
               naside = document.querySelector("aside:not(" + asideSelector + ")"),
@@ -88,6 +110,7 @@
         scroller.style.height = "1px";
       }
 
+      // show the sidebar while blurring the rest
       function showSidebar(asideSelector) {
         const aside = document.querySelector("aside" + asideSelector),
               naside = document.querySelector("aside:not(" + asideSelector + ")"),
@@ -242,7 +265,7 @@
 
     <!-- buttons -->
     <nav>
-      <span class="button sidebar" onclick="toggleSidebar('#overlay-toc')"></span>
+      <span class="button sidebar" onclick="toggleSidebar('#overlay-menu')"></span>
       {% if lunr %}
       <span class="button search" onclick="toggleSidebar('#overlay-search', '#search-input')"></span>
       {% endif %}
@@ -256,10 +279,21 @@
     <main>
 
       <!-- table of contents -->
-      <aside id="overlay-toc">{{ toc }}</aside>
+      <aside id="overlay-menu">
+        <div></div>
+        {{ toc }}
+        <div class="keys">
+          <span><kbd>.</kbd> to this menu</span>
+          {% if lunr %}
+          <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">/</kbd> to search</span>
+          {% endif %}
+          <span><kbd>&lt;</kbd> to previous content</span>
+          <span><kbd>&gt;</kbd> to next content</span>
+        </div>
+      </aside>
       <script>
-        document.querySelectorAll("#overlay-toc a").forEach(a => {
-          a.setAttribute("onclick", "toggleSidebar('#overlay-toc')");
+        document.querySelectorAll("#overlay-menu a").forEach(a => {
+          a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
         });
       </script>
 

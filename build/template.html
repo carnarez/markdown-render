@@ -98,9 +98,9 @@
         // toggle sidebars or navigate to preceding/following content
         if (event.srcElement.tagName === "BODY") {
           if (key === "<") {
-            window.location.href = localStorage.getItem("prev-content");
+            window.location.href = localStorage.getItem("prev-content") || "";
           } else if (key === ">") {
-            window.location.href = localStorage.getItem("next-content");
+            window.location.href = localStorage.getItem("next-content") || "";
           } else if (key === ".") {
             toggleSidebar("#overlay-menu");
           } else if (key === "/") {
@@ -347,8 +347,8 @@
         <div class="keys">
           <span><kbd>Esc</kbd> unfocus</span>
           <span><kbd>.</kbd> menu</span>
-          <span><kbd onclick="window.location.href = localStorage.getItem('prev-content')">&lt;</kbd> previous</span>
-          <span><kbd onclick="window.location.href = localStorage.getItem('next-content')">&gt;</kbd> next</span>
+          <span><kbd onclick="window.location.href = localStorage.getItem('prev-content') || ''">&lt;</kbd> previous</span>
+          <span><kbd onclick="window.location.href = localStorage.getItem('next-content') || ''">&gt;</kbd> next</span>
           <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">/</kbd> search</span>
         </div>
       </aside>

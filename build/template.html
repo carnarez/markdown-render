@@ -73,9 +73,9 @@
 
         if (event.srcElement.tagName === "BODY") {
           if (key === "<") {
-            window.location.href = "{{ prev }}";
+            window.location.href = "{{ preceding }}";
           } else if (key === ">") {
-            window.location.href = "{{ next }}";
+            window.location.href = "{{ following }}";
           } else if (key === ".") {
             toggleSidebar("#overlay-menu");
           } else if (key === "/") {
@@ -158,9 +158,17 @@
 
             if (input.length > 2) {
               index.search(input).forEach(match => {
-                const path = prose[match.ref][0].replaceAll("/", " &gt; "),
+                const path = prose[match.ref][0],
                       title = prose[match.ref][1],
-                      text = prose[match.ref][2];
+                      text = prose[match.ref][2],
+                      score = match.score;
+
+                var crumbs = "";
+                if (path === "") {
+                  crumbs = "/";
+                } else {
+                  crumbs = `${path}/`.replaceAll("/", " &gt; ");
+                }
 
                 Object.keys(match.matchData.metadata).forEach(attr => {
                   match.matchData.metadata[attr].text.position.forEach(arr => {
@@ -174,11 +182,12 @@
                         href="{{ root | trim("/") }}/${match.ref}"
                         onclick="toggleSidebar('#overlay-search')"
                       >
-                        <div class="title">${path} &gt; ${title}</div>
+                        <div class="title">${crumbs}${title}</div>
                         <div class="text">
                           ${text.slice(Math.max(0, pos - 100), pos)}
                           <mark>${text.slice(pos, pos + len)}</mark>
                           ${text.slice(pos + len, Math.min(pos + len + 100, text.length))}
+                          <span class="score">${score}</span>
                         </div>
                       </a>
                     `;
@@ -282,37 +291,36 @@
         <div class="menu">
           {{ menu }}
           {{ toc }}
+          <script>
+            document.querySelectorAll("#overlay-menu a").forEach(a => {
+              a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
+            });
+          </script>
         </div>
+        <hr>
         <div class="keys">
           <span><kbd>Esc</kbd> unfocus</span>
           <span><kbd>.</kbd> menu</span>
-          <span><kbd>&lt;</kbd> previous</span>
-          <span><kbd>&gt;</kbd> next</span>
+          <span><kbd onclick="window.location.href = '{{ preceding }}'">&lt;</kbd> previous</span>
+          <span><kbd onclick="window.location.href = '{{ following }}'">&gt;</kbd> next</span>
           <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">/</kbd> search</span>
         </div>
       </aside>
-      <script>
-        document.querySelectorAll("#overlay-menu a").forEach(a => {
-          a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
-        });
-      </script>
 
       <!-- search functionalities -->
       <aside id="overlay-search">
         <div class="search">
-          <div>
-            <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
-            <input
-              autocomplete="off"
-              id="search-input"
-              onkeyup="lunrSearch()"
-              placeholder="search with lunr"
-              type="text"
-            >
-            <span class="button reset" onclick="resetSearch()"></span>
-          </div>
-          <ul id="search-output"></ul>
+          <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
+          <input
+            autocomplete="off"
+            id="search-input"
+            onkeyup="lunrSearch()"
+            placeholder="search with lunr"
+            type="text"
+          >
+          <span class="button reset" onclick="resetSearch()"></span>
         </div>
+        <ul id="search-output"></ul>
       </aside>
 
       <!-- actual content -->

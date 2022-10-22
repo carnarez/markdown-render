@@ -9,7 +9,6 @@
 
 @import "style-highlight.css";
 @import "style-markdown.css";
-@import "style-mermaid.css";
 @import "style-search.css";
 
 /* color schemes */
@@ -72,6 +71,7 @@
                        border-color,
                        color,
                        filter,
+                       font-size,
                        margin,
                        opacity,
                        text-decoration-color;
@@ -158,7 +158,6 @@ article {
   width: var(--icon-size);
 }
 
-.button.home::before,
 .button.repo::before,
 .button.reset::before,
 .button.search::before,
@@ -167,11 +166,6 @@ article {
   font-size: var(--icon-size);
   font-weight: 900;
   width: 2rem; /* same as line-height */
-}
-
-.button.home::before {
-  content: "\f3c5";
-  font-family: "Font Awesome 6 Free";
 }
 
 .button.repo::before {
@@ -190,7 +184,7 @@ article {
 }
 
 .button.sidebar::before {
-  content: "\f0c9";
+  content: "\f0ca";
   font-family: "Font Awesome 6 Free";
 }
 
@@ -202,7 +196,8 @@ article {
 /* keyboard shortcuts */
 
 .keys {
-  display: flex;
+  display: none;
+  flex-wrap: wrap;
   font-size: 80%;
   gap: 1.5rem;
   justify-content: center;
@@ -210,8 +205,54 @@ article {
   max-width: 1000px;
 }
 
-/* utils */
+/* logo */
 
-.flex-spacer {
+.logo {
   flex-grow: 2;
+  text-align: center;
+}
+
+/* menu */
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.menu > div {
+  min-width: 50%;
+}
+
+.menu > div::before {
+  display: block;
+  font-variant: small-caps;
+  margin: 0 0 1rem 0;
+  text-transform: lowercase;
+}
+
+.menu > div:nth-child(1):before {
+  content: "chapters";
+}
+
+.menu > div:nth-child(2):before {
+  content: "contents";
+}
+
+/* some low-resolution/mobile css tweaks */
+
+@media (min-width:1025px) {
+  #prev-article {
+  }
+
+  #next-article {
+  }
+
+  .keys {
+    display: flex;
+  }
+
+  .menu {
+    flex-direction: row;
+  }
 }

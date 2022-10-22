@@ -203,6 +203,14 @@ a:hover {
   border-color: var(--link-color);
 }
 
+/* mermaid diagrams (hopefully not for long...) */
+
+div.mermaid svg {
+  display: block;
+  margin: 0 auto;
+  overflow: auto;
+}
+
 /* strikethrough */
 
 del {
@@ -254,15 +262,31 @@ table tbody tr:nth-child(odd) {
 .toc ul {
   list-style: none;
   margin: 0;
+  padding: 0;
+}
+
+.toc ul li {
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0 0 0 1px;
+  color: var(--font-color);
   padding: 0 0 0 1rem;
+}
+
+.toc ul li:hover {
+  border-color: var(--link-color);
+  color: var(--link-color);
 }
 
 .toc ul li a {
   border: 0;
+  color: inherit;
   display: block;
 }
 
 .toc ul li a:hover {
+  color: var(--link-color);
+  font-size: 120%;
   font-weight: bold;
 }
 

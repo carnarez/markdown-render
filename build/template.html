@@ -144,7 +144,6 @@
       }
     </script>
 
-    {% if lunr %}
     <!-- search via lunr; json file will be cached after first query -->
     <script>
       function lunrSearch() {
@@ -159,7 +158,9 @@
 
             if (input.length > 2) {
               index.search(input).forEach(match => {
-                const text = prose[match.ref];
+                const path = prose[match.ref][0].replaceAll("/", " &gt; "),
+                      title = prose[match.ref][1],
+                      text = prose[match.ref][2];
 
                 Object.keys(match.matchData.metadata).forEach(attr => {
                   match.matchData.metadata[attr].text.position.forEach(arr => {
@@ -173,9 +174,12 @@
                         href="{{ root | trim("/") }}/${match.ref}"
                         onclick="toggleSidebar('#overlay-search')"
                       >
-                      <span>${text.slice(Math.max(0, pos - 100), pos)}</span>
-                      <mark>${text.slice(pos, pos + len)}</mark>
-                      <span>${text.slice(pos + len, Math.min(pos + len + 100, text.length))}</span>
+                        <div class="title">${path} &gt; ${title}</div>
+                        <div class="text">
+                          ${text.slice(Math.max(0, pos - 100), pos)}
+                          <mark>${text.slice(pos, pos + len)}</mark>
+                          ${text.slice(pos + len, Math.min(pos + len + 100, text.length))}
+                        </div>
                       </a>
                     `;
                  
@@ -204,7 +208,6 @@
         input.focus();
       }
     </script>
-    {% endif %}
 
     <!-- external javascript libraries -->
     {% if highlight %}
@@ -241,12 +244,10 @@
       )"
     ></script>
     {% endif %}
-    {% if lunr %}
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js"
     ></script>
-    {% endif %}
     {% if mermaid %}
     <script src="{{ root | trim("/") }}/mermaid.js"></script>
     <script
@@ -266,10 +267,8 @@
     <!-- buttons -->
     <nav>
       <span class="button sidebar" onclick="toggleSidebar('#overlay-menu')"></span>
-      {% if lunr %}
       <span class="button search" onclick="toggleSidebar('#overlay-search', '#search-input')"></span>
-      {% endif %}
-      <span class="flex-spacer"></span>
+      <span class="logo"></span>
       {% if repo %}
       <a class="button repo" href="{{ repo }}"></a>
       {% endif %}
@@ -280,15 +279,16 @@
 
       <!-- table of contents -->
       <aside id="overlay-menu">
-        <div></div>
-        {{ toc }}
+        <div class="menu">
+          {{ menu }}
+          {{ toc }}
+        </div>
         <div class="keys">
-          <span><kbd>.</kbd> to this menu</span>
-          {% if lunr %}
-          <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">/</kbd> to search</span>
-          {% endif %}
-          <span><kbd>&lt;</kbd> to previous content</span>
-          <span><kbd>&gt;</kbd> to next content</span>
+          <span><kbd>Esc</kbd> unfocus</span>
+          <span><kbd>.</kbd> menu</span>
+          <span><kbd>&lt;</kbd> previous</span>
+          <span><kbd>&gt;</kbd> next</span>
+          <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">/</kbd> search</span>
         </div>
       </aside>
       <script>
@@ -297,7 +297,6 @@
         });
       </script>
 
-      {% if lunr %}
       <!-- search functionalities -->
       <aside id="overlay-search">
         <div class="search">
@@ -315,7 +314,6 @@
           <ul id="search-output"></ul>
         </div>
       </aside>
-      {% endif %}
 
       <!-- actual content -->
       <article>{{ content }}</article>

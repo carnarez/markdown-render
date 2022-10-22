@@ -51,21 +51,22 @@
   border-color: var(--link-color);
 }
 
-#search-output li::after {
-  color: var(--link-color);
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-}
-
-#search-output li::after {
-  content: "\f08e";
-  font-size: 80%;
-  padding: 0 0 0 0.5rem;
-}
-
 #search-output li a {
   border: 0;
+}
+
+#search-output li a .text {
   color: var(--font-color);
+  margin: 0 0 0 1rem;
+}
+
+#search-output li a .text::after {
+  color: var(--link-color);
+  content: "\f08e";
+  font-family: "Font Awesome 6 Free";
+  font-size: 80%;
+  font-weight: 900;
+  margin: 0 0 0 1rem;
 }
 
 mark {

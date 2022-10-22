@@ -25,7 +25,7 @@ import re
 import xml
 
 from jinja2 import BaseLoader, Environment, Template
-from lunr import lunr, get_default_builder
+from lunr import get_default_builder, lunr
 from markdown import Markdown
 from markdown.extensions import Extension
 from markdown.extensions.footnotes import FootnoteExtension
@@ -60,7 +60,9 @@ def load_template(filepath: str = "./template.html") -> Template:
     return Environment(loader=BaseLoader()).from_string(open(filepath).read())
 
 
-def render_template(root: str, tmpl: Template, meta: dict[str, str], toc: str, html: str) -> str:
+def render_template(
+    root: str, tmpl: Template, meta: dict[str, str], menu: str, toc: str, html: str
+) -> str:
     """Render the `Jinja2` template after checking for presence of specific content.
 
     Parameters
@@ -71,8 +73,10 @@ def render_template(root: str, tmpl: Template, meta: dict[str, str], toc: str, h
         `Jinja2` template ready to be used.
     meta : dict[str, str]
         Metadata, extracted from the front matter or generated.
+    menu : str
+        Overall table of contents.
     toc : str
-        Table of Contents of the converted content.
+        Table of contents of the converted document.
     html : str
         Generated HTML content.
 
@@ -87,11 +91,11 @@ def render_template(root: str, tmpl: Template, meta: dict[str, str], toc: str, h
     """
     return tmpl.render(
         root=root,
+        menu=menu,
         toc=toc,
         content=html,
         highlight=True if '<pre class="highlight">' in html else False,
         katex=True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False,
-        lunr=True,  # always true
         mermaid=any(
             [
                 True if f'<div class="{m}">' in html else False
@@ -169,7 +173,7 @@ def clean_document(mdwn: str, ellipsis: str = " [...] ") -> str:
     Note
     ----
     Replace the following string by the provided ellipsis:
-    * Table of Contents markers `[TOC]`.
+    * Table of contents markers `[TOC]`.
     * All footnote markers.
     * All code blocks.
     * [`astdocs`](https://github.com/carnarez/astdocs) `%%%SOURCE`, `%%%START` and
@@ -206,7 +210,9 @@ def clean_document(mdwn: str, ellipsis: str = " [...] ") -> str:
     mdwn = re.sub(r"<.+?>", ellipsis, mdwn)
 
     # replace title markers
-    mdwn = re.sub(r"^[#]+\s*(.*)$", r"%%%SECTION\1%%%PARAGRAPH", mdwn, flags=re.MULTILINE)
+    mdwn = re.sub(
+        r"^[#]+\s*(.*)$", r"%%%SECTION\1%%%PARAGRAPH", mdwn, flags=re.MULTILINE
+    )
 
     return mdwn
 
@@ -236,7 +242,7 @@ def convert_document(
     Returns
     -------
     : str
-        Table of Contents of the converted document.
+        Table of contents of the converted document.
     : str
         `Markdown` converted to the requested format, using the provided extensions.
     """
@@ -262,7 +268,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
     : dict[str, str]
         Metadata, extracted from the front matter or generated.
     : str
-        Table of Contents of the converted document.
+        Table of contents of the converted document.
     : str
         `Markdown` content converted to HTML.
     : str
@@ -331,6 +337,37 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
     return meta, toc, html, text
 
 
+def process_menu(filepath: str) -> str:
+    """Render the overall table of contents.
+
+    Parameters
+    ----------
+    filepath : str
+        Path to the `Markdown` file.
+
+    Returns
+    -------
+    : str
+        `Markdown` content converted to HTML.
+    """
+    # check extension respective documentations for configuration
+    extensions: list[Extension] = [
+        DeleteSubExtension(),
+        EmojiExtension(emoji_index=gemoji),
+        InsertSupExtension(),
+        TocExtension(),
+    ]
+
+    # load markdown content
+    with open(filepath) as f:
+        mdwn = f.read().strip()
+
+    # convert to html
+    _, html = convert_document(mdwn, extensions=extensions)
+
+    return f'<div class="toc">{html}</div>'
+
+
 def index_documents(texts: dict[str, str]) -> str:
     """Index all documents for [`lunr.js`](https://lunrjs.com/).
 
@@ -360,13 +397,14 @@ def index_documents(texts: dict[str, str]) -> str:
             if "%%%PARAGRAPH" in section:
                 title, section = section.split("%%%PARAGRAPH")
                 anchor = title.lower().replace(".", "").replace(" ", "-")  # github
-                href = f'{endpoint}#{anchor}'
+                href = f"{endpoint}#{anchor}"
             else:
+                title = ""
                 href = endpoint
 
             section = section.strip()
             if len(section):
-                documents[href] = section
+                documents[href] = (endpoint.rstrip("/"), title, section)
 
     # convert to json
     return json.dumps(
@@ -375,7 +413,7 @@ def index_documents(texts: dict[str, str]) -> str:
             "indexed": lunr(
                 ref="path",
                 fields=["text"],
-                documents=[{"path": p, "text": t} for p, t in documents.items()],
+                documents=[{"path": h, "text": x} for h, (p, i, x) in documents.items()],
                 builder=builder,
             ).serialize(),
         }
@@ -417,6 +455,12 @@ if __name__ == "__main__":
     # flags
     parser = argparse.ArgumentParser(description="Render and index Markdown content.")
     parser.add_argument(
+        "-m",
+        "--menu",
+        default="toc.md",
+        help="Path to the overall table of contents (in Markdown format).",
+    )
+    parser.add_argument(
         "-p",
         "--prefix",
         default=".",
@@ -436,8 +480,14 @@ if __name__ == "__main__":
     )
     flags, files = parser.parse_known_args()
 
-    # process the markdown file
+    # process the html template
     tmpl = load_template(flags.template)
+
+    # process the table of content
+    try:
+      menu = process_menu(flags.menu)
+    except FileNotFoundError:
+      menu = ""
 
     # for each argument...
     for filepath in files:
@@ -453,7 +503,7 @@ if __name__ == "__main__":
 
         # process the markdown file
         meta, toc, html, text = process_document(filepath)
-        html = render_template(flags.root, tmpl, meta, toc, html)
+        html = render_template(flags.root, tmpl, meta, menu, toc, html)
 
         # save content for later
         metas[output] = meta

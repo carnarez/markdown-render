@@ -12,10 +12,8 @@ RUN apt-get update \
  && pip install --upgrade pip \
  && pip install --requirement /usr/src/requirements.txt
 
-RUN find . -name "*.md" | while read f; do \
-      mkdir -p /var/www/`dirname $f`; \
-    done \
- && python render.py --prefix=/var/www `find . -name "*.md"` 
+RUN find . -name "*.md" | grep -v "toc.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
+ && python render.py --prefix=/var/www `find . -name "*.md" | grep -v "toc.md"` 
 
 
 # minify everything in place

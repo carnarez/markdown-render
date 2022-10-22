@@ -60,22 +60,47 @@
 
     <!-- progress indicator -->
     <script>
+      // progress bar
       window.addEventListener("scroll", () => {
         const scrolled = 100 * window.scrollY / (document.querySelector("article").offsetHeight - window.innerHeight);
         document.querySelector("#scroller").style.width = scrolled + "%";
       });
+
+      // deferred otherwise no links are present 
+      window.onload = () => {
+        const menuLinks = document.querySelectorAll("#overlay-menu .menu > div a");
+
+        // highlight current item in the menu
+        menuLinks.forEach((a, i) => {
+          const href = a.getAttribute("href").replace(/^[/]|[/]$/g, ""),
+                path = window.location.pathname.replace(/^[/]|[/]$/g, "");
+
+          // update the preceding and following content
+          if (href === path) {
+            a.className += " active";
+            if (i > 0) localStorage.setItem("prev-content", menuLinks[i - 1].href);
+            if (i < menuLinks.length - 1) localStorage.setItem("next-content", menuLinks[i + 1].href);
+          }
+
+          // close the sidebar when a link is clicked
+          a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
+        });
+
+      }
     </script>
 
+    <!-- old-school navigation -->
     <script>
       // keyboard shortcuts
       window.addEventListener("keyup", (event) => {
         const key = event.key;
 
+        // toggle sidebars or navigate to preceding/following content
         if (event.srcElement.tagName === "BODY") {
           if (key === "<") {
-            window.location.href = "{{ preceding }}";
+            window.location.href = localStorage.getItem("prev-content");
           } else if (key === ">") {
-            window.location.href = "{{ following }}";
+            window.location.href = localStorage.getItem("next-content");
           } else if (key === ".") {
             toggleSidebar("#overlay-menu");
           } else if (key === "/") {
@@ -83,6 +108,7 @@
           }
         }
 
+        // unfocus from input elements
         if (event.srcElement.tagName === "INPUT" && key === "Escape") event.srcElement.blur();
       });
     </script>
@@ -157,12 +183,18 @@
                   output = document.querySelector("#search-output");
 
             if (input.length > 2) {
+
+              // no results yet
+                output.innerHTML = `<li>No results for "<i>${input}</i>" in current corpus.</li>`;
+
+              // find them results
               index.search(input).forEach(match => {
                 const path = prose[match.ref][0],
                       title = prose[match.ref][1],
                       text = prose[match.ref][2],
                       score = match.score;
 
+                // became more cumbersome than expected...
                 var crumbs = "";
                 if (path === "") {
                   if (title !== "") {
@@ -171,9 +203,15 @@
                     crumbs = "/"
                   }
                 } else {
-                  crumbs = `${path}/`.replaceAll("/", " &gt; ");
+                  if (title !== "") {
+                    crumbs = `${path}/`.replaceAll("/", " &gt; ");
+                  } else {
+                    crumbs = path.replaceAll("/", " &gt; ");
+                  }
                 }
 
+                // add an entry for each result
+                // we might want to limit that at some point...
                 Object.keys(match.matchData.metadata).forEach(attr => {
                   match.matchData.metadata[attr].text.position.forEach(arr => {
                     const li = document.createElement("li"),
@@ -201,24 +239,29 @@
                 });
 
               });
+
+              // show results and update the height of the background blurred element
+              if (results.length > 0) {
+                output.replaceChildren(...results);
+                showSidebar("#overlay-search");
+              }
+
+            } else {
+              output.replaceChildren();
             }
 
-            output.replaceChildren(...results);
-
-            showSidebar("#overlay-search");
           });
       }
 
+      // reset search: remove input and output, and focus
       function resetSearch() {
         const input = document.querySelector("#search-input"),
               output = document.querySelector("#search-output");
 
-        if (input.value.length > 0) {
-          input.value = "";
-          output.replaceChildren();
-        }
-
+        input.value = "";
         input.focus();
+
+        output.replaceChildren();
       }
     </script>
 
@@ -270,6 +313,10 @@
     ></script>
     {% endif %}
 
+    <!-- deferred tidbits -->
+    <script>
+    </script>
+
   </head>
 
   <body>
@@ -295,18 +342,13 @@
         <div class="menu">
           {{ menu }}
           {{ toc }}
-          <script>
-            document.querySelectorAll("#overlay-menu a").forEach(a => {
-              a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
-            });
-          </script>
         </div>
         <hr>
         <div class="keys">
           <span><kbd>Esc</kbd> unfocus</span>
           <span><kbd>.</kbd> menu</span>
-          <span><kbd onclick="window.location.href = '{{ preceding }}'">&lt;</kbd> previous</span>
-          <span><kbd onclick="window.location.href = '{{ following }}'">&gt;</kbd> next</span>
+          <span><kbd onclick="window.location.href = localStorage.getItem('prev-content')">&lt;</kbd> previous</span>
+          <span><kbd onclick="window.location.href = localStorage.getItem('next-content')">&gt;</kbd> next</span>
           <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">/</kbd> search</span>
         </div>
       </aside>

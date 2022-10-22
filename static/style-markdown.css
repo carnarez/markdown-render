@@ -294,7 +294,6 @@ table tbody tr:nth-child(odd) {
 
 .toc ul li a:hover {
   color: var(--link-color);
-  font-size: 120%;
   font-weight: bold;
 }
 

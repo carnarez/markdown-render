@@ -20,6 +20,7 @@
                            "Liberation Mono", monospace;
   --font-size: 16px;
   --icon-size: 20px;
+  --max-width: 1000px;
   --transition-duration: 0.5s;
 }
 
@@ -71,7 +72,7 @@
                        border-color,
                        color,
                        filter,
-                       font-size,
+                       font-weight,
                        margin,
                        opacity,
                        text-decoration-color;
@@ -105,7 +106,8 @@ nav {
   display: flex;
   gap: 0.5rem;
   height: 4rem;
-  margin: 5px 5px 0 5px;
+  margin: 5px auto 0 auto;
+  max-width: var(--max-width);
 }
 
 main {
@@ -129,7 +131,7 @@ aside {
 
 aside > * {
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: var(--max-width);
   width: 100%;
 }
 
@@ -143,7 +145,7 @@ aside > hr {
 
 article {
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: var(--max-width);
   padding: 1rem;
 }
 
@@ -211,7 +213,7 @@ article {
   gap: 1.5rem;
   justify-content: center;
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: var(--max-width);
   padding: 1rem 1rem 0 1rem;
 }
 
@@ -231,7 +233,8 @@ article {
 }
 
 .menu > div {
-  min-width: 50%;
+  flex-grow: 2;
+  min-width: calc(50% - 1.5rem);
 }
 
 .menu > div::before {
@@ -249,15 +252,13 @@ article {
   content: "contents";
 }
 
+.menu .active {
+  color: var(--link-color);
+}
+
 /* some low-resolution/mobile css tweaks */
 
 @media (min-width:1025px) {
-  #prev-article {
-  }
-
-  #next-article {
-  }
-
   .keys {
     display: flex;
   }

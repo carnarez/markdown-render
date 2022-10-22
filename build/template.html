@@ -165,7 +165,11 @@
 
                 var crumbs = "";
                 if (path === "") {
-                  crumbs = "/";
+                  if (title !== "") {
+                    crumbs = "";
+                  } else {
+                    crumbs = "/"
+                  }
                 } else {
                   crumbs = `${path}/`.replaceAll("/", " &gt; ");
                 }

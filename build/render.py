@@ -487,7 +487,7 @@ if __name__ == "__main__":
     try:
       menu = process_menu(flags.menu)
     except FileNotFoundError:
-      menu = ""
+      menu = '<div class="menu"></div>'
 
     # for each argument...
     for filepath in files:

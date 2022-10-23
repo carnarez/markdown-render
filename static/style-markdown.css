@@ -163,10 +163,15 @@ span.katex-display:hover:after {
   margin: 1.5rem 0 0 0;
 }
 
-.footnote .footnote-backref::after {
+.footnote-backref {
+  border: 0;
+}
+
+.footnote-backref::after {
   content: "\f08e";
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
+  margin: 0 0 0 1rem;
 }
 
 /* horizontal rule */

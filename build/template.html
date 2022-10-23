@@ -68,7 +68,7 @@
 
       // deferred otherwise no links are present 
       window.onload = () => {
-        const menuLinks = document.querySelectorAll("#overlay-menu .menu > div a");
+        const menuLinks = document.querySelectorAll("#overlay-menu .menu .toc:first-child a");
 
         // highlight current item in the menu
         menuLinks.forEach((a, i) => {
@@ -78,8 +78,26 @@
           // update the preceding and following content
           if (href === path) {
             a.className += " active";
-            if (i > 0) localStorage.setItem("prev-content", menuLinks[i - 1].href);
-            if (i < menuLinks.length - 1) localStorage.setItem("next-content", menuLinks[i + 1].href);
+
+            if (i > 0) {
+              const prev_a = menuLinks[i - 1],
+                    button =  document.querySelector("#prev");
+
+              localStorage.setItem("prev-content", prev_a.href);
+
+              button.href = prev_a.href;
+              button.text = prev_a.text;
+            }
+
+            if (i < menuLinks.length - 1) {
+              const next_a = menuLinks[i + 1],
+                    button = document.querySelector("#next");
+
+              localStorage.setItem("next-content", next_a.href);
+
+              button.href = next_a.href;
+              button.text = next_a.text;
+            }
           }
 
           // close the sidebar when a link is clicked
@@ -103,7 +121,7 @@
             window.location.href = localStorage.getItem("next-content") || "";
           } else if (key === ".") {
             toggleSidebar("#overlay-menu");
-          } else if (key === "/") {
+          } else if (key === "?") {
             toggleSidebar("#overlay-search", "#search-input");
           }
         }
@@ -194,8 +212,9 @@
                       text = prose[match.ref][2],
                       score = match.score;
 
-                // became more cumbersome than expected...
                 var crumbs = "";
+
+                // became more cumbersome than expected...
                 if (path === "") {
                   if (title !== "") {
                     crumbs = "";
@@ -219,11 +238,7 @@
                           len = parseInt(arr[1]);
                  
                     li.innerHTML = `
-                      <a
-                        class="search-result"
-                        href="{{ root | trim("/") }}/${match.ref}"
-                        onclick="toggleSidebar('#overlay-search')"
-                      >
+                      <a class="search-result" href="{{ root | trim("/") }}/${match.ref}" onclick="toggleSidebar('#overlay-search')">
                         <div class="title">${crumbs}${title}</div>
                         <div class="text">
                           ${text.slice(Math.max(0, pos - 100), pos)}
@@ -349,7 +364,7 @@
           <span><kbd>.</kbd> menu</span>
           <span><kbd onclick="window.location.href = localStorage.getItem('prev-content') || ''">&lt;</kbd> previous</span>
           <span><kbd onclick="window.location.href = localStorage.getItem('next-content') || ''">&gt;</kbd> next</span>
-          <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">/</kbd> search</span>
+          <span><kbd onclick="toggleSidebar('#overlay-search', '#search-input')">?</kbd> search</span>
         </div>
       </aside>
 
@@ -357,20 +372,24 @@
       <aside id="overlay-search">
         <div class="search">
           <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
-          <input
-            autocomplete="off"
-            id="search-input"
-            onkeyup="lunrSearch()"
-            placeholder="search with lunr"
-            type="text"
-          >
+          <input autocomplete="off" id="search-input" onkeyup="lunrSearch()" placeholder="search with lunr" type="text">
           <span class="button reset" onclick="resetSearch()"></span>
         </div>
         <ul id="search-output"></ul>
       </aside>
 
       <!-- actual content -->
-      <article>{{ content }}</article>
+      <article>
+        <div class="content">
+          {{ content }}
+        </div>
+        <hr>
+        <div class="prev-next">
+          <a id="prev"></a>
+          <span class="flex-spacer"></span>
+          <a id="next"></a>
+        </div>
+      </article>
 
     </main>
 

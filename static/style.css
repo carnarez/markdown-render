@@ -117,16 +117,19 @@ main {
 
 aside {
   background-color: var(--background-color);
-  display: flex;
-  flex-direction: column;
   margin: 0 0 0 -100vw;
   min-height: calc(100vh - 4rem - 6px);
   opacity: 0.9;
   overflow: hidden;
-  padding: 1rem;
   position: absolute;
   width: 100%;
   z-index: 10;
+}
+
+article,
+aside {
+  display: flex;
+  flex-direction: column;
 }
 
 article > *,
@@ -239,7 +242,7 @@ aside > hr {
   text-transform: lowercase;
 }
 
-.menu > div:first-child:before {
+.menu > div:first-child:not(:empty):before {
   content: "chapters";
 }
 
@@ -247,11 +250,7 @@ aside > hr {
   content: "contents";
 }
 
-.menu > div:empty {
-  content: "";
-}
-
-.menu .active {
+.toc .active {
   color: var(--link-color);
 }
 

@@ -68,20 +68,22 @@
 
       // deferred otherwise no links are present 
       window.onload = () => {
-        const menuLinks = document.querySelectorAll("#overlay-menu .menu .toc:first-child a");
+        const menuLinks = document.querySelectorAll("#overlay-menu .menu .toc:first-child a"),
+              tocLinks = document.querySelectorAll("#overlay-menu .menu .toc:last-child a");
 
-        // highlight current item in the menu
         menuLinks.forEach((a, i) => {
           const href = a.getAttribute("href").replace(/^[/]|[/]$/g, ""),
                 path = window.location.pathname.replace(/^[/]|[/]$/g, "");
 
-          // update the preceding and following content
           if (href === path) {
+
+            // highlight current item in the menu
             a.className += " active";
 
+            // update the preceding and following content
             if (i > 0) {
               const prev_a = menuLinks[i - 1],
-                    button =  document.querySelector("#prev");
+                    button = document.querySelector("#prev");
 
               localStorage.setItem("prev-content", prev_a.href);
 
@@ -98,7 +100,17 @@
               button.href = next_a.href;
               button.text = next_a.text;
             }
+
           }
+        });
+
+        // highlight current item in the table of contents (if part of the current url)
+        tocLinks.forEach(a => {
+          const href = a.getAttribute("href"),
+                hash = window.location.hash;
+
+          // highlight current item in the table of contents
+          if (href === hash) a.className += " active";
 
           // close the sidebar when a link is clicked
           a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
@@ -380,10 +392,7 @@
 
       <!-- actual content -->
       <article>
-        <div class="content">
-          {{ content }}
-        </div>
-        <hr>
+        <div>{{ content }}</div>
         <div class="prev-next">
           <a id="prev"></a>
           <span class="flex-spacer"></span>

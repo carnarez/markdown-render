@@ -18,7 +18,7 @@
     <meta property="og:description" content="{{ description }}">
     <meta property="og:image" content="{{ image }}">
     <link rel="canonical" href="{{ canonical or url }}">
-    <link rel="icon" href="favicon.ico" type="image/png">
+    <link rel="icon" href="#" type="image/png">
 
     <!-- styling and color scheme -->
     <link rel="stylesheet" href="{{ root | trim("/") }}/style.css">
@@ -60,25 +60,37 @@
 
     <!-- progress indicator -->
     <script>
-      // progress bar
+      // update the progress bar
       window.addEventListener("scroll", () => {
-        const scrolled = 100 * window.scrollY / (document.querySelector("article").offsetHeight - window.innerHeight);
-        document.querySelector("#scroller").style.width = scrolled + "%";
+        document.querySelector("#scroller").style.width = 100 * window.scrollY / (document.querySelector("article").offsetHeight - window.innerHeight) + "%";
       });
 
-      // deferred otherwise no links are present 
-      window.onload = () => {
-        const menuLinks = document.querySelectorAll("#overlay-menu .menu .toc:first-child a"),
-              tocLinks = document.querySelectorAll("#overlay-menu .menu .toc:last-child a");
+      // highlight current item in the table of contents
+      window.addEventListener("hashchange", () => {
+        document.querySelectorAll("#overlay-menu .toc:last-child a").forEach(a => {
+          if (a.getAttribute("href") === window.location.hash) {
+            a.className = "active";
+          } else {
+            a.className = "";
+          }
+        });
+      });
 
+      // deferred otherwise no elements
+      window.onload = () => {
+        const menuLinks = document.querySelectorAll("#overlay-menu .toc:first-child a"),
+              tocLinks = document.querySelectorAll("#overlay-menu .toc:last-child a");
+
+        // highlight current item in the menu
         menuLinks.forEach((a, i) => {
           const href = a.getAttribute("href").replace(/^[/]|[/]$/g, ""),
                 path = window.location.pathname.replace(/^[/]|[/]$/g, "");
 
+          // no break capabilities for a forEach
           if (href === path) {
 
             // highlight current item in the menu
-            a.className += " active";
+            a.className = "active";
 
             // update the preceding and following content
             if (i > 0) {
@@ -104,15 +116,8 @@
           }
         });
 
-        // highlight current item in the table of contents (if part of the current url)
+        // close the sidebar when an item of the table of contents is clicked
         tocLinks.forEach(a => {
-          const href = a.getAttribute("href"),
-                hash = window.location.hash;
-
-          // highlight current item in the table of contents
-          if (href === hash) a.className += " active";
-
-          // close the sidebar when a link is clicked
           a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
         });
 
@@ -186,6 +191,9 @@
         article.style.overflow = "hidden";
 
         scroller.style.height = "0";
+
+        // scroll to top of the page
+        window.scroll({top: 0, behaviour: "smooth"});
       }
 
       // wrapper function

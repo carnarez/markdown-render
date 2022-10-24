@@ -60,9 +60,30 @@
 
     <!-- progress indicator -->
     <script>
-      // update the progress bar
+      // scrolling events
       window.addEventListener("scroll", () => {
+        // update the progress bar
         document.querySelector("#scroller").style.width = 100 * window.scrollY / (document.querySelector("article").offsetHeight - window.innerHeight) + "%";
+
+        // update url hash according to visited section
+        // this is not compatible with the current way of highlighting things
+        // leaving it commented for now
+        // const titles = document.querySelectorAll(`
+        //   article div:first-child h1,
+        //   article div:first-child h2,
+        //   article div:first-child h3,
+        //   article div:first-child h4,
+        //   article div:first-child h5,
+        //   article div:first-child h6
+        // `);
+        //
+        // for (let i = 1; i < titles.length; i++) {
+        //   if (titles[i].getBoundingClientRect().top > 0) {
+        //     history.pushState({}, "", `#${titles[i - 1].id}`);
+        //     break; // no need to go any further
+        //   }
+        // }
+
       });
 
       // highlight current item in the table of contents

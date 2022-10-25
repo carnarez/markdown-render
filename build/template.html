@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
   <head>
 
     <meta charset="utf-8">
@@ -21,7 +20,7 @@
     <link rel="icon" href="#" type="image/png">
 
     <!-- styling and color scheme -->
-    <link rel="stylesheet" href="{{ root | trim("/") }}/style.css">
+    <link rel="stylesheet" href="{{ http }}/style.css">
     {% if path != "" %}
     <link rel="stylesheet" href="style.css">
     {% endif %}
@@ -58,16 +57,17 @@
       }
     </script>
 
-    <!-- progress indicator -->
+    <!-- progress indicators -->
     <script>
-      // scrolling events
+      // scroll events
       window.addEventListener("scroll", () => {
+
         // update the progress bar
-        document.querySelector("#scroller").style.width = 100 * window.scrollY / (document.querySelector("article").offsetHeight - window.innerHeight) + "%";
+        document.querySelector("#scroller").style.width = (100 * window.scrollY) / (document.querySelector("article").offsetHeight - window.innerHeight) + "%";
 
         // update url hash according to visited section
-        // this is not compatible with the current way of highlighting things
-        // leaving it commented for now
+        // this is not compatible with the current way of highlighting
+        // things, leaving all this commented for now
         // const titles = document.querySelectorAll(`
         //   article div:first-child h1,
         //   article div:first-child h2,
@@ -86,8 +86,10 @@
 
       });
 
-      // highlight current item in the table of contents
+      // hash change events
       window.addEventListener("hashchange", () => {
+
+        // highlight current item in the table of contents
         document.querySelectorAll("#overlay-menu .toc:last-child a").forEach(a => {
           if (a.getAttribute("href") === window.location.hash) {
             a.className = "active";
@@ -95,17 +97,18 @@
             a.className = "";
           }
         });
+
       });
 
-      // deferred otherwise no elements
+      // onload actions (deferred otherwise no elements to loop over)
       window.onload = () => {
-        const menuLinks = document.querySelectorAll("#overlay-menu .toc:first-child a"),
-              tocLinks = document.querySelectorAll("#overlay-menu .toc:last-child a");
+        const chapterLinks = document.querySelectorAll("#overlay-menu .toc:first-child a"),
+              contentLinks = document.querySelectorAll("#overlay-menu .toc:last-child a"),
+              path = window.location.pathname.replace(/^[/]|[/]$/g, ""),
+              hash = window.location.hash;
 
-        // highlight current item in the menu
-        menuLinks.forEach((a, i) => {
-          const href = a.getAttribute("href").replace(/^[/]|[/]$/g, ""),
-                path = window.location.pathname.replace(/^[/]|[/]$/g, "");
+        chapterLinks.forEach((a, i) => {
+          let href = a.getAttribute("href").replace(/^[/]|[/]$/g, "");
 
           // no break capabilities for a forEach
           if (href === path) {
@@ -113,9 +116,9 @@
             // highlight current item in the menu
             a.className = "active";
 
-            // update the preceding and following content
+            // update the preceding content
             if (i > 0) {
-              const prev_a = menuLinks[i - 1],
+              const prev_a = chapterLinks[i - 1],
                     button = document.querySelector("#prev");
 
               localStorage.setItem("prev-content", prev_a.href);
@@ -124,8 +127,9 @@
               button.text = prev_a.text;
             }
 
-            if (i < menuLinks.length - 1) {
-              const next_a = menuLinks[i + 1],
+            // update the following content
+            if (i < chapterLinks.length - 1) {
+              const next_a = chapterLinks[i + 1],
                     button = document.querySelector("#next");
 
               localStorage.setItem("next-content", next_a.href);
@@ -137,9 +141,18 @@
           }
         });
 
-        // close the sidebar when an item of the table of contents is clicked
-        tocLinks.forEach(a => {
+        contentLinks.forEach(a => {
+          let href = a.getAttribute("href");
+
+          // close the sidebar when an item of the table of contents is clicked
           a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
+
+          // highlight current item in the table of contents
+          if (a.getAttribute("href") === hash) {
+            a.className = "active";
+          } else {
+            a.className = "";
+          }
         });
 
       }
@@ -147,7 +160,7 @@
 
     <!-- old-school navigation -->
     <script>
-      // keyboard shortcuts
+      // keyboard events
       window.addEventListener("keyup", (event) => {
         const key = event.key;
 
@@ -166,6 +179,7 @@
 
         // unfocus from input elements
         if (event.srcElement.tagName === "INPUT" && key === "Escape") event.srcElement.blur();
+
       });
     </script>
 
@@ -190,6 +204,9 @@
         article.style.overflow = "auto";
 
         scroller.style.height = "1px";
+
+        // scroll to element
+        document.querySelector(window.location.hash).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
       }
 
       // show the sidebar while blurring the rest
@@ -232,7 +249,7 @@
     <!-- search via lunr; json file will be cached after first query -->
     <script>
       function lunrSearch() {
-        fetch("{{ root | trim("/") }}/lunr-index.json")
+        fetch("{{ http }}/lunr-index.json")
           .then(response => response.json())
           .then(data => {
             const prose = data.documents,
@@ -244,18 +261,18 @@
             if (input.length > 2) {
 
               // no results yet
-                output.innerHTML = `<li>No results for "<i>${input}</i>" in current corpus.</li>`;
+              output.innerHTML = `<li>No results for "<i>${input}</i>" in current corpus.</li>`;
 
               // find them results
               index.search(input).forEach(match => {
                 const path = prose[match.ref][0],
                       title = prose[match.ref][1],
                       text = prose[match.ref][2],
-                      score = match.score;
+                      score = parseFloat(match.score).toFixed(3);
 
-                var crumbs = "";
+                let crumbs = "";
 
-                // became more cumbersome than expected...
+                // this became much more cumbersome than expected...
                 if (path === "") {
                   if (title !== "") {
                     crumbs = "";
@@ -279,7 +296,7 @@
                           len = parseInt(arr[1]);
                  
                     li.innerHTML = `
-                      <a class="search-result" href="{{ root | trim("/") }}/${match.ref}" onclick="toggleSidebar('#overlay-search')">
+                      <a class="search-result" href="{{ http }}/${match.ref}" onclick="toggleSidebar('#overlay-search')">
                         <div class="title">${crumbs}${title}</div>
                         <div class="text">
                           ${text.slice(Math.max(0, pos - 100), pos)}
@@ -309,7 +326,7 @@
           });
       }
 
-      // reset search: remove input and output, and focus
+      // reset search: flush input/output and focus
       function resetSearch() {
         const input = document.querySelector("#search-input"),
               output = document.querySelector("#search-output");
@@ -361,17 +378,13 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js"
     ></script>
     {% if mermaid %}
-    <script src="{{ root | trim("/") }}/mermaid.js"></script>
+    <script src="{{ http }}/mermaid.js"></script>
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"
       onload="mermaidInitialize()"
     ></script>
     {% endif %}
-
-    <!-- deferred tidbits -->
-    <script>
-    </script>
 
   </head>
 
@@ -396,8 +409,8 @@
       <!-- table of contents -->
       <aside id="overlay-menu">
         <div class="menu">
-          {{ menu }}
-          {{ toc }}
+          {{ chapters }}
+          {{ contents }}
         </div>
         <hr>
         <div class="keys">
@@ -421,7 +434,7 @@
 
       <!-- actual content -->
       <article>
-        <div>{{ content }}</div>
+        <div>{{ article }}</div>
         <div class="prev-next">
           <a id="prev"></a>
           <span class="flex-spacer"></span>

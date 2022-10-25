@@ -61,7 +61,7 @@ def load_template(filepath: str = "./template.html") -> Template:
 
 
 def render_template(
-    root: str, tmpl: Template, meta: dict[str, str], menu: str, toc: str, html: str
+    root: str, tmpl: Template, meta: dict[str, str], chpt: str, ctnt: str, html: str
 ) -> str:
     """Render the `Jinja2` template after checking for presence of specific content.
 
@@ -73,9 +73,9 @@ def render_template(
         `Jinja2` template ready to be used.
     meta : dict[str, str]
         Metadata, extracted from the front matter or generated.
-    menu : str
+    chpt : str
         Overall table of contents.
-    toc : str
+    ctnt : str
         Table of contents of the converted document.
     html : str
         Generated HTML content.
@@ -90,10 +90,11 @@ def render_template(
     The current check for equations easily returns false positives.
     """
     return tmpl.render(
-        root=root,
-        menu=menu,
-        toc=toc,
-        content=html,
+        http=root,
+        chapters=menu,
+        contents=toc,
+        article=html,
+        # booleans
         highlight=True if '<pre class="highlight">' in html else False,
         katex=True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False,
         mermaid=any(
@@ -102,6 +103,7 @@ def render_template(
                 for m in ("mermaid", "naiad")
             ]
         ),
+        # other defined flags (might or might not be used)
         **meta,
     )
 
@@ -503,7 +505,7 @@ if __name__ == "__main__":
 
         # process the markdown file
         meta, toc, html, text = process_document(filepath)
-        html = render_template(flags.root, tmpl, meta, menu, toc, html)
+        html = render_template(flags.root.strip("/"), tmpl, meta, menu, toc, html)
 
         # save content for later
         metas[output] = meta

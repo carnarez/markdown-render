@@ -62,6 +62,9 @@
       // what is 1rem in px
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
+      // define a timer for scrolling events
+      var timer;
+
       // scroll events (only for the main page, not the sidebar)
       window.addEventListener("scroll", () => {
         if (Array.from(document.querySelectorAll("aside")).every(e => e.style.margin !== "0px")) {
@@ -69,44 +72,51 @@
           // update the progress bar
           document.querySelector("#scroller").style.width = (100 * window.scrollY) / (document.querySelector("article").offsetHeight - window.innerHeight) + "%";
 
-          // all sections (could be a template literals but does not get minimized then)
-          const titles = document.querySelectorAll(
-            "article div:first-child h1," +
-            "article div:first-child h2," +
-            "article div:first-child h3," +
-            "article div:first-child h4," +
-            "article div:first-child h5," +
-            "article div:first-child h6"
-          );
+          // makes sure we stopped scrolling before doing the stuff below
+          // cancel the timer and start a new one when a new event comes
+          // wait 250 ms before updating the history
+          if (timer !== null) clearTimeout(timer);        
+          timer = setTimeout(function() {
 
-          // update url hash according to visited section
-          for (let i = 0; i < titles.length; i++) {
-            if (titles[i].getBoundingClientRect().top - 2 * rem > 0) {
-
-              // if scrolled back to top we can remove any hashtag
-              if (i === 0) {
-                history.pushState({}, "", window.location.pathname);
+            // all sections (could be a template literals but does not get minimized then)
+            const titles = document.querySelectorAll(
+              "article div:first-child h1," +
+              "article div:first-child h2," +
+              "article div:first-child h3," +
+              "article div:first-child h4," +
+              "article div:first-child h5," +
+              "article div:first-child h6"
+            );
+            
+            // update url hash according to visited section
+            for (let i = 0; i < titles.length; i++) {
+              if (titles[i].getBoundingClientRect().top - 2 * rem > 0) {
+            
+                // if scrolled back to top we can remove any hashtag
+                if (i === 0) {
+                  history.pushState({}, "", window.location.pathname);
+                }
+            
+                // identifying the next section defines the currently browsed one
+                else {
+                  history.pushState({}, "", `#${titles[i - 1].id}`);
+                }
+            
+                // no need to go any further
+                break;
               }
-
-              // identifying the next section defines the currently browsed one
-              else {
-                history.pushState({}, "", `#${titles[i - 1].id}`);
+            }
+            
+            // highlight current item in the table of contents
+            document.querySelectorAll("#overlay-menu .toc:last-child a").forEach(a => {
+              if (a.getAttribute("href") === window.location.hash) {
+                a.className = "active";
+              } else {
+                a.className = "";
               }
+            });
 
-              // no need to go any further
-              break;
-            }
-          }
-
-          // highlight current item in the table of contents
-          document.querySelectorAll("#overlay-menu .toc:last-child a").forEach(a => {
-            if (a.getAttribute("href") === window.location.hash) {
-              a.className = "active";
-            } else {
-              a.className = "";
-            }
-          });
-
+          }, 250);
         }
       });
 
@@ -217,7 +227,7 @@
 
         // scroll to element
         const hash = window.location.hash;
-        if (hash.length) document.querySelector(hash).scrollIntoView();
+        if (hash.length) document.querySelector(hash).scrollIntoView({behavior: "auto"});
       }
 
       // show the sidebar while blurring the rest
@@ -242,7 +252,8 @@
         scroller.style.height = "0";
 
         // scroll to top of the page
-        window.scroll({behaviour: "smooth", top: 0});
+        // using workaround because firefox does not seem to like .scroll()
+        document.querySelector("nav").scrollIntoView({behavior: "auto"});
       }
 
       // wrapper function

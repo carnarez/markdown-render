@@ -57,47 +57,57 @@
       }
     </script>
 
-    <!-- progress indicators -->
+    <!-- progress indicators (progress bar, chapter and content) -->
     <script>
-      // scroll events
+      // what is 1rem in px
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+      // scroll events (only for the main page, not the sidebar)
       window.addEventListener("scroll", () => {
+        if (Array.from(document.querySelectorAll("aside")).every(e => e.style.margin !== "0px")) {
 
-        // update the progress bar
-        document.querySelector("#scroller").style.width = (100 * window.scrollY) / (document.querySelector("article").offsetHeight - window.innerHeight) + "%";
+          // update the progress bar
+          document.querySelector("#scroller").style.width = (100 * window.scrollY) / (document.querySelector("article").offsetHeight - window.innerHeight) + "%";
 
-        // update url hash according to visited section
-        // this is not compatible with the current way of highlighting
-        // things, leaving all this commented for now
-        // const titles = document.querySelectorAll(`
-        //   article div:first-child h1,
-        //   article div:first-child h2,
-        //   article div:first-child h3,
-        //   article div:first-child h4,
-        //   article div:first-child h5,
-        //   article div:first-child h6
-        // `);
-        //
-        // for (let i = 1; i < titles.length; i++) {
-        //   if (titles[i].getBoundingClientRect().top > 0) {
-        //     history.pushState({}, "", `#${titles[i - 1].id}`);
-        //     break; // no need to go any further
-        //   }
-        // }
+          // all sections (could be a template literals but does not get minimized then)
+          const titles = document.querySelectorAll(
+            "article div:first-child h1," +
+            "article div:first-child h2," +
+            "article div:first-child h3," +
+            "article div:first-child h4," +
+            "article div:first-child h5," +
+            "article div:first-child h6"
+          );
 
-      });
+          // update url hash according to visited section
+          for (let i = 0; i < titles.length; i++) {
+            if (titles[i].getBoundingClientRect().top - 2 * rem > 0) {
 
-      // hash change events
-      window.addEventListener("hashchange", () => {
+              // if scrolled back to top we can remove any hashtag
+              if (i === 0) {
+                history.pushState({}, "", window.location.pathname);
+              }
 
-        // highlight current item in the table of contents
-        document.querySelectorAll("#overlay-menu .toc:last-child a").forEach(a => {
-          if (a.getAttribute("href") === window.location.hash) {
-            a.className = "active";
-          } else {
-            a.className = "";
+              // identifying the next section defines the currently browsed one
+              else {
+                history.pushState({}, "", `#${titles[i - 1].id}`);
+              }
+
+              // no need to go any further
+              break;
+            }
           }
-        });
 
+          // highlight current item in the table of contents
+          document.querySelectorAll("#overlay-menu .toc:last-child a").forEach(a => {
+            if (a.getAttribute("href") === window.location.hash) {
+              a.className = "active";
+            } else {
+              a.className = "";
+            }
+          });
+
+        }
       });
 
       // onload actions (deferred otherwise no elements to loop over)
@@ -142,7 +152,6 @@
         });
 
         contentLinks.forEach(a => {
-          let href = a.getAttribute("href");
 
           // close the sidebar when an item of the table of contents is clicked
           a.setAttribute("onclick", "toggleSidebar('#overlay-menu')");
@@ -153,6 +162,7 @@
           } else {
             a.className = "";
           }
+
         });
 
       }
@@ -206,7 +216,8 @@
         scroller.style.height = "1px";
 
         // scroll to element
-        document.querySelector(window.location.hash).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        const hash = window.location.hash;
+        if (hash.length) document.querySelector(hash).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
       }
 
       // show the sidebar while blurring the rest
@@ -231,7 +242,7 @@
         scroller.style.height = "0";
 
         // scroll to top of the page
-        window.scroll({top: 0, behaviour: "smooth"});
+        window.scroll({behaviour: "smooth", top: 0});
       }
 
       // wrapper function

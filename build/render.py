@@ -2,10 +2,14 @@
 
 Arguments
 ---------
---prefix
-    Prefix to the output path.
---template
-    Path to the HTML template.
+menu
+    Path to the overall table of contents (in Markdown format). Defaults to `toc.md`.
+prefix
+    Prefix to the output path. Defaults to `.` (current directory).
+root
+    Root of the exposed content. Defaults to `http://localhost:8000/`.
+template
+    Path to the HTML template. Defaults to `template.html`.
 
 Examples
 --------
@@ -415,7 +419,9 @@ def index_documents(texts: dict[str, str]) -> str:
             "indexed": lunr(
                 ref="path",
                 fields=["text"],
-                documents=[{"path": h, "text": x} for h, (p, i, x) in documents.items()],
+                documents=[
+                    {"path": h, "text": x} for h, (p, i, x) in documents.items()
+                ],
                 builder=builder,
             ).serialize(),
         }
@@ -487,9 +493,9 @@ if __name__ == "__main__":
 
     # process the table of content
     try:
-      menu = process_menu(flags.menu)
+        menu = process_menu(flags.menu)
     except FileNotFoundError:
-      menu = '<div class="menu"></div>'
+        menu = '<div class="menu"></div>'
 
     # for each argument...
     for filepath in files:

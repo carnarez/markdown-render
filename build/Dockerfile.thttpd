@@ -32,7 +32,15 @@ COPY prose .
 RUN apt-get update \
  && apt-get install --no-install-recommends --no-install-suggests --yes git \
  && pip install --upgrade pip \
- && pip install --requirement /usr/src/requirements.txt
+ && pip install --no-cache-dir git+https://github.com/carnarez/markdown-astdocs@master \
+                               git+https://github.com/carnarez/markdown-img@master \
+                               git+https://github.com/carnarez/markdown-insert@master \
+                               git+https://github.com/carnarez/markdown-script@master \
+                               jinja2 \
+                               lunr \
+                               markdown \
+                               pymdown-extensions \
+                               pyyaml
 
 RUN find . -name "*.md" | grep -v "toc.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
  && python render.py --prefix=/var/www `find . -name "*.md" | grep -v "toc.md"`

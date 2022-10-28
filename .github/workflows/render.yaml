@@ -21,7 +21,12 @@ jobs:
       - name: Install Node dependencies
         run: |
           npm config set update-notifier false
-          npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli prettier terser
+          npm install --global --no-audit --no-fund autoprefixer \
+                                                    clean-css-cli \
+                                                    html-minifier \
+                                                    postcss-cli \
+                                                    prettier \
+                                                    terser
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -31,7 +36,16 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install ghp-import --requirement build/requirements.txt
+          python -m pip install ghp-import \
+                                git+https://github.com/carnarez/markdown-astdocs@master \
+                                git+https://github.com/carnarez/markdown-img@master \
+                                git+https://github.com/carnarez/markdown-insert@master \
+                                git+https://github.com/carnarez/markdown-script@master \
+                                jinja2 \
+                                lunr \
+                                markdown \
+                                pymdown-extensions \
+                                pyyaml
 
       - name: Render Markdown content
         run: |

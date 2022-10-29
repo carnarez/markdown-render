@@ -20,7 +20,8 @@
                            "Liberation Mono", monospace;
   --font-size: 16px;
   --icon-size: 20px;
-  --max-width: 1000px;
+  --max-width: 800px;
+  --nav-height: 5rem;
   --transition-duration: 0.5s;
 }
 
@@ -55,7 +56,7 @@
   box-sizing: border-box;
   color-scheme: var(--color-scheme);
   scroll-behavior: smooth;
-  scroll-margin-top: 1rem;
+  scroll-margin-top: var(--nav-height);
 }
 
 *,
@@ -71,11 +72,10 @@
   transition-property: background-color,
                        border-color,
                        color,
-                       filter,
-                       font-weight,
                        margin,
                        opacity,
-                       text-decoration-color;
+                       text-decoration-color,
+                       width;
 }
 
 body {
@@ -85,6 +85,20 @@ body {
   font-size: var(--font-size);
   line-height: 2rem;
   margin: 0;
+  padding: 0;
+}
+
+/* splash screen */
+
+header {
+  align-items: center;
+  background-color: var(--background-color-alt);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  z-index: 10;
 }
 
 /* scroll indicator */
@@ -93,63 +107,34 @@ body {
   background-color: var(--link-color);
   height: 1px;
   margin: 0;
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 0;
-  z-index: 10;
-}
-
-/* components */
-
-nav {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
-  height: 4rem;
-  margin: 5px auto 0 auto;
-  max-width: var(--max-width);
-}
-
-main {
-  position: relative;
-  margin: 0 5px;
-}
-
-aside {
-  background-color: var(--background-color);
-  margin: 0 0 0 -100vw;
-  min-height: calc(100vh - 4rem - 6px);
-  opacity: 0.9;
-  overflow: hidden;
-  position: absolute;
-  width: 100%;
   z-index: 9;
 }
 
-article,
-aside {
-  display: flex;
-  flex-direction: column;
-}
+/* navigation bar */
 
-article > *,
-aside > * {
-  margin: 1rem auto;
-  max-width: var(--max-width);
+nav {
+  background-color: var(--background-color);
+  border-color: var(--background-color-alt);
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  height: var(--nav-height);
+  order: 0;
+  position: sticky;
+  top: 0;
   width: 100%;
+  z-index: 8;
 }
 
-article > div,
-aside > div {
+.buttons {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  height: 100%;
   padding: 0 1rem;
 }
-
-article > hr,
-aside > hr {
-  flex-grow: 1;
-}
-
-/* vanilla buttons */
 
 .button {
   border: 0;
@@ -204,59 +189,97 @@ aside > hr {
   font-family: "Font Awesome 6 Free";
 }
 
-/* keyboard shortcuts */
-
-.keys {
-  display: none;
-  flex-wrap: wrap;
-  font-size: 80%;
-  gap: 1.5rem;
-  justify-content: center;
-  max-width: var(--max-width);
-}
-
-/* logo */
-
 .logo {
-  flex-grow: 2;
+  border: 0;
   text-align: center;
 }
 
-/* menu */
+.logo:hover {
+  border: 0;
+}
 
-.menu {
+/* side bars */
+
+aside {
+  border-color: var(--background-color-alt);
+  border-style: solid;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  font-size: 90%;
+  height: calc(100% - var(--nav-height)); /* sign is right if unexpected */
+  overflow: hidden;
+  position: fixed;
+  scrollbar-width: none;
+  top: var(--nav-height);
+  white-space: nowrap;
+  width: 0;
+  z-index: 7;
 }
 
-.menu > div:not(:empty) {
-  flex-grow: 2;
-  min-width: calc(50% - 1.5rem);
+aside::-webkit-scrollbar {
+  width: 0;
 }
 
-.menu > div:not(:empty):before {
+aside > * {
+  margin: 0;
+  padding: 1rem;
+  width: 100%;
+}
+ 
+#chapters {
+  border-width: 0 1px 0 0;
+  left: 0;
+}
+
+#contents {
+  border-width: 0 0 0 1px;
+  right: 0;
+}
+
+#chapters .toc:not(:empty):before,
+#contents .toc:not(:empty):before {
   display: block;
   font-variant: small-caps;
   margin: 0 0 1rem 0;
   text-transform: lowercase;
 }
 
-.menu > div:first-child:not(:empty):before {
+#chapters .toc:not(:empty):before {
   content: "chapters";
 }
 
-.menu > div:last-child:not(:empty):before {
+#contents .toc:not(:empty):before {
   content: "contents";
 }
 
-.toc .active {
+#chapters a.active,
+#contents a.active {
   color: var(--link-color);
+  font-weight: bold;
+}
+
+/* main content */
+
+main {
+  border-color: var(--background-color-alt);
+  border-style: solid;
+  border-width: 0 1px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+
+main > * {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 1rem;
+  width: 100%;
 }
 
 /* preceding/following content */
 
-.prev-next {
+.prevnext {
   display: flex;
   flex-direction: column;
 }
@@ -306,19 +329,14 @@ aside > hr {
 /* some low-resolution/mobile style tweaks
  * meaning all the css around here is mobile-first */
 
-@media (min-width:1025px) {
-  .keys {
-    display: flex;
-  }
-
-  .menu,
-  .prev-next {
+@media (min-width:1400px) {
+  .prevnext {
     flex-direction: row;
   }
 }
 
 /* utils */
 
-.flex-spacer {
+.spacer {
   flex-grow: 2;
 }

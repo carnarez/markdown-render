@@ -65,7 +65,7 @@ def load_template(filepath: str = "./template.html") -> Template:
 
 
 def render_template(
-    root: str, tmpl: Template, meta: dict[str, str], chpt: str, ctnt: str, html: str
+    root: str, tmpl: Template, meta: dict[str, str], menu: str, html: str
 ) -> str:
     """Render the `Jinja2` template after checking for presence of specific content.
 
@@ -77,9 +77,7 @@ def render_template(
         `Jinja2` template ready to be used.
     meta : dict[str, str]
         Metadata, extracted from the front matter or generated.
-    chpt : str
-        Overall table of contents.
-    ctnt : str
+    menu : str
         Table of contents of the converted document.
     html : str
         Generated HTML content.
@@ -95,8 +93,7 @@ def render_template(
     """
     return tmpl.render(
         http=root,
-        chapters=menu,
-        contents=toc,
+        contents=menu,
         article=html,
         # booleans
         highlight=True if '<pre class="highlight">' in html else False,
@@ -374,6 +371,39 @@ def process_menu(filepath: str) -> str:
     return f'<div class="toc">{html}</div>'
 
 
+def merge_digests(endpoint: str, menu: str, toc: str):
+    """Insert the document table of contents into the ovrall table of contents.
+
+    Parameters
+    ----------
+    endpoint : str
+        Internal URL to the served content.
+    menu : str
+        Overall table of contents.
+    toc : str
+        Table of contents of the converted document.
+
+    Returns
+    -------
+    : str
+        HTML table of contents.
+    """
+    _menu = []
+
+    # clean up
+    toc = re.search(r'<div class="toc">(.*?)</div>', toc, flags=re.DOTALL).group(1)
+
+    # figure out which entry is the one
+    for tag in menu.split("\n"):
+        if (m := re.search('href="(.*?)"', tag)) and m.group(1) == endpoint:
+            _menu.append(tag)
+            _menu.append(f"<li>{toc}</li>")
+        else:
+            _menu.append(tag)
+
+    return "\n".join(_menu)
+
+
 def index_documents(texts: dict[str, str]) -> str:
     """Index all documents for [`lunr.js`](https://lunrjs.com/).
 
@@ -495,7 +525,7 @@ if __name__ == "__main__":
     try:
         menu = process_menu(flags.menu)
     except FileNotFoundError:
-        menu = '<div class="menu"></div>'
+        menu = ""
 
     # for each argument...
     for filepath in files:
@@ -511,7 +541,15 @@ if __name__ == "__main__":
 
         # process the markdown file
         meta, toc, html, text = process_document(filepath)
-        html = render_template(flags.root.strip("/"), tmpl, meta, menu, toc, html)
+
+        # attach the page table of contents to the overall table of contents
+        if len(menu):
+            toc = merge_digests(
+                re.sub("/index.[dhtml]+$", "", f"/{dirname}/{basename}"), menu, toc
+            )
+
+        # render the html page
+        html = render_template(flags.root.strip("/"), tmpl, meta, toc, html)
 
         # save content for later
         metas[output] = meta

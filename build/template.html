@@ -57,41 +57,25 @@
       }
     </script>
 
-    <!-- progress indicators (progress bar, chapter and content) -->
+    <!-- progress indicators (progress bar, section and content) -->
     <script>
-      var splashToggle = false, timer;
+      var timer;
 
       // scroll events, mostly throttled
       window.addEventListener("scroll", () => {
         const scroller = document.querySelector("#scroller"),
-              scrolled = scroller.getBoundingClientRect().top;
+              aside = document.querySelector("aside"),
+              article = document.querySelector("article");
 
-        // update the progress bar
-        if (scrolled === 0) {
+        if (scroller.getBoundingClientRect().top > 0) {
+          scroller.style.width = "0";
+        } else {
+
+          // update the progress bar *if visible*
           let currentScrollY = window.scrollY - window.innerHeight,
-              overallScrollY = document.querySelector("main").offsetHeight - window.innerHeight;
+              overallScrollY = document.querySelector("article").offsetHeight - window.innerHeight;
 
-          scroller.style.width = 100 * currentScrollY / overallScrollY + "%";
-        }
-
-        // keep sidebars hidden
-        if (scrolled > 0) {
-          if (parseInt(chapters.style.width) > 0) hideSidebar(chapters);
-          if (parseInt(contents.style.width) > 0) hideSidebar(contents);
-          scroller.style.width = "0";
-          splashToggle = false;
-        }
-
-        // show the sidebars only if we have scrolled the splash screen entirely
-        else if (scrolled === 0 && splashToggle === false) {
-          showSidebar(chapters);
-          showSidebar(contents);
-          scroller.style.width = "0";
-          splashToggle = true;
-        }
-
-        // process events
-        else {
+          scroller.style.width = 100 * Math.min(currentScrollY / overallScrollY, 1) + "%";
           
           // makes sure we stopped scrolling before doing the stuff below
           // cancel the timer and start a new one when a new event comes
@@ -99,46 +83,49 @@
             
           // wait 150 ms before updating the history
           timer = setTimeout(() => {
-            const chapters = document.querySelector("#chapters"),
-                  contents = document.querySelector("#contents");
+            const aside = document.querySelector("aside");
           
-          // all sections (could be a template literals but does not get minimized then)
-          const titles = document.querySelectorAll(
-            ".maintext h1," +
-            ".maintext h2," +
-            ".maintext h3," +
-            ".maintext h4," +
-            ".maintext h5," +
-            ".maintext h6"
-          );
-          
-          // update url hash according to visited section
-          for (let i = 0; i < titles.length; i++) {
-            if (titles[i].getBoundingClientRect().top - parseInt(getComputedStyle(document.documentElement).scrollMarginTop) - 1 > 0) {
-          
-              // if scrolled back to top we can remove any hashtag
-              if (i === 0) {
-                history.pushState({}, "", window.location.pathname);
+            // all sections (could be a template literals but does not get minimized then)
+            const titles = document.querySelectorAll(
+              ".maintext h1," +
+              ".maintext h2," +
+              ".maintext h3," +
+              ".maintext h4," +
+              ".maintext h5," +
+              ".maintext h6"
+            );
+            
+            // update url hash according to visited section
+            for (let i = 0; i < titles.length; i++) {
+              if (titles[i].getBoundingClientRect().top - parseInt(getComputedStyle(document.documentElement).scrollMarginTop) - 1 > 0) {
+            
+                // if scrolled back to top we can remove any hashtag
+                if (i === 0) {
+                  history.pushState({}, "", window.location.pathname);
+                }
+            
+                // identifying the next section defines the currently browsed one
+                else {
+                  history.pushState({}, "", `#${titles[i - 1].id}`);
+                }
+            
+                // no need to go any further
+                break;
               }
-          
-              // identifying the next section defines the currently browsed one
-              else {
-                history.pushState({}, "", `#${titles[i - 1].id}`);
+            }
+            
+            // highlight current item in the table of contents
+            document.querySelectorAll("aside a").forEach(a => {
+              let href = a.getAttribute("href");
+
+              if (href.startsWith("#")) {
+                if (href === window.location.hash) {
+                  a.classList.add("active");
+                } else {
+                  a.classList.remove("active");
+                }
               }
-          
-              // no need to go any further
-              break;
-            }
-          }
-          
-          // highlight current item in the table of contents
-          document.querySelectorAll("#contents a").forEach(a => {
-            if (a.getAttribute("href") === window.location.hash) {
-              a.className = "active";
-            } else {
-              a.className = "";
-            }
-          });
+            });
           
           }, 150);
 
@@ -148,23 +135,34 @@
 
       // onload actions (deferred otherwise no elements to loop over)
       window.onload = () => {
-        const chapterLinks = document.querySelectorAll("#chapters a"),
-              contentLinks = document.querySelectorAll("#contents a"),
+        const links = document.querySelectorAll("aside a"),
               path = window.location.pathname.replace(/^[/]|[/]$/g, ""),
               hash = window.location.hash;
 
-        chapterLinks.forEach((a, i) => {
+        // build list of links (needed for the preceding/following content)
+        const sectionLinks = [],
+              contentLinks = [];
+
+        links.forEach(a => {
+          if (!a.getAttribute("href").startsWith("#")) {
+            sectionLinks.push(a);
+          } else {
+            contentLinks.push(a);
+          }
+        });
+
+        sectionLinks.forEach((a, i) => {
           let href = a.getAttribute("href").replace(/^[/]|[/]$/g, "");
 
           // no break capabilities for a forEach
           if (href === path) {
 
             // highlight current item in the menu
-            a.className = "active";
+            a.classList.add("active");
 
             // update the preceding content
             if (i > 0) {
-              const prev_a = chapterLinks[i - 1],
+              const prev_a = sectionLinks[i - 1],
                     button = document.querySelector("#prev");
 
               localStorage.setItem("prev-content", prev_a.href);
@@ -174,8 +172,8 @@
             }
 
             // update the following content
-            if (i < chapterLinks.length - 1) {
-              const next_a = chapterLinks[i + 1],
+            if (i < sectionLinks.length - 1) {
+              const next_a = sectionLinks[i + 1],
                     button = document.querySelector("#next");
 
               localStorage.setItem("next-content", next_a.href);
@@ -190,9 +188,9 @@
         // highlight current item in the table of contents
         contentLinks.forEach(a => {
           if (a.getAttribute("href") === hash) {
-            a.className = "active";
+            a.classList.add("active");
           } else {
-            a.className = "";
+            a.classList.remove("active");
           }
         });
 
@@ -230,42 +228,26 @@
 
     <!-- show/hide sidebars -->
     <script>
-      function hideSidebar(element) {
-        element.style.overflow = "hidden";
-        element.style.width = "0";
-      }
-
-      function showSidebar(element) {
-        element.style.width = "20%";
-        element.style.overflow = "auto";
-      }
-
-      // wrapper
       function toggleSidebars() {
-        const chapters = document.querySelector("#chapters"),
-              contents = document.querySelector("#contents");
+        if (document.querySelector("#scroller").getBoundingClientRect().top === 0) {
 
-        // hide the left sidebar
-        if (
-          (chapters.style.width === "" || chapters.style.width === "20%") &&
-          (contents.style.width === "" || contents.style.width === "20%")
-        ) {
-          hideSidebar(chapters);
+          // elements involved
+          const aside = document.querySelector("aside"),
+                article = document.querySelector("article");
+          
+          // hide the sidebar
+          if (aside.classList.contains("visible-sidebar")) {
+            aside.classList.remove("visible-sidebar");
+            article.classList.remove("visible-sidebar");
+          }
+          
+          // show sidebar
+          else {
+            aside.classList.add("visible-sidebar");
+            article.classList.add("visible-sidebar");
+          }
+
         }
-
-        // hide the right sidebar
-        else if (
-          contents.style.width === "" || contents.style.width === "20%"
-        ) {
-          hideSidebar(contents);
-        }
-
-        // show both sidebars
-        else {
-          showSidebar(chapters);
-          showSidebar(contents);
-        }
-
       }
     </script>
 
@@ -412,6 +394,19 @@
   </head>
 
   <body>
+      
+    <!-- buttons -->
+    <nav>
+      <div class="buttons">
+        <a class="button sidebar" onclick="toggleSidebars()"></a>
+        <a class="button search" onclick="toggleSearchOverlay()"></a>
+        <span class="spacer"></span>
+        <a class="spacer logo" href="{{ http }}"><img src=""></a>
+        <span class="spacer"></span>
+        <a class="button repo" href="{{ repo }}"></a>
+        <a class="button theme" onclick="toggleTheme()"></a>
+      </div>
+    </nav>
 
     {% if path != "" %}
     <!-- splash screen -->
@@ -421,43 +416,35 @@
       <span>{{ decription }}</span>
       <span>
         <a href="{{ repo }}">GitHub</a>
-        <a href="">Quickstart</a>
+        <a onclick="window.scroll(0, document.querySelector('main').getBoundingClientRect().top)">Docs</a>
       </span>
     </header>
     {% endif %}
 
-    <!-- show scrolling progress -->
-    <div id="scroller"></div>
-
-    <!-- buttons -->
-    <nav>
-      <div class="buttons">
-        <a class="button sidebar" onclick="toggleSidebars()"></a>
-        <a class="button search" onclick="toggleSearchOverlay()"></a>
-        <a class="spacer logo" href="{{ root }}"><img src=""></a>
-        <a class="button repo" href="{{ repo }}"></a>
-        <a class="button theme" onclick="toggleTheme()"></a>
-      </div>
-    </nav>
-  
-    <!-- tables of contents -->
-    <aside id="chapters">{{ chapters }}</aside>
-    <aside id="contents">{{ contents }}</aside>
-  
-    <!-- actual content -->
     <main>
 
-      <!-- main text -->
-      <article>{{ article }}</article>
-
-      <!-- previous / next articles -->
-      <span class="spacer">
-      <div class="prevnext">
-        <a id="prev"></a>
-        <span class="spacer"></span>
-        <a id="next"></a>
-      </div>
-
+      <!-- show scrolling progress -->
+      <div id="scroller"></div>
+      
+      <!-- tables of contents -->
+      <aside>{{ contents }}</aside>
+      
+      <!-- actual content -->
+      <article>
+      
+        <!-- main text -->
+        <div class="maintext">{{ article }}</div>
+      
+        <!-- previous / next articles -->
+        <span class="spacer">
+        <div class="prevnext">
+          <a id="prev"></a>
+          <span class="spacer"></span>
+          <a id="next"></a>
+        </div>
+      
+      </article>
+      
       <!-- search functionalities
       <div id="search-overlay">
         <div class="search-bar">
@@ -466,7 +453,8 @@
           <span class="button reset" onclick="resetSearch()"></span>
         </div>
         <ul id="search-output"></ul>
-      </div> -->
+      </div>
+      -->
 
     </main>
 

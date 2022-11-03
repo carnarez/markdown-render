@@ -72,8 +72,10 @@
   transition-property: background-color,
                        border-color,
                        color,
+                       left,
                        margin,
                        opacity,
+                       right,
                        text-decoration-color,
                        width;
 }
@@ -88,44 +90,14 @@ body {
   padding: 0;
 }
 
-/* splash screen */
-
-header {
-  align-items: center;
-  background-color: var(--background-color-alt);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
-  width: 100%;
-  z-index: 10;
-}
-
-/* scroll indicator */
-
-#scroller {
-  background-color: var(--link-color);
-  height: 1px;
-  margin: 0;
-  position: sticky;
-  top: 0;
-  width: 0;
-  z-index: 9;
-}
-
 /* navigation bar */
 
 nav {
-  background-color: var(--background-color);
-  border-color: var(--background-color-alt);
-  border-style: solid;
-  border-width: 0 0 1px 0;
   height: var(--nav-height);
-  order: 0;
-  position: sticky;
+  position: fixed;
   top: 0;
   width: 100%;
-  z-index: 8;
+  z-index: 9;
 }
 
 .buttons {
@@ -189,20 +161,47 @@ nav {
   font-family: "Font Awesome 6 Free";
 }
 
-.logo {
-  border: 0;
-  text-align: center;
-}
-
+.logo,
 .logo:hover {
   border: 0;
+}
+
+/* splash screen */
+
+header {
+  align-items: center;
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* main content */
+
+main {
+  position: sticky;
+  top: 0;
+}
+
+/* scroll indicator */
+
+#scroller {
+  background-color: var(--link-color);
+  height: 1px;
+  margin: 0;
+  position: sticky;
+  top: 0;
+  transition: none;
+  width: 0;
+  z-index: 9;
 }
 
 /* side bars */
 
 aside {
-  border-color: var(--background-color-alt);
-  border-style: solid;
   display: flex;
   flex-direction: column;
   font-size: 90%;
@@ -213,11 +212,15 @@ aside {
   top: var(--nav-height);
   white-space: nowrap;
   width: 0;
-  z-index: 7;
 }
 
 aside::-webkit-scrollbar {
   width: 0;
+}
+
+aside.visible-sidebar {
+  overflow: auto;
+  width: 20%;
 }
 
 aside > * {
@@ -225,52 +228,28 @@ aside > * {
   padding: 1rem;
   width: 100%;
 }
- 
-#chapters {
-  border-width: 0 1px 0 0;
-  left: 0;
-}
 
-#contents {
-  border-width: 0 0 0 1px;
-  right: 0;
-}
-
-#chapters .toc:not(:empty):before,
-#contents .toc:not(:empty):before {
-  display: block;
-  font-variant: small-caps;
-  margin: 0 0 1rem 0;
-  text-transform: lowercase;
-}
-
-#chapters .toc:not(:empty):before {
-  content: "chapters";
-}
-
-#contents .toc:not(:empty):before {
-  content: "contents";
-}
-
-#chapters a.active,
-#contents a.active {
-  color: var(--link-color);
+aside a.active {
+  color: var(--link-color) !important;
   font-weight: bold;
 }
 
 /* main content */
 
-main {
-  border-color: var(--background-color-alt);
-  border-style: solid;
-  border-width: 0 1px;
+article {
   display: flex;
   flex-direction: column;
-  position: relative;
+  left: 0;
   width: 100%;
+  position: relative;
 }
 
-main > * {
+article.visible-sidebar {
+  left: 20%;
+  width: 80%;
+}
+
+article > * {
   margin: 0 auto;
   max-width: 800px;
   padding: 1rem;
@@ -324,15 +303,6 @@ main > * {
 #next:not(:empty):after {
   content: "\f061";
   margin: 0 0 0 1rem;
-}
-
-/* some low-resolution/mobile style tweaks
- * meaning all the css around here is mobile-first */
-
-@media (min-width:1400px) {
-  .prevnext {
-    flex-direction: row;
-  }
 }
 
 /* utils */

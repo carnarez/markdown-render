@@ -64,16 +64,30 @@
       // scroll events, mostly throttled
       window.addEventListener("scroll", () => {
         const scroller = document.querySelector("#scroller"),
-              aside = document.querySelector("aside"),
+              nav = document.querySelector("nav"),
+              aside = document.querySelector("#toc"),
               article = document.querySelector("article");
 
+        // hide/reduce all
         if (scroller.getBoundingClientRect().top > 0) {
           scroller.style.width = "0";
-        } else {
+          document.querySelectorAll("aside, article").forEach(a => {
+            let className = a.className.match(/visible-[a-z]+-sidebar/) || "";
+            if (className.length > 0) a.classList.remove(className);
+          });
+          aside.scrollTop = 0;
+        }
+        
+        // process the event
+        else {
 
-          // update the progress bar *if visible*
+          // update the progress bar
+          {% if path == "" and splash != "" %}
           let currentScrollY = window.scrollY - window.innerHeight,
-              overallScrollY = document.querySelector("article").offsetHeight - window.innerHeight;
+          {% else %}
+          let currentScrollY = window.scrollY,
+          {% endif %}
+              overallScrollY = article.offsetHeight - window.innerHeight;
 
           scroller.style.width = 100 * Math.min(currentScrollY / overallScrollY, 1) + "%";
           
@@ -83,17 +97,7 @@
             
           // wait 150 ms before updating the history
           timer = setTimeout(() => {
-            const aside = document.querySelector("aside");
-          
-            // all sections (could be a template literals but does not get minimized then)
-            const titles = document.querySelectorAll(
-              ".maintext h1," +
-              ".maintext h2," +
-              ".maintext h3," +
-              ".maintext h4," +
-              ".maintext h5," +
-              ".maintext h6"
-            );
+            const titles = article.querySelectorAll("h1, h2, h3, h4, h5, h6");
             
             // update url hash according to visited section
             for (let i = 0; i < titles.length; i++) {
@@ -115,12 +119,18 @@
             }
             
             // highlight current item in the table of contents
-            document.querySelectorAll("aside a").forEach(a => {
+            aside.querySelectorAll("a").forEach(a => {
               let href = a.getAttribute("href");
 
               if (href.startsWith("#")) {
                 if (href === window.location.hash) {
                   a.classList.add("active");
+                  if (
+                    a.offsetTop < aside.scrollTop + nav.offsetHeight ||
+                    a.offsetTop > window.innerHeight - nav.offsetHeight
+                  ) {
+                    aside.scrollTop = a.offsetTop - 2*nav.offsetHeight;
+                  }
                 } else {
                   a.classList.remove("active");
                 }
@@ -135,9 +145,16 @@
 
       // onload actions (deferred otherwise no elements to loop over)
       window.onload = () => {
-        const links = document.querySelectorAll("aside a"),
+        const nav = document.querySelector("nav"),
+              aside = document.querySelector("#toc"),
+              links = aside.querySelectorAll("a"),
               path = window.location.pathname.replace(/^[/]|[/]$/g, ""),
               hash = window.location.hash;
+
+        // add click action on each link
+        links.forEach(a => {
+          a.setAttribute("onclick", "toggleSidebar('#toc', 'thin')");
+        });
 
         // build list of links (needed for the preceding/following content)
         const sectionLinks = [],
@@ -151,14 +168,21 @@
           }
         });
 
+        // highlight in table of contents and set preceding/following contents
         sectionLinks.forEach((a, i) => {
           let href = a.getAttribute("href").replace(/^[/]|[/]$/g, "");
 
           // no break capabilities for a forEach
           if (href === path) {
 
-            // highlight current item in the menu
+            // highlight current item in the table of contents
             a.classList.add("active");
+            if (
+              a.offsetTop < aside.scrollTop + nav.offsetHeight ||
+              a.offsetTop > window.innerHeight - nav.offsetHeight
+            ) {
+              aside.scrollTop = a.offsetTop - 2*nav.offsetHeight;
+            }
 
             // update the preceding content
             if (i > 0) {
@@ -189,6 +213,12 @@
         contentLinks.forEach(a => {
           if (a.getAttribute("href") === hash) {
             a.classList.add("active");
+            if (
+              a.offsetTop < aside.scrollTop + nav.offsetHeight ||
+              a.offsetTop > window.innerHeight - nav.offsetHeight
+            ) {
+              aside.scrollTop = a.offsetTop - 2*nav.offsetHeight;
+            }
           } else {
             a.classList.remove("active");
           }
@@ -201,53 +231,61 @@
     <script>
       // keyboard events, triggered only if the splash screen has been scrolled entirely
       window.addEventListener("keyup", (event) => {
-        if (document.querySelector("#scroller").getBoundingClientRect().top === 0) {
+        const scroller = document.querySelector("#scroller"),
+              key = event.key;
 
-          // key that was typed
-          const key = event.key;
-          
-          // toggle sidebars or navigate to preceding/following content
-          if (event.srcElement.tagName === "BODY") {
-            if (key === "<") {
-              window.location.href = localStorage.getItem("prev-content") || "";
-            } else if (key === ">") {
-              window.location.href = localStorage.getItem("next-content") || "";
-            } else if (key === ".") {
-              toggleSidebars();
-            } else if (key === "?") {
-              toggleSearchOverlay();
-            }
+        // toggle sidebars or navigate to preceding/following content
+        if (scroller.getBoundingClientRect().top === 0 && event.srcElement.tagName === "BODY") {
+          if (key === "<") {
+            window.location.href = localStorage.getItem("prev-content") || "";
+          } else if (key === ">") {
+            window.location.href = localStorage.getItem("next-content") || "";
+          } else if (key === ".") {
+            toggleSidebar("#toc", "thin");
+          } else if (key === "?") {
+            toggleSidebar("#search", "thick");
           }
-          
-          // unfocus from input elements
-          if (event.srcElement.tagName === "INPUT" && key === "Escape") event.srcElement.blur();
-
         }
+        
+        // unfocus from input elements
+        if (event.srcElement.tagName === "INPUT" && key === "Escape") event.srcElement.blur();
+        
       });
     </script>
 
-    <!-- show/hide sidebars -->
+    <!-- show/hide sidebar -->
     <script>
-      function toggleSidebars() {
-        if (document.querySelector("#scroller").getBoundingClientRect().top === 0) {
+      function toggleSidebar(asideSelector, widthKeyword, focusElement = undefined) {
+        const scroller = document.querySelector("#scroller"),
+              aside = document.querySelector(`aside${asideSelector}`),
+              naside = document.querySelector(`aside:not(${asideSelector})`),
+              article = document.querySelector("article");
 
-          // elements involved
-          const aside = document.querySelector("aside"),
-                article = document.querySelector("article");
-          
-          // hide the sidebar
-          if (aside.classList.contains("visible-sidebar")) {
-            aside.classList.remove("visible-sidebar");
-            article.classList.remove("visible-sidebar");
-          }
-          
-          // show sidebar
-          else {
-            aside.classList.add("visible-sidebar");
-            article.classList.add("visible-sidebar");
-          }
+        let className;
 
+        // skip the splash screen if needed
+        if (scroller.offsetTop > 0) window.scroll(0, scroller.offsetTop);
+
+        // hide the other sidebar, if shown
+        className = naside.className.match(/visible-[a-z]+-sidebar/) || "";
+        if (className.length > 0) {
+          naside.classList.remove(className);
+          article.classList.remove(className);
         }
+
+        // hide/show sidebar
+        className = `visible-${widthKeyword}-sidebar`;
+        if (aside.classList.contains(className)) {
+          aside.classList.remove(className);
+          article.classList.remove(className);
+        } else {
+          aside.classList.add(className);
+          article.classList.add(className);
+        }
+
+        // focus on the given element, if provided
+        if (focusElement !== undefined) document.querySelector(focusElement).focus();
+
       }
     </script>
 
@@ -301,7 +339,7 @@
                           len = parseInt(arr[1]);
                  
                     li.innerHTML = `
-                      <a class="search-result" href="{{ http }}/${match.ref}" onclick="toggleSidebar('#overlay-search')">
+                      <a class="search-result" href="{{ http }}/${match.ref}" onclick="toggleSidebar('#search', 'thick')">
                         <div class="title">${crumbs}${title}</div>
                         <div class="text">
                           ${text.slice(Math.max(0, pos - 100), pos)}
@@ -318,11 +356,7 @@
 
               });
 
-              // show results and update the height of the background blurred element
-              if (results.length > 0) {
-                output.replaceChildren(...results);
-                showSidebar("#overlay-search");
-              }
+              if (results.length > 0) output.replaceChildren(...results);
 
             } else {
               output.replaceChildren();
@@ -398,8 +432,8 @@
     <!-- buttons -->
     <nav>
       <div class="buttons">
-        <a class="button sidebar" onclick="toggleSidebars()"></a>
-        <a class="button search" onclick="toggleSearchOverlay()"></a>
+        <a class="button sidebar" onclick="toggleSidebar('#toc', 'thin')"></a>
+        <a class="button search" onclick="toggleSidebar('#search', 'thick', '#search-input')"></a>
         <span class="spacer"></span>
         <a class="spacer logo" href="{{ http }}"><img src=""></a>
         <span class="spacer"></span>
@@ -408,53 +442,47 @@
       </div>
     </nav>
 
-    {% if path != "" %}
+    {% if path == "" and splash != "" %}
     <!-- splash screen -->
     <header>
-      <img src="">
+      <img src="{{ splash }}">
       <span>{{ title }}</span>
       <span>{{ decription }}</span>
       <span>
         <a href="{{ repo }}">GitHub</a>
-        <a onclick="window.scroll(0, document.querySelector('main').getBoundingClientRect().top)">Docs</a>
+        <a onclick="window.scroll(0, document.querySelector('#scroller').getBoundingClientRect().top)">Documentation</a>
       </span>
     </header>
     {% endif %}
 
-    <main>
+    <!-- show scrolling progress -->
+    <div id="scroller"></div>
 
-      <!-- show scrolling progress -->
-      <div id="scroller"></div>
+    <main>
       
       <!-- tables of contents -->
-      <aside>{{ contents }}</aside>
+      <aside id="toc">{{ contents }}</aside>
       
-      <!-- actual content -->
-      <article>
-      
-        <!-- main text -->
-        <div class="maintext">{{ article }}</div>
-      
-        <!-- previous / next articles -->
-        <span class="spacer">
-        <div class="prevnext">
-          <a id="prev"></a>
-          <span class="spacer"></span>
-          <a id="next"></a>
-        </div>
-      
-      </article>
-      
-      <!-- search functionalities
-      <div id="search-overlay">
-        <div class="search-bar">
+      <!-- search functionalities -->
+      <aside id="search">
+        <div class="search-field">
           <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
           <input autocomplete="off" id="search-input" onkeyup="lunrSearch()" placeholder="search with lunr" type="text">
           <span class="button reset" onclick="resetSearch()"></span>
         </div>
         <ul id="search-output"></ul>
-      </div>
-      -->
+      </aside>
+      
+      <!-- actual content and preceding/following contents -->
+      <article>
+        <div class="maintext">{{ article }}</div>
+        <span class="spacer"></span>
+        <div class="prevnext">
+          <a id="prev"></a>
+          <span class="spacer"></span>
+          <a id="next"></a>
+        </div>
+      </article>
 
     </main>
 

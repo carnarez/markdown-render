@@ -1,10 +1,10 @@
-.search {
+.search-field {
   align-items: center;
   display: flex;
   justify-content: center;
 }
 
-.search .button:hover {
+.search-field .button:hover {
   background-color: inherit;
 }
 
@@ -30,7 +30,7 @@
 
 #search-output {
   list-style: none;
-  padding: 0;
+  padding: 0 1rem;
 }
 
 #search-output li {
@@ -43,7 +43,7 @@
 }
 
 #search-output li:first-child {
-  margin: 3rem 0 1rem 0;
+  margin: 1rem 0;
 }
 
 #search-output li:hover {
@@ -52,6 +52,7 @@
 
 #search-output li a {
   border: 0;
+  width: 100%;
 }
 
 #search-output .text {

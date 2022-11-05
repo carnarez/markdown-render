@@ -391,13 +391,15 @@ def merge_digests(endpoint: str, menu: str, toc: str):
     _menu = []
 
     # clean up
-    toc = re.search(r'<div class="toc">(.*?)</div>', toc, flags=re.DOTALL).group(1)
+    try:
+        toc = re.search(r'<div class="toc">(.*?)</div>', toc, flags=re.DOTALL).group(1)
+    except AttributeError:
+        toc = ""
 
     # figure out which entry is the one
     for tag in menu.split("\n"):
         if (m := re.search('href="(.*?)"', tag)) and m.group(1) == endpoint:
-            _menu.append(tag)
-            _menu.append(f"<li>{toc}</li>")
+            _menu.append(tag.replace("</li>", f"{toc}</li>"))
         else:
             _menu.append(tag)
 

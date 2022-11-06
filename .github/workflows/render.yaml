@@ -54,7 +54,7 @@ jobs:
 
             find . -name "*.md" | while read f; do mkdir -p /tmp/www/`dirname $f`; done
             python ../build/render.py --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
-                                      --prefix=/var/www \
+                                      --prefix=/tmp/www \
                                       --template=../build/template.html \
                                       `find . -name "*.md"`
           )

@@ -43,7 +43,9 @@ COPY build .
 COPY prose .
 
 RUN find . -name "*.md" | grep -v "toc.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
- && python render.py --prefix=/var/www `find . -name "*.md" | grep -v "toc.md"`
+ && python render.py --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
+                     --prefix=/var/www \
+                     `find . -name "*.md" | grep -v "toc.md"` 
 
 
 # prettify everything in place

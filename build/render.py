@@ -2,19 +2,23 @@
 
 Arguments
 ---------
-menu
-    Path to the overall table of contents (in Markdown format). Defaults to `toc.md`.
+meta
+    Extra metadata attributes for the frontmatter, separated by pipes (`|`). Defaults to
+    an empty string.
 prefix
     Prefix to the output path. Defaults to `.` (current directory).
 root
     Root of the exposed content. Defaults to `http://localhost:8000/`.
 template
     Path to the HTML template. Defaults to `template.html`.
+toc
+    Path to the overall table of contents (in Markdown format). Defaults to `toc.md`.
 
 Examples
 --------
 ```shell
 $ python render.py *.md
+$ python render.py --meta="splash=splash.png|description=This is a description." *.md
 $ python render.py --prefix=/var/www *.md
 $ python render.py --template=template.html *.md
 ```
@@ -65,7 +69,7 @@ def load_template(filepath: str = "./template.html") -> Template:
 
 
 def render_template(
-    root: str, tmpl: Template, meta: dict[str, str], menu: str, html: str
+    root: str, tmpl: Template, meta: dict[str, str], toc: str, html: str
 ) -> str:
     """Render the `Jinja2` template after checking for presence of specific content.
 
@@ -77,7 +81,7 @@ def render_template(
         `Jinja2` template ready to be used.
     meta : dict[str, str]
         Metadata, extracted from the front matter or generated.
-    menu : str
+    toc : str
         Table of contents of the converted document.
     html : str
         Generated HTML content.
@@ -93,7 +97,7 @@ def render_template(
     """
     return tmpl.render(
         http=root,
-        contents=menu,
+        contents=toc,
         article=html,
         # booleans
         highlight=True if '<pre class="highlight">' in html else False,
@@ -340,7 +344,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
     return meta, toc, html, text
 
 
-def process_menu(filepath: str) -> str:
+def process_toc(filepath: str) -> str:
     """Render the overall table of contents.
 
     Parameters
@@ -371,16 +375,16 @@ def process_menu(filepath: str) -> str:
     return f'<div class="toc">{html}</div>'
 
 
-def merge_digests(endpoint: str, menu: str, toc: str):
+def merge_digests(endpoint: str, global_toc: str, page_toc: str):
     """Insert the document table of contents into the ovrall table of contents.
 
     Parameters
     ----------
     endpoint : str
         Internal URL to the served content.
-    menu : str
+    global_toc : str
         Overall table of contents.
-    toc : str
+    page_toc : str
         Table of contents of the converted document.
 
     Returns
@@ -388,22 +392,22 @@ def merge_digests(endpoint: str, menu: str, toc: str):
     : str
         HTML table of contents.
     """
-    _menu = []
+    toc = []
 
     # clean up
-    try:
-        toc = re.search(r'<div class="toc">(.*?)</div>', toc, flags=re.DOTALL).group(1)
-    except AttributeError:
-        toc = ""
+    if len(page_toc):
+        page_toc = re.search(
+            r'<div class="toc">(.*)</div>', page_toc, flags=re.DOTALL
+        ).group(1)
 
     # figure out which entry is the one
-    for tag in menu.split("\n"):
+    for tag in global_toc.split("\n"):
         if (m := re.search('href="(.*?)"', tag)) and m.group(1) == endpoint:
-            _menu.append(tag.replace("</li>", f"{toc}</li>"))
+            toc.append(tag.replace("</a>", f"</a>{page_toc}"))
         else:
-            _menu.append(tag)
+            toc.append(tag)
 
-    return "\n".join(_menu)
+    return "\n".join(toc)
 
 
 def index_documents(texts: dict[str, str]) -> str:
@@ -495,10 +499,16 @@ if __name__ == "__main__":
     # flags
     parser = argparse.ArgumentParser(description="Render and index Markdown content.")
     parser.add_argument(
-        "-m",
-        "--menu",
+        "-c",
+        "--toc",
         default="toc.md",
         help="Path to the overall table of contents (in Markdown format).",
+    )
+    parser.add_argument(
+        "-m",
+        "--meta",
+        default="",
+        help="Extra metadata attributes for the frontmatter, separated by pipes.",
     )
     parser.add_argument(
         "-p",
@@ -523,11 +533,14 @@ if __name__ == "__main__":
     # process the html template
     tmpl = load_template(flags.template)
 
+    # process the extra frontmatter
+    xtra = dict([kv.split("=") for kv in flags.meta.split("|")])
+
     # process the table of content
     try:
-        menu = process_menu(flags.menu)
+        gtoc = process_toc(flags.toc)
     except FileNotFoundError:
-        menu = ""
+        gtoc = ""
 
     # for each argument...
     for filepath in files:
@@ -542,13 +555,18 @@ if __name__ == "__main__":
         output = re.sub(r"\.md$", ".html", f"{dirname}/{basename}".strip("/"))
 
         # process the markdown file
-        meta, toc, html, text = process_document(filepath)
+        meta, dtoc, html, text = process_document(filepath)
+
+        # merge both metadata dict
+        meta.update(xtra)
 
         # attach the page table of contents to the overall table of contents
-        if len(menu):
+        if len(gtoc):
             toc = merge_digests(
-                re.sub("/index.[dhtml]+$", "", f"/{dirname}/{basename}"), menu, toc
+                re.sub("/index.[dhtml]+$", "", f"/{dirname}/{basename}"), gtoc, dtoc
             )
+        else:
+            toc = dtoc
 
         # render the html page
         html = render_template(flags.root.strip("/"), tmpl, meta, toc, html)

@@ -534,7 +534,10 @@ if __name__ == "__main__":
     tmpl = load_template(flags.template)
 
     # process the extra frontmatter
-    xtra = dict([kv.split("=") for kv in flags.meta.split("|")])
+    try:
+        xtra = dict([kv.split("=") for kv in flags.meta.split("|")])
+    except ValueError:
+        xtra = {}
 
     # process the table of content
     try:
@@ -558,7 +561,8 @@ if __name__ == "__main__":
         meta, dtoc, html, text = process_document(filepath)
 
         # merge both metadata dict
-        meta.update(xtra)
+        if len(xtra):
+            meta.update(xtra)
 
         # attach the page table of contents to the overall table of contents
         if len(gtoc):

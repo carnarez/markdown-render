@@ -228,7 +228,6 @@ main {
 /* side bars */
 
 aside {
-  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   font-size: 90%;

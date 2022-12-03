@@ -1,7 +1,7 @@
 .PHONY: build
 
 style:
-	/bin/bash build/style-highlight.sh > static/style-highlight.css
+	/bin/bash utils/style-highlight.sh > style/style-highlight.css
 
 httpd:
 	docker build --file build/Dockerfile.httpd --tag markdown-tests .

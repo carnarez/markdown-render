@@ -589,5 +589,5 @@ if __name__ == "__main__":
             f.write(p)
 
     # output index
-    with open(f"{flags.prefix}/lunr-index.json", "w") as f:
+    with open(f"{flags.prefix}/index.json", "w") as f:
         f.write(index)

@@ -35,7 +35,7 @@ WORKDIR /var/www
 COPY --from=render /var/www .
 
 COPY prose .
-COPY static .
+COPY style .
 
 RUN rm `find . -name "*.md"` \
  && npm config set update-notifier false \

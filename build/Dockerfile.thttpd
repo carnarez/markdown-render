@@ -15,7 +15,7 @@ RUN apk --no-cache add curl gcc make musl-dev patch tar \
  && patch -p1 < ../thttpd.patch \
  && curl -fs -o config.sub https://git.savannah.gnu.org/cgit/config.git/plain/config.sub \
  && ./configure \
- && make CCOPT="-O2 -g -static -w" thttpd \
+ && make CCOPT="-O2 -g -style -w" thttpd \
  && install -m 755 thttpd /usr/sbin
 
 
@@ -57,7 +57,7 @@ WORKDIR /var/www
 COPY --from=render /var/www .
 
 COPY prose .
-COPY static .
+COPY style .
 
 RUN rm `find . -name "*.md"` \
  && npm config set update-notifier false \

@@ -278,21 +278,26 @@
         if (aside.classList.contains(className)) {
           aside.classList.remove(className);
           article.classList.remove(className);
+          focusElement = undefined; // unfocus search field
         } else {
           aside.classList.add(className);
           article.classList.add(className);
         }
 
         // focus on the given element, if provided
-        if (focusElement !== undefined) document.querySelector(focusElement).focus();
+        if (focusElement !== undefined) {
+          document.querySelector(focusElement).focus();
+        } else {
+          document.activeElement.blur();
+        }
 
       }
     </script>
 
-    <!-- search via lunr; json file will be cached after first query -->
+    <!-- search via lunr; json corpus will be cached after first query -->
     <script>
       function lunrSearch() {
-        fetch("{{ http }}/lunr-index.json")
+        fetch("{{ http }}/index.json")
           .then(response => response.json())
           .then(data => {
             const prose = data.documents,

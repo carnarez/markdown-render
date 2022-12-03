@@ -82,7 +82,7 @@ jobs:
       - name: Minify via clean-css, html-minifier and terser
         run: |
           (
-            cd static
+            cd style
 
             cat style.css style-*.css | grep -v '@import "' > /tmp/www/style.css
           )
@@ -118,4 +118,4 @@ jobs:
 
 #      - name: Publish to GitHub Pages
 #        run: |
-#          ghp-import --branch www --force --no-jekyll --push /tmp/www
+#          ghp-import --branch www --force --push /tmp/www

@@ -321,7 +321,7 @@ article.visible-thin-sidebar {
 
 article > * {
   margin: 0 auto;
-  max-width: 800px;
+  max-width: var(--max-width);
   padding: 1rem;
   width: 100%;
 }

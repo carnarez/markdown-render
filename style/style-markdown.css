@@ -146,6 +146,11 @@ span.katex-display:hover:after {
 
 /* footnotes */
 
+sup {
+  line-height: 0;
+  vertical-align: super;
+}
+
 .footnote {
   font-size: 90%;
   line-height: 1rem;

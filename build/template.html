@@ -87,7 +87,7 @@
           {% else %}
           let currentScrollY = window.scrollY,
           {% endif %}
-              overallScrollY = article.offsetHeight - window.innerHeight;
+              overallScrollY = nav.offsetHeight + article.offsetHeight - window.innerHeight;
 
           scroller.style.width = 100 * Math.min(currentScrollY / overallScrollY, 1) + "%";
           

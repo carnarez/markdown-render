@@ -82,7 +82,7 @@
         else {
 
           // update the progress bar
-          {% if path == "" and splash != "" %}
+          {% if path == "" and splash != "nosplash" and splash != "" %}
           let currentScrollY = window.scrollY - window.innerHeight,
           {% else %}
           let currentScrollY = window.scrollY,
@@ -447,7 +447,7 @@
       </div>
     </nav>
 
-    {% if path == "" and splash != "" %}
+    {% if path == "" and splash != "nosplash" and splash != "" %}
     <!-- splash screen -->
     <header>
       <img src="{{ splash }}">

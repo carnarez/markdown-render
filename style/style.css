@@ -240,9 +240,9 @@ aside {
   height: 100%;
   left: -100%;
   overflow: hidden;
+  padding: var(--nav-height) 0 0 0;
   position: fixed;
   scrollbar-width: none;
-  padding: var(--nav-height) 0 0 0;
   top: 0;
 }
 
@@ -251,8 +251,13 @@ aside::-webkit-scrollbar {
 }
 
 aside#toc {
-  white-space: nowrap;
   width: 20%;
+}
+
+aside#toc a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 aside#search {

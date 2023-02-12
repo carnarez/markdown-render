@@ -422,7 +422,32 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js"
     ></script>
     {% if mermaid %}
-    <script src="{{ http }}/mermaid.js"></script>
+    <!-- <script src="{{ http }}/mermaid.js"></script> -->
+    <script>
+      // mermaid is so cumbersome to theme...
+      function mermaidInitialize() {
+        const computedStyle = getComputedStyle(document.documentElement),
+              backgroundColor = computedStyle.getPropertyValue("--background-color"),
+              backgroundColorAlt = computedStyle.getPropertyValue("--background-color-alt"),
+              fontColor = computedStyle.getPropertyValue("--font-color"),
+              fontFamily = computedStyle.getPropertyValue("--font-family"),
+              fontSize = computedStyle.getPropertyValue("--font-size"),
+              linkColor = computedStyle.getPropertyValue("--link-color");
+        
+        // just the minimum (for flowcharts)
+        mermaid.initialize({
+          theme: "base",
+          themeVariables: {
+            fontFamily: fontFamily,
+            fontSize: fontSize,
+            lineColor: fontColor,
+            primaryColor: backgroundColorAlt,
+            primaryBorderColor: fontColor,
+            primaryTextColor: fontColor
+          }
+        });
+      }
+    </script>
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"

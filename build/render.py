@@ -148,6 +148,9 @@ def load_document(filepath: str) -> tuple[dict[str, str], str]:
     if "filename" not in meta:
         meta["filename"] = re.sub(".md$", "", filepath.split("/")[-1])
 
+    if "logo" not in meta:
+        meta["logo"] = ""
+
     if "path" not in meta:
         meta["path"] = "/".join(filepath.split("/")[:-1])
 

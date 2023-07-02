@@ -167,7 +167,7 @@ nav {
 }
 
 .logo img {
-  max-height: var(--nav-height);
+  max-height: calc(var(--icon-size) + 2rem);
   max-width: calc(var(--icon-size) + 2rem);
 }
 

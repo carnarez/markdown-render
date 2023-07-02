@@ -163,6 +163,7 @@ nav {
 .logo,
 .logo:hover {
   border: 0;
+  text-align: center;
 }
 
 .logo img {
@@ -207,7 +208,8 @@ header a:hover {
 }
 
 header .title {
-  font-size: 130%;
+  margin: 2rem 0 1rem 0;
+  font-size: 150%;
 }
 
 /* main content */

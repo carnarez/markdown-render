@@ -72,6 +72,7 @@ Aside from `title`, all metatags are left empty if absent from the front matter.
 * `canonical` to provide the canonical link of the article (defaults to `url` if not
    provided).
 * `link` to provide a link to the author's favourite website.
+* `logo` to provide a top-bar logo.
 
 ## Client-side
 

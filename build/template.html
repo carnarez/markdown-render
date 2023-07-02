@@ -153,7 +153,7 @@
 
         // add click action on each link
         links.forEach(a => {
-          a.setAttribute("onclick", "toggleSidebar('#toc', 'thin')");
+          a.setAttribute("onclick", "toggleSidebar('#toc')");
         });
 
         // build list of links (needed for the preceding/following content)
@@ -241,9 +241,9 @@
           } else if (key === ">") {
             window.location.href = localStorage.getItem("next-content") || "";
           } else if (key === ".") {
-            toggleSidebar("#toc", "thin");
+            toggleSidebar("#toc");
           } else if (key === "?") {
-            toggleSidebar("#search", "thick");
+            toggleSidebar("#search");
           }
         }
         
@@ -255,33 +255,29 @@
 
     <!-- show/hide sidebar -->
     <script>
-      function toggleSidebar(asideSelector, widthKeyword, focusElement = undefined) {
+      function toggleSidebar(asideSelector, focusElement = undefined) {
         const scroller = document.querySelector("#scroller"),
               aside = document.querySelector(`aside${asideSelector}`),
               naside = document.querySelector(`aside:not(${asideSelector})`),
               article = document.querySelector("article");
 
-        let className;
-
         // skip the splash screen if needed
         if (scroller.offsetTop > 0) window.scroll(0, scroller.offsetTop);
 
         // hide the other sidebar, if shown
-        className = naside.className.match(/visible-[a-z]+-sidebar/) || "";
-        if (className.length > 0) {
-          naside.classList.remove(className);
-          article.classList.remove(className);
+        if (naside.classList.contains("visible-sidebar")) {
+          naside.classList.remove("visible-sidebar");
+          article.classList.remove("visible-sidebar");
         }
 
         // hide/show sidebar
-        className = `visible-${widthKeyword}-sidebar`;
-        if (aside.classList.contains(className)) {
-          aside.classList.remove(className);
-          article.classList.remove(className);
+        if (aside.classList.contains("visible-sidebar")) {
+          aside.classList.remove("visible-sidebar");
+          article.classList.remove("visible-sidebar");
           focusElement = undefined; // unfocus search field
         } else {
-          aside.classList.add(className);
-          article.classList.add(className);
+          aside.classList.add("visible-sidebar");
+          article.classList.add("visible-sidebar");
         }
 
         // focus on the given element, if provided
@@ -344,7 +340,7 @@
                           len = parseInt(arr[1]);
                  
                     li.innerHTML = `
-                      <a class="search-result" href="{{ http }}/${match.ref}" onclick="toggleSidebar('#search', 'thick')">
+                      <a class="search-result" href="{{ http }}/${match.ref}" onclick="toggleSidebar('#search')">
                         <div class="title">${crumbs}${title}</div>
                         <div class="text">
                           ${text.slice(Math.max(0, pos - 100), pos)}
@@ -462,8 +458,8 @@
     <!-- buttons -->
     <nav>
       <div class="buttons">
-        <a class="button sidebar" onclick="toggleSidebar('#toc', 'thin')"></a>
-        <a class="button search" onclick="toggleSidebar('#search', 'thick', '#search-input')"></a>
+        <a class="button sidebar" onclick="toggleSidebar('#toc')"></a>
+        <a class="button search" onclick="toggleSidebar('#search', '#search-input')"></a>
         <span class="spacer"></span>
         <a class="spacer logo" href="{{ http }}"><img src="{{ logo }}"></a>
         <span class="spacer"></span>

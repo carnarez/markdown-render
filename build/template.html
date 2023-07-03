@@ -461,7 +461,9 @@
         <a class="button sidebar" onclick="toggleSidebar('#toc')"></a>
         <a class="button search" onclick="toggleSidebar('#search', '#search-input')"></a>
         <span class="spacer"></span>
-        <a class="spacer logo" href="{{ http }}"><img src="{{ logo }}"></a>
+        {% if path != "" %}
+        <a class="logo" href="{{ http }}"><img src="{{ logo }}"></a>
+        {% endif %}
         <span class="spacer"></span>
         <a class="button repo" href="{{ repo }}"></a>
         <a class="button theme" onclick="toggleTheme()"></a>

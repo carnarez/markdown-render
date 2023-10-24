@@ -1,5 +1,4 @@
-**Templates for rendering and styling Markdown-generated HTML.** For my opinionated
-usage.
+**Templates for rendering `Markdown` into HTML.** For my opinionated usage.
 
 # Rendering
 
@@ -82,17 +81,6 @@ a couple `JavaScript` libraries:
 * [`highlight.js`](https://highlightjs.org/) for syntax highlighting.
 * [`KaTeX`](https://katex.org/) to render equations written in LaTeX.
 * [`Mermaid`](https://mermaidjs.github.io/) to render diagrams and flowcharts.
-
-Basic styling (and syntax highlighting) forked from GitHub colour scheme; see
-[`style-highlight.sh`](build/style-highlight.sh). Crude light/dimmed/dark toggler
-included. As usual `Mermaid` is quite hard to style consistently, but an effort of
-integration has been made via the `mermaidInitialize()` function in the
-[template](build/template.html).
-
-The free [Solid](https://fontawesome.com/v5.15/icons?d=gallery&s=solid&m=free), 
-[Regular](https://fontawesome.com/v5.15/icons?d=gallery&s=regular&m=free) & 
-[Brands](https://fontawesome.com/v5.15/icons?d=gallery&p=2&s=solid&m=free)
-[Font Awesome](https://fontawesome.com/) icon sets are also made available.
 
 # Deploy locally
 

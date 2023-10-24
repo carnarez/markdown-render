@@ -1,5 +1,0 @@
-Dockerfile.httpd
-Dockerfile.thttpd
-.dockerignore
-style-highlight.sh
-thttpd.patch

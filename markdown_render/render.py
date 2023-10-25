@@ -29,6 +29,7 @@ import datetime
 import io
 import json
 import os
+import pathlib
 import re
 import xml
 
@@ -49,7 +50,7 @@ from pymdownx.emoji import EmojiExtension, gemoji
 from pymdownx.highlight import HighlightExtension
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 from pymdownx.tilde import DeleteSubExtension
-from yaml import Loader, load
+from yaml import SafeLoader, load
 
 
 def load_template(filepath: str = "./template.html") -> Template:
@@ -65,11 +66,16 @@ def load_template(filepath: str = "./template.html") -> Template:
     : jinja2.Template
         `Jinja2` template ready to be used.
     """
-    return Environment(loader=BaseLoader()).from_string(open(filepath).read())
+    with pathlib.Path(filepath).open() as f:
+        return Environment(loader=BaseLoader()).from_string(f.read())
 
 
 def render_template(
-    root: str, tmpl: Template, meta: dict[str, str], toc: str, html: str
+    root: str,
+    tmpl: Template,
+    meta: dict[str, str],
+    toc: str,
+    html: str,
 ) -> str:
     """Render the `Jinja2` template after checking for presence of specific content.
 
@@ -100,14 +106,9 @@ def render_template(
         contents=toc,
         article=html,
         # booleans
-        highlight=True if '<pre class="highlight">' in html else False,
-        katex=True if re.search(r"\$.*\$", html, flags=re.DOTALL) else False,
-        mermaid=any(
-            [
-                True if f'<div class="{m}">' in html else False
-                for m in ("mermaid", "naiad")
-            ]
-        ),
+        highlight='<pre class="highlight">' in html,
+        katex=bool(re.search("\\$.*\\$", html, flags=re.DOTALL)),
+        mermaid=any(f'<div class="{m}">' in html for m in ("mermaid", "naiad")),
         # other defined flags (might or might not be used)
         **meta,
     )
@@ -132,18 +133,17 @@ def load_document(filepath: str) -> tuple[dict[str, str], str]:
     rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n", flags=re.DOTALL)
 
     # load markdown content
-    with open(filepath) as f:
+    with pathlib.Path(filepath).open() as f:
         mdwn = f.read().strip()
 
     # parse front matter if present
-    if mdwn.startswith("---"):
-        if (m := re.match(rgxp, mdwn)) is not None:
-            meta = load(m.group(1), Loader=Loader)  # type: ignore
-            mdwn = re.sub(rgxp, "", mdwn, count=1).strip()
+    if mdwn.startswith("---") and (m := re.match(rgxp, mdwn)) is not None:
+        meta = load(m.group(1), Loader=SafeLoader)
+        mdwn = re.sub(rgxp, "", mdwn, count=1).strip()
 
     # generate metadata if undefined
     if "date" not in meta:
-        meta["date"] = datetime.date.today().strftime("%Y-%m-%d")
+        meta["date"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
 
     if "filename" not in meta:
         meta["filename"] = re.sub(".md$", "", filepath.split("/")[-1])
@@ -220,11 +220,12 @@ def clean_document(mdwn: str, ellipsis: str = " [...] ") -> str:
     mdwn = re.sub(r"<.+?>", ellipsis, mdwn)
 
     # replace title markers
-    mdwn = re.sub(
-        r"^[#]+\s*(.*)$", r"%%%SECTION\1%%%PARAGRAPH", mdwn, flags=re.MULTILINE
+    return re.sub(
+        r"^[#]+\s*(.*)$",
+        r"%%%SECTION\1%%%PARAGRAPH",
+        mdwn,
+        flags=re.MULTILINE,
     )
-
-    return mdwn
 
 
 def convert_document(
@@ -256,8 +257,8 @@ def convert_document(
     : str
         `Markdown` converted to the requested format, using the provided extensions.
     """
-    md = Markdown(extensions=extensions, output_format=output_format)  # type: ignore
-    md.stripTopLevelTags = strip_top_level_tags  # type: ignore
+    md = Markdown(extensions=extensions, output_format=output_format)
+    md.stripTopLevelTags = strip_top_level_tags
 
     html = md.convert(mdwn)
     toc = md.toc
@@ -265,7 +266,7 @@ def convert_document(
     return toc, html
 
 
-def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
+def process_document(filepath: str) -> tuple[dict[str, str], str, str, str]:
     """Umbrella function to process fully an input file _completely_.
 
     Parameters
@@ -294,7 +295,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
         FootnoteExtension(BACKLINK_TEXT=""),
         HighlightExtension(use_pygments=False),
         ImgExtension(),
-        InsertExtension(parent_path=os.path.dirname(os.path.realpath(filepath))),
+        InsertExtension(parent_path=pathlib.Path(filepath).resolve().parent),
         InsertSupExtension(),
         MarkdownInHtmlExtension(),
         ScriptExtension(),
@@ -302,7 +303,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
             custom_fences=[
                 {"name": "mermaid", "class": "mermaid", "format": fence_div_format},
                 {"name": "naiad", "class": "naiad", "format": fence_div_format},
-            ]
+            ],
         ),
         TableExtension(),
         TocExtension(),
@@ -332,7 +333,10 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str]:
     # clean markdown from markup and convert to plain text
     mdwn = clean_document(mdwn, ellipsis)
     _, text = convert_document(
-        mdwn, extensions=extensions, output_format="text", strip_top_level_tags=False
+        mdwn,
+        extensions=extensions,
+        output_format="text",
+        strip_top_level_tags=False,
     )
 
     # remove useless spacing and duplicated ellipsis
@@ -369,7 +373,7 @@ def process_toc(filepath: str) -> str:
     ]
 
     # load markdown content
-    with open(filepath) as f:
+    with pathlib.Path(filepath).open() as f:
         mdwn = f.read().strip()
 
     # convert to html
@@ -378,7 +382,7 @@ def process_toc(filepath: str) -> str:
     return f'<div class="toc">{html}</div>'
 
 
-def merge_digests(endpoint: str, global_toc: str, page_toc: str):
+def merge_digests(endpoint: str, global_toc: str, page_toc: str) -> str:
     """Insert the document table of contents into the ovrall table of contents.
 
     Parameters
@@ -400,7 +404,9 @@ def merge_digests(endpoint: str, global_toc: str, page_toc: str):
     # clean up
     if len(page_toc):
         page_toc = re.search(
-            r'<div class="toc">(.*)</div>', page_toc, flags=re.DOTALL
+            r'<div class="toc">(.*)</div>',
+            page_toc,
+            flags=re.DOTALL,
         ).group(1)
 
     # figure out which entry is the one
@@ -438,7 +444,6 @@ def index_documents(texts: dict[str, str]) -> str:
         endpoint = re.sub("index.html$", "", filepath)
 
         for section in text.split("%%%SECTION"):
-
             if "%%%PARAGRAPH" in section:
                 title, section = section.split("%%%PARAGRAPH")
                 anchor = title.lower().replace(".", "").replace(" ", "-")  # github
@@ -463,7 +468,7 @@ def index_documents(texts: dict[str, str]) -> str:
                 ],
                 builder=builder,
             ).serialize(),
-        }
+        },
     )
 
 
@@ -471,7 +476,8 @@ def index_documents(texts: dict[str, str]) -> str:
 # https://github.com/Python-Markdown/markdown/blob/master/markdown/core.py#L46
 # function name follows the standard from the other converters
 def to_text_string(
-    element: xml.etree.ElementTree.Element, stream: io.StringIO = None
+    element: xml.etree.ElementTree.Element,
+    stream: io.StringIO | None = None,
 ) -> str:
     """Serialize Markdown content into plain text."""
     if stream is None:
@@ -489,10 +495,9 @@ def to_text_string(
     return stream.getvalue()
 
 
-# patching object
-Markdown.output_formats["text"] = to_text_string  # type: ignore
-
-if __name__ == "__main__":
+def cli() -> None:
+    """Process CLI calls."""
+    Markdown.output_formats["text"] = to_text_string  # patching object
 
     # keep track of the output and documents to be processed for lunr
     metas: dict[str, dict[str, str]] = {}
@@ -550,7 +555,6 @@ if __name__ == "__main__":
 
     # for each argument...
     for filepath in files:
-
         # quick path clean up
         if filepath.startswith("./"):
             filepath = filepath.replace("./", "", 1)
@@ -570,7 +574,9 @@ if __name__ == "__main__":
         # attach the page table of contents to the overall table of contents
         if len(gtoc):
             toc = merge_digests(
-                re.sub("/index.[dhtml]+$", "", f"/{dirname}/{basename}"), gtoc, dtoc
+                re.sub("/index.[dhtml]+$", "", f"/{dirname}/{basename}"),
+                gtoc,
+                dtoc,
             )
         else:
             toc = dtoc
@@ -588,9 +594,13 @@ if __name__ == "__main__":
 
     # output each page
     for o, p in htmls.items():
-        with open(f"{flags.prefix}/{o}", "w") as f:
+        with pathlib.Path(f"{flags.prefix}/{o}").open("w") as f:
             f.write(p)
 
     # output index
-    with open(f"{flags.prefix}/index.json", "w") as f:
+    with pathlib.Path(f"{flags.prefix}/index.json").open("w") as f:
         f.write(index)
+
+
+if __name__ == "__main__":
+    cli()

@@ -10,7 +10,8 @@ prefix
 root
     Root of the exposed content. Defaults to `http://localhost:8000/`.
 template
-    Path to the HTML template. Defaults to `template.html`.
+    Path to the HTML template. Defaults to the `template.html` file embedded in the
+    `Python` package.
 toc
     Path to the overall table of contents (in Markdown format). Defaults to `toc.md`.
 
@@ -26,6 +27,7 @@ $ python render.py --template=template.html *.md
 
 import argparse
 import datetime
+import importlib
 import io
 import json
 import os
@@ -53,7 +55,7 @@ from pymdownx.tilde import DeleteSubExtension
 from yaml import SafeLoader, load
 
 
-def load_template(filepath: str = "./template.html") -> Template:
+def load_template(filepath: str = None) -> Template:
     """Load the `Jinja2` template.
 
     Parameters
@@ -66,6 +68,11 @@ def load_template(filepath: str = "./template.html") -> Template:
     : jinja2.Template
         `Jinja2` template ready to be used.
     """
+    if filepath is None:
+        package = importlib.util.find_spec("markdown_render")  # eww
+        realpath = package.origin.replace("__init__.py", "")
+        filepath = f"{realpath}template.html"
+
     with pathlib.Path(filepath).open() as f:
         return Environment(loader=BaseLoader()).from_string(f.read())
 
@@ -533,7 +540,7 @@ def cli() -> None:
     parser.add_argument(
         "-t",
         "--template",
-        default="template.html",
+        default=None,
         help="Path to the HTML template to use during conversion.",
     )
     flags, files = parser.parse_known_args()

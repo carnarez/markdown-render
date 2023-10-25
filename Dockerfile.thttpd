@@ -31,6 +31,9 @@ FROM python:slim AS render
 
 WORKDIR /usr/src
 
+COPY markdown_render markdown_render
+COPY setup.py .
+
 RUN apt-get update \
  && apt-get install --no-install-recommends --no-install-suggests --yes git \
  && pip install --upgrade pip \
@@ -42,16 +45,15 @@ RUN apt-get update \
                                lunr \
                                markdown \
                                pymdown-extensions \
-                               pyyaml
+                               pyyaml \
+ && pip install --editable .
 
-COPY markdown_render/render.py render.py
-COPY markdown_render/template.html template.html
 COPY tests .
 
 RUN find . -name "*.md" | grep -v "toc.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
- && python render.py --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
-                     --prefix=/var/www \
-                     `find . -name "*.md" | grep -v "toc.md"` 
+ && render-markdown --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
+                    --prefix=/var/www \
+                    `find . -name "*.md" | grep -v "toc.md"` 
 
 
 # prettify everything in place

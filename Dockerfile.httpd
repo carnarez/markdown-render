@@ -1,24 +1,26 @@
 # render markdown to html
 
-FROM python:slim as render
+FROM python:slim AS render
 
 WORKDIR /usr/src
 
 RUN apt-get update \
- && apt-get install --no-install-recommends --no-install-suggests --yes git \
+ && DEBIAN_FRONTEND=noninteractive \
+    apt-get install --no-install-recommends --no-install-suggests --yes git \
  && pip install --upgrade pip \
- && pip install --no-cache-dir git+https://github.com/carnarez/markdown-astdocs@master \
-                               git+https://github.com/carnarez/markdown-img@master \
-                               git+https://github.com/carnarez/markdown-insert@master \
-                               git+https://github.com/carnarez/markdown-script@master \
+ && pip install --no-cache-dir git+https://github.com/carnarez/markdown-extension-astdocs@master \
+                               git+https://github.com/carnarez/markdown-extension-img@master \
+                               git+https://github.com/carnarez/markdown-extension-insert@master \
+                               git+https://github.com/carnarez/markdown-extension-script@master \
                                jinja2 \
                                lunr \
                                markdown \
                                pymdown-extensions \
                                pyyaml
 
-COPY build .
-COPY prose .
+COPY markdown_render/render.py render.py
+COPY markdown_render/template.html template.html
+COPY tests .
 
 RUN find . -name "*.md" | grep -v "toc.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
  && python render.py --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
@@ -28,18 +30,26 @@ RUN find . -name "*.md" | grep -v "toc.md" | while read f; do mkdir -p /var/www/
 
 # minify everything in place
 
-FROM node:alpine as bundle
+FROM node:alpine AS bundle
 
 WORKDIR /var/www
 
 COPY --from=render /var/www .
 
-COPY prose .
-COPY style .
+COPY tests .
 
 RUN rm `find . -name "*.md"` \
+ && apk --no-cache add git \
  && npm config set update-notifier false \
- && npm install --global --no-audit --no-fund autoprefixer clean-css-cli html-minifier postcss-cli terser | grep -v ^$ \
+ && npm install --global --no-audit --no-fund autoprefixer \
+                                              clean-css-cli \
+                                              html-minifier \
+                                              postcss-cli \
+                                              terser \
+    | grep -v ^$ \
+ && git clone --depth=1 https://github.com/carnarez/markdown-render-styling.git \
+ && mv markdown-render-styling/*.css . \
+ && rm -fr markdown-render-styling \
  && find . -name "*.css" | while read f; do \
       postcss $f --replace --use autoprefixer; \
       cleancss --output $f $f; \

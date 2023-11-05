@@ -80,7 +80,7 @@ jobs:
             prettier --write .
           )
 
-      - name: Minify via clean-css, html-minifier and terser
+      - name: Minify via cssnano, html-minifier and terser
         run: |
           (
             git clone --depth=1 https://github.com/carnarez/markdown-render-styling.git

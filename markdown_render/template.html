@@ -64,7 +64,7 @@
       // scroll events, mostly throttled
       window.addEventListener("scroll", () => {
         const scroller = document.querySelector("#scroller"),
-              nav = document.querySelector("nav"),
+              topbar = document.querySelector("#topbar"),
               aside = document.querySelector("#toc"),
               article = document.querySelector("article");
 
@@ -72,7 +72,7 @@
         if (scroller.getBoundingClientRect().top > 0) {
           scroller.style.width = "0";
           document.querySelectorAll("aside, article").forEach(a => {
-            let className = a.className.match(/visible-[a-z]+-sidebar/) || "";
+            let className = a.className.match(/visible-sidebar/) || "";
             if (className.length > 0) a.classList.remove(className);
           });
           aside.scrollTop = 0;
@@ -87,7 +87,7 @@
           {% else %}
           let currentScrollY = window.scrollY,
           {% endif %}
-              overallScrollY = nav.offsetHeight + article.offsetHeight - window.innerHeight;
+              overallScrollY = topbar.offsetHeight + article.offsetHeight - window.innerHeight;
 
           scroller.style.width = 100 * Math.min(currentScrollY / overallScrollY, 1) + "%";
           
@@ -126,10 +126,10 @@
                 if (href === window.location.hash) {
                   a.classList.add("active");
                   if (
-                    a.offsetTop < aside.scrollTop + nav.offsetHeight ||
-                    a.offsetTop > window.innerHeight - nav.offsetHeight
+                    a.offsetTop < aside.scrollTop + topbar.offsetHeight ||
+                    a.offsetTop > window.innerHeight - topbar.offsetHeight
                   ) {
-                    aside.scrollTop = a.offsetTop - 2*nav.offsetHeight;
+                    aside.scrollTop = a.offsetTop - 2*topbar.offsetHeight;
                   }
                 } else {
                   a.classList.remove("active");
@@ -145,7 +145,7 @@
 
       // onload actions (deferred otherwise no elements to loop over)
       window.onload = () => {
-        const nav = document.querySelector("nav"),
+        const topbar = document.querySelector("#topbar"),
               aside = document.querySelector("#toc"),
               links = aside.querySelectorAll("a"),
               path = window.location.pathname.replace(/^[/]|[/]$/g, ""),
@@ -178,10 +178,10 @@
             // highlight current item in the table of contents
             a.classList.add("active");
             if (
-              a.offsetTop < aside.scrollTop + nav.offsetHeight ||
-              a.offsetTop > window.innerHeight - nav.offsetHeight
+              a.offsetTop < aside.scrollTop + topbar.offsetHeight ||
+              a.offsetTop > window.innerHeight - topbar.offsetHeight
             ) {
-              aside.scrollTop = a.offsetTop - 2*nav.offsetHeight;
+              aside.scrollTop = a.offsetTop - 2*topbar.offsetHeight;
             }
 
             // update the preceding content
@@ -214,10 +214,10 @@
           if (a.getAttribute("href") === hash) {
             a.classList.add("active");
             if (
-              a.offsetTop < aside.scrollTop + nav.offsetHeight ||
-              a.offsetTop > window.innerHeight - nav.offsetHeight
+              a.offsetTop < aside.scrollTop + topbar.offsetHeight ||
+              a.offsetTop > window.innerHeight - topbar.offsetHeight
             ) {
-              aside.scrollTop = a.offsetTop - 2*nav.offsetHeight;
+              aside.scrollTop = a.offsetTop - 2*topbar.offsetHeight;
             }
           } else {
             a.classList.remove("active");
@@ -382,18 +382,18 @@
     {% if highlight %}
     <script
       defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
       onload="hljs.highlightAll()"
     ></script>
     {% endif %}
     {% if katex %}
     <script
       defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.js"
+      src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"
     ></script>
     <script
       defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/contrib/auto-render.min.js"
+      src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
       onload="renderMathInElement(
         document.body,
         {
@@ -455,35 +455,31 @@
   <body>
       
     <!-- buttons -->
-    <nav>
-      <div class="buttons">
-        <a class="button sidebar" onclick="toggleSidebar('#toc')"></a>
-        <a class="button search" onclick="toggleSidebar('#search', '#search-input')"></a>
+    <nav id="topbar">
+      <div>
+        <a class="sidebar" onclick="toggleSidebar('#toc')"></a>
+        <a class="search" onclick="toggleSidebar('#search', '#search-input')"></a>
         <span class="spacer"></span>
         {% if path != "" %}
         <a class="logo" href="{{ http }}"><img src="{{ logo }}"></a>
         {% endif %}
         <span class="spacer"></span>
-        <a class="button repo" href="{{ repo }}"></a>
-        <a class="button theme" onclick="toggleTheme()"></a>
+        <a class="repo" href="{{ repo }}"></a>
+        <a class="theme" onclick="toggleTheme()"></a>
       </div>
     </nav>
 
     {% if path == "" and splash != "nosplash" and splash != "" %}
     <!-- splash screen -->
-    <header>
+    <header id="splash">
       <img src="{{ splash }}">
       <span class="title">{{ title }}</span>
       <span class="description">{{ description }}</span>
-      <span>
-        <a href="{{ repo }}">GitHub</a>
-        <a onclick="window.scroll(0, document.querySelector('#scroller').getBoundingClientRect().top)">Documentation</a>
-      </span>
     </header>
     {% endif %}
 
     <!-- show scrolling progress -->
-    <div id="scroller"></div>
+    <nav id="scroller"></nav>
 
     <main>
       
@@ -492,23 +488,23 @@
       
       <!-- search functionalities -->
       <aside id="search">
-        <div class="search-field">
-          <span class="button search" onclick="document.querySelector('#search-input').focus()"></span>
+        <header>
+          <a class="search" onclick="document.querySelector('#search-input').focus()"></a>
           <input autocomplete="off" id="search-input" onkeyup="lunrSearch()" placeholder="search with lunr" type="text">
-          <span class="button reset" onclick="resetSearch()"></span>
-        </div>
+          <a class="reset" onclick="resetSearch()"></a>
+        </header>
         <ul id="search-output"></ul>
       </aside>
       
       <!-- actual content and preceding/following contents -->
       <article>
-        <div class="maintext">{{ article }}</div>
+        <div>{{ article }}</div>
         <span class="spacer"></span>
-        <div class="prevnext">
+        <footer>
           <a id="prev"></a>
           <span class="spacer"></span>
           <a id="next"></a>
-        </div>
+        </footer>
       </article>
 
     </main>

@@ -24,10 +24,13 @@ RUN apt-get update \
 
 COPY tests .
 
-RUN find . -name "*.md" | grep -v "toc.md" | while read f; do mkdir -p /var/www/`dirname $f`; done \
+RUN find . -name "*.md" \
+  | grep -e "toc.md" -e "markdown_render" -v \
+  | while read f; do mkdir -p /var/www/`dirname $f`; done \
  && render-markdown --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
                     --prefix=/var/www \
-                    `find . -name "*.md" | grep -v "toc.md"` 
+                    `find . -name "*.md" | grep -e "toc.md" -e "markdown_render" -v` \
+ && rm -fr markdown_render setup.py
 
 
 # minify everything in place
@@ -44,17 +47,18 @@ RUN rm `find . -name "*.md"` \
  && apk --no-cache add git \
  && npm config set update-notifier false \
  && npm install --global --no-audit --no-fund autoprefixer \
-                                              clean-css-cli \
+                                              cssnano \
                                               html-minifier \
                                               postcss-cli \
                                               terser \
-    | grep -v ^$ \
- && git clone --depth=1 https://github.com/carnarez/markdown-render-styling.git \
- && mv markdown-render-styling/*.css . \
- && rm -fr markdown-render-styling \
+  | grep -v ^$ \
+ && git clone --branch=bundle --depth=1 https://github.com/carnarez/markdown-render-styling \
+ && cat markdown-render-styling/style.css *.css 2>/dev/null | grep -v '@import url("style-' > style.css_ \
+ && rm -fr markdown-render-styling *.css \
+ && mv style.css_ style.css \
  && find . -name "*.css" | while read f; do \
-      postcss $f --replace --use autoprefixer; \
-      cleancss --output $f $f; \
+      postcss $f --no-map --replace --use autoprefixer; \
+      postcss $f --no-map --replace --use cssnano; \
     done \
  && find . -name "*.html" | while read f; do \
       html-minifier --collapse-boolean-attributes \

@@ -54,7 +54,7 @@ jobs:
             cd tests
 
             find . -name "*.md" | while read f; do mkdir -p /tmp/www/`dirname $f`; done
-            markdown_render --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
+            markdown-render --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
                             --prefix=/tmp/www \
                             --template=../markdown_render/template.html \
                             `find . -name "*.md"`

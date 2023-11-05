@@ -1,4 +1,4 @@
-**Templates for rendering `Markdown` into HTML.** For my opinionated usage.
+**Templates for rendering `Markdown` into HTML.** For my _very_ opinionated usage.
 
 # Rendering
 

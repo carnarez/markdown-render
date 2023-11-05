@@ -10,8 +10,7 @@ processed through [`autoprefixer`](https://github.com/postcss/autoprefixer) to a
 vendor prefxes.
 
 Served files could be prettified via [Prettier](https://github.com/prettier/prettier),
-but are currently minified using a mix of
-[clean-css](https://github.com/clean-css/clean-css),
+but are currently minified using a mix of [cssnano](https://github.com/cssnano/cssnano),
 [html-minifier](https://github.com/kangax/html-minifier) and
 [terser](https://github.com/terser/terser).
 

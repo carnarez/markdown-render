@@ -278,7 +278,7 @@ HTML is allowed within the document; nested Markown too. Example of the `<detail
 <details markdown="1">
 <summary markdown="1">Test with some `code` in the summary text</summary>
 
-**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
+**This is bold**, ^^this is underlined^^. ~~[This is a link](https://calmcode.io/).~~
 
 ```python
 import polars as pl
@@ -290,7 +290,7 @@ import polars as pl
 <details markdown="1">
 <summary markdown="1">Test with some `code` in the summary text</summary>
 
-**This is bold**, ^^this is underlined^^. [This is a link](https://calmcode.io/).
+**This is bold**, ^^this is underlined^^. ~~[This is a crossed link](https://calmcode.io/)~~.
 
 ```python
 import polars as pl

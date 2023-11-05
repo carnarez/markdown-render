@@ -1,15 +1,13 @@
 /* local style */
 
 a {
-  border-color: transparent;
-  border-style: solid;
-  border-width: 0 0 1px 0;
   color: green;
-  cursor: pointer;
   text-decoration-line: none;
+  cursor: pointer;
 }
 
 a:focus,
 a:hover {
-  border-color: green;
+  color: green;
+  text-decoration-line: underline;
 }

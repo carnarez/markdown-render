@@ -22,7 +22,7 @@ jobs:
         run: |
           npm config set update-notifier false
           npm install --global --no-audit --no-fund autoprefixer \
-                                                    clean-css-cli \
+                                                    cssnano \
                                                     html-minifier \
                                                     postcss-cli \
                                                     prettier \
@@ -46,6 +46,7 @@ jobs:
                                 markdown \
                                 pymdown-extensions \
                                 pyyaml
+          python -m pip install --editable .
 
       - name: Render Markdown content
         run: |
@@ -53,10 +54,10 @@ jobs:
             cd tests
 
             find . -name "*.md" | while read f; do mkdir -p /tmp/www/`dirname $f`; done
-            python ../markdown_render/render.py --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
-                                                --prefix=/tmp/www \
-                                                --template=../markdown_render/template.html \
-                                                `find . -name "*.md"`
+            markdown_render --meta="title=Cool stuff|description=Testing playground for Markdown rendering." \
+                            --prefix=/tmp/www \
+                            --template=../markdown_render/template.html \
+                            `find . -name "*.md"`
           )
 
       - name: List articles by their titles (SEO)
@@ -92,16 +93,16 @@ jobs:
             cd /tmp/www
             
             find . -name "*.css" | while read f; do
-              postcss $f --replace --use autoprefixer
-              cleancss --output $f $f
+              postcss $f --no-map --replace --use autoprefixer
+              postcss $f --no-map --replace --use cssnano
             done
             
             find . -name "*.html" | while read f; do
               html-minifier --collapse-boolean-attributes \
                             --collapse-whitespace \
-                            --output $f \
                             --minify-css true \
                             --minify-js true \
+                            --output $f \
                             --remove-attribute-quotes \
                             --remove-comments \
                             --remove-empty-attributes \

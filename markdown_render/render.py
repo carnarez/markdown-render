@@ -1,7 +1,7 @@
 """Template script to render `Markdown` to HTML and index the content for Lunr.
 
-Arguments
----------
+Parameters
+----------
 meta
     Extra metadata attributes for the frontmatter, separated by pipes (`|`). Defaults to
     an empty string.
@@ -15,14 +15,15 @@ template
 toc
     Path to the overall table of contents (in Markdown format). Defaults to `toc.md`.
 
-Examples
---------
+Usage
+-----
 ```shell
 $ python render.py *.md
 $ python render.py --meta="splash=splash.png|description=This is a description." *.md
 $ python render.py --prefix=/var/www *.md
 $ python render.py --template=template.html *.md
 ```
+
 """
 
 import argparse
@@ -67,6 +68,7 @@ def load_template(filepath: str = None) -> Template:
     -------
     : jinja2.Template
         `Jinja2` template ready to be used.
+
     """
     if filepath is None:
         package = importlib.util.find_spec("markdown_render")  # eww
@@ -107,6 +109,7 @@ def render_template(
     Note
     ----
     The current check for equations easily returns false positives.
+
     """
     return tmpl.render(
         http=root,
@@ -135,6 +138,7 @@ def load_document(filepath: str) -> tuple[dict[str, str], str]:
         Metadata, extracted from the front matter or generated.
     : str
         Raw `Markdown` content.
+
     """
     meta: dict[str, str] = {}
     rgxp: re.Pattern = re.compile(r"^---\n(.+?)\n---\n", flags=re.DOTALL)
@@ -198,6 +202,7 @@ def clean_document(mdwn: str, ellipsis: str = " [...] ") -> str:
     * All equations (might cause some false positive).
     * All special syntax: `![]()`, `%[]()`, `&[]()`.
     * All HTML tags.
+
     """
     # remove toc
     mdwn = mdwn.replace("[TOC]", "")
@@ -263,6 +268,7 @@ def convert_document(
         Table of contents of the converted document.
     : str
         `Markdown` converted to the requested format, using the provided extensions.
+
     """
     md = Markdown(extensions=extensions, output_format=output_format)
     md.stripTopLevelTags = strip_top_level_tags
@@ -293,6 +299,7 @@ def process_document(filepath: str) -> tuple[dict[str, str], str, str, str]:
         Clean up `Markdown` content, ready to be indexed by
         [`lunr.js`](https://lunrjs.com/) (or its `Python` sibling,
         [`lunr.py`](https://lunr.readthedocs.io/)).
+
     """
     # check extension respective documentations for configuration
     extensions: list[Extension] = [
@@ -370,6 +377,7 @@ def process_toc(filepath: str) -> str:
     -------
     : str
         `Markdown` content converted to HTML.
+
     """
     # check extension respective documentations for configuration
     extensions: list[Extension] = [
@@ -405,6 +413,7 @@ def merge_digests(endpoint: str, global_toc: str, page_toc: str) -> str:
     -------
     : str
         HTML table of contents.
+
     """
     toc = []
 
@@ -439,6 +448,7 @@ def index_documents(texts: dict[str, str]) -> str:
     -------
     : str
         JSON content ready to be loaded by [`lunr.py`](https://lunr.readthedocs.io/).
+
     """
     documents: dict[str, str] = {}
 
